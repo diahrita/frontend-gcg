@@ -25,14 +25,12 @@ const AppMenu = () => {
                 { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/uikit/overlay' },
                 { label: 'Media', icon: 'pi pi-fw pi-image', to: '/uikit/media' },
                 { label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/uikit/menu', preventExact: true },
-                { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/uikit/charts' },
+                { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/uikit/charts' }
             ]
         },
         {
             label: 'Utilities',
-            items: [
-                { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', to: '/utilities/icons' },
-            ]
+            items: [{ label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', to: '/utilities/icons' }]
         },
         {
             label: 'Pages',
@@ -47,6 +45,11 @@ const AppMenu = () => {
                             label: 'Login',
                             icon: 'pi pi-fw pi-sign-in',
                             to: '/auth/login'
+                        },
+                        {
+                            label: 'Register',
+                            icon: 'pi pi-fw pi-sign-in',
+                            to: '/auth/register'
                         },
                         {
                             label: 'Error',
@@ -64,9 +67,9 @@ const AppMenu = () => {
                     label: 'Crud',
                     icon: 'pi pi-fw pi-pencil',
                     to: '/pages/crud'
-                },
+                }
             ]
-        },
+        }
     ];
 
     return (

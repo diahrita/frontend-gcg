@@ -10,13 +10,14 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import Link from 'next/link';
 
-const LoginPage = () => {
+const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [checked, setChecked] = useState(false);
     const { layoutConfig } = useContext(LayoutContext);
 
     const router = useRouter();
     const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
+    const [value, setValue] = useState<string>('');
 
     return (
         <div className={containerClassName}>
@@ -33,10 +34,15 @@ const LoginPage = () => {
                         <div className="text-center mb-5">
                             <img src="/layout/images/tps.png" alt="Image" height="100" className="mb-3" />
                             <div className="text-900 text-3xl font-medium mb-3">Selamat Datang</div>
-                            <span className="text-600 font-medium">Login untuk melanjutkan</span>
+                            <span className="text-600 font-medium">Silahkan Register Terlebih Dahulu</span>
                         </div>
 
                         <div>
+                            <label htmlFor="nama" className="block text-900 text-xl font-medium mb-2">
+                                Nama
+                            </label>
+                            <InputText id="nama" type="text" placeholder="Nama" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
+
                             <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
                                 Email
                             </label>
@@ -45,16 +51,24 @@ const LoginPage = () => {
                             <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
                                 Password
                             </label>
-                            <Password inputId="password1" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" toggleMask feedback={false} className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
+                            <Password
+                                inputId="password1"
+                                value={value}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+                                placeholder="Password"
+                                toggleMask
+                                className="w-full mb-5"
+                                inputClassName="w-full p-3 md:w-30rem"
+                            />
 
                             <div className="flex align-items-center justify-content-between mb-1 gap-5"></div>
-                            <Button label="Login" className="w-full p-3 text-xl" onClick={() => router.push('/')}></Button>
+                            <Button label="Register" className="w-full p-3 text-xl" onClick={() => router.push('/')}></Button>
 
                             <div className="text-center mb-5">
                                 <div className="text-600 font-medium mb-3" style={{ paddingTop: '1rem' }}>
-                                    Belum Punya Akun?{' '}
-                                    <Link href="/auth/register" className="underline text-blue-600">
-                                        Daftar
+                                    Sudah Punya Akun?{' '}
+                                    <Link href="/auth/login" className="underline text-blue-600">
+                                        Masuk
                                     </Link>
                                 </div>
                             </div>
@@ -67,4 +81,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
