@@ -25,7 +25,8 @@ export const loginUser = async (username: string, password: string, router: any)
 
         // Check if the status code in the response is '200'
         if (response.data.StatusCode === '200') {
-            console.log('Login successful:', response.data);
+            // console.log('Login successful:', response.data);
+            
             toast.success('Login Sukses');
 
             // Store credentials in localStorage

@@ -1,16 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Button } from 'primereact/button';
-import { Chart } from 'primereact/chart';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
-import { Menu } from 'primereact/menu';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../demo/service/ProductService';
-import { LayoutContext } from '../../layout/context/layoutcontext';
-import Link from 'next/link';
 import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
+import { useRouter } from 'next/navigation';
+import { Menu } from 'primereact/menu';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { ProductService } from '../../demo/service/ProductService';
+import { LayoutContext } from '../../layout/context/layoutcontext';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -35,11 +31,25 @@ const lineData: ChartData = {
 };
 
 const Dashboard = () => {
+
+
+    const router = useRouter();
+
+    // useEffect(() => {
+    //     const authStatus = localStorage.getItem('authStatus');
+
+    //     if (authStatus !== 'loggedIn') {
+    //         router.push('/auth/login'); // Arahkan ke halaman login jika tidak terautentikasi
+    //     }
+    // }, [router]);
+
+
     const [products, setProducts] = useState<Demo.Product[]>([]);
     const menu1 = useRef<Menu>(null);
     const menu2 = useRef<Menu>(null);
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
+
 
     const applyLightTheme = () => {
         const lineOptions: ChartOptions = {
