@@ -1,19 +1,20 @@
-'use client'
+'use client';
+import { loginUser } from '@/app/api/loginApi';
 import { LayoutContext } from '@/layout/context/layoutcontext';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { useContext, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 interface Props {
-    googleData: any;  
+    googleData: any;
 }
 
 const LoginPage = ({ googleData }: Props) => {
-    console.log('Received data in component:', googleData); 
-    
+    console.log('Received data in component:', googleData);
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -24,51 +25,17 @@ const LoginPage = ({ googleData }: Props) => {
     const handleLogin = async () => {
         setLoading(true);
         setError('');
-
-        // Basic validation
-        if (!username || !password) {
-            setError('Username and password are required.');
-            setLoading(false);
-            return;
-        }
-
         try {
-            const response = await axios.post('/api/login', { 
-                username,
-                password
-            });
-
-            console.log('Login successful:', response.data);
-            router.push('/');
-        } catch (err: unknown) {
-            console.error('Error during login:', err);
-        
-            let errorMessage = 'Login failed. Please try again.';
-        
-            if (axios.isAxiosError(err)) {
-                if (err.response) {
-                    console.error('Response error data:', err.response.data);
-                    errorMessage = err.response.data.message || 'Server responded with an error.';
-                } else if (err.request) {
-                    console.error('No response received:', err.request);
-                    errorMessage = 'No response received from the server. Please check your network connection.';
-                } else {
-                    console.error('Error message:', err.message);
-                    errorMessage = err.message;
-                }
-            } else if (err instanceof Error) {
-                console.error('Error message:', err.message);
-                errorMessage = err.message;
-            }
-        
-            setError(errorMessage);
+            await loginUser(username, password, router); // Call the login function
+        } catch (err) {
+            setError('Terjadi kesalahan. Silakan coba lagi.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="container-classname"> {}
+        <div className="container-classname">
             <div className="flex flex-column align-items-center justify-content-center">
                 <div className="mb-5 w-6rem flex-shrink-0" />
                 <div
@@ -127,6 +94,7 @@ const LoginPage = ({ googleData }: Props) => {
                 </div>
                 <div className="mb-5 w-6rem flex-shrink-0" />
             </div>
+            <Toaster position="top-right" />
         </div>
     );
 };
