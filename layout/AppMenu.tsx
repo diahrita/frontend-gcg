@@ -15,7 +15,7 @@ const AppMenu = () => {
             label: 'Home',
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-                { label: 'Form Klaim', icon: 'pi pi-fw pi-file', to: '/uikit/klaim' }
+                { label: 'Form Klaim', icon: 'pi pi-fw pi-file', to: '/uikit/klaim' },
             ]
         },
         {
@@ -64,7 +64,7 @@ const AppMenu = () => {
             label: 'Pengaturan',
             items: [
                 {
-                    label: 'Data User', icon: 'pi pi-fw pi-users', to: '/uikit/table',
+                    label: 'Data User', icon: 'pi pi-fw pi-users',
                 },
             ]
         },
@@ -88,10 +88,10 @@ const AppMenu = () => {
                     to: '/auth/register'
                 },
                 {
-                    label: 'Icons', 
-                    icon: 'pi pi-fw pi-prime', 
+                    label: 'Icons',
+                    icon: 'pi pi-fw pi-prime',
                     to: '/utilities/icons'
-                },
+                }
                 // {
                 //     label: 'Error',
                 //     icon: 'pi pi-fw pi-times-circle',
