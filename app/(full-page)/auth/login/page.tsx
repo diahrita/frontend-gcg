@@ -50,7 +50,7 @@ const LoginPage = ({ googleData }: Props) => {
         setUsername(input);
     };
 
-    // Handle changes to password with validation
+    // Handle changes to password with validation //Cross-Site Scripting
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value.slice(0, 20);
         setPassword(input);
