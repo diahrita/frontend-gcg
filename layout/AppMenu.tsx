@@ -47,11 +47,13 @@ const AppMenu = () => {
                         }
                     ]
                 },
+                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open'},
+                { label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list'},
                 // { label: 'Survey', icon: 'pi pi-fw pi-clone', to: '/uikit/survey' },
                 // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
                 // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
                 // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
-                { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' }
+                // { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
                 // { label: 'Overlay', icon: 'pi pi-fw spi-clone', to: '/uikit/overlay' },
                 // { label: 'Media', icon: 'pi pi-fw pi-image', to: '/uikit/media' },
                 // { label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/uikit/menu', preventExact: true },
@@ -62,13 +64,7 @@ const AppMenu = () => {
             label: 'Pengaturan',
             items: [
                 {
-                    label: 'Data User', icon: 'pi pi-fw pi-users',
-                },
-                {
-                    label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open',
-                },
-                {
-                    label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list',
+                    label: 'Data User', icon: 'pi pi-fw pi-users', to: '/uikit/table',
                 },
             ]
         },
