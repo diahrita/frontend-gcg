@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/react-dom": "18.2.5",
     "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
     "chart.js": "4.2.1",
     "next": "13.4.8",
     "primeflex": "^3.3.1",
@@ -22,6 +23,8 @@
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "20.14.12",
     "@types/react": "18.3.3",
     "eslint": "8.43.0",

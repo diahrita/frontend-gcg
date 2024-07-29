@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 interface Props {
@@ -13,8 +13,6 @@ interface Props {
 }
 
 const LoginPage = ({ googleData }: Props) => {
-    console.log('Received data in component:', googleData);
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -22,16 +20,40 @@ const LoginPage = ({ googleData }: Props) => {
     const { layoutConfig } = useContext(LayoutContext);
     const router = useRouter();
 
+    // Load saved credentials from localStorage
+    useEffect(() => {
+        const savedUsername = localStorage.getItem('username');
+        const savedPassword = localStorage.getItem('password');
+        if (savedUsername) {
+            setUsername(savedUsername);
+        }
+        if (savedPassword) {
+            setPassword(savedPassword);
+        }
+    }, []);
+
     const handleLogin = async () => {
         setLoading(true);
         setError('');
         try {
-            await loginUser(username, password, router); // Call the login function
+            await loginUser(username, password, router); 
         } catch (err) {
             setError('Terjadi kesalahan. Silakan coba lagi.');
         } finally {
             setLoading(false);
         }
+    };
+
+    // Handle changes to username with validation
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value.slice(0, 20); 
+        setUsername(input);
+    };
+
+    // Handle changes to password with validation
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value.slice(0, 20);
+        setPassword(input);
     };
 
     return (
@@ -53,15 +75,15 @@ const LoginPage = ({ googleData }: Props) => {
                         </div>
 
                         <div>
-                            <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
+                            <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
                                 Username
                             </label>
                             <InputText
-                                id="email1"
+                                id="username"
                                 type="text"
                                 placeholder="Alamat Email atau Username"
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={handleUsernameChange}
                                 className="w-full md:w-30rem mb-5"
                                 style={{ padding: '1rem' }}
                             />
@@ -72,7 +94,7 @@ const LoginPage = ({ googleData }: Props) => {
                             <Password
                                 inputId="password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={handlePasswordChange}
                                 placeholder="Password"
                                 toggleMask
                                 feedback={false}

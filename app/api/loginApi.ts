@@ -21,18 +21,20 @@ export const loginUser = async (username: string, password: string, router: any)
     }
 
     try {
-        const response = await axios.post('/api/login', {
-            username,
-            password
-        });
+        const response = await axios.post('/api/login', { username, password });
 
         // Check if the status code in the response is '200'
         if (response.data.StatusCode === '200') {
             console.log('Login successful:', response.data);
             toast.success('Login Sukses');
+
+            // Store credentials in localStorage
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password); 
+
             setTimeout(() => {
                 router.push('/');
-            }, 2000); // Adjust the delay time as needed
+            }, 2000); 
         } else {
             console.error('Login failed:', response.data);
             toast.error('Login gagal! Cek username dan password anda.');
