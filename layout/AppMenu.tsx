@@ -25,7 +25,7 @@ const AppMenu = () => {
                 { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
                 // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
                 // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
-                { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
+                { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' }
                 // { label: 'Overlay', icon: 'pi pi-fw spi-clone', to: '/uikit/overlay' },
                 // { label: 'Media', icon: 'pi pi-fw pi-image', to: '/uikit/media' },
                 // { label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/uikit/menu', preventExact: true },
@@ -45,33 +45,33 @@ const AppMenu = () => {
                 //     label: 'Auth',
                 //     icon: 'pi pi-fw pi-user',
                 //     items: [
-                        {
-                            label: 'Login',
-                            icon: 'pi pi-fw pi-sign-in',
-                            to: '/auth/login'
-                        },
-                        {
-                            label: 'Register',
-                            icon: 'pi pi-fw pi-sign-in',
-                            to: '/auth/register'
-                        },
-                        {
-                            label: 'Error',
-                            icon: 'pi pi-fw pi-times-circle',
-                            to: '/auth/error'
-                        },
-                        {
-                            label: 'Access Denied',
-                            icon: 'pi pi-fw pi-lock',
-                            to: '/auth/access'
-                        },
+                {
+                    label: 'Login',
+                    icon: 'pi pi-fw pi-sign-in',
+                    to: '/auth/login'
+                },
+                {
+                    label: 'Register',
+                    icon: 'pi pi-fw pi-sign-in',
+                    to: '/auth/register'
+                },
+                {
+                    label: 'Error',
+                    icon: 'pi pi-fw pi-times-circle',
+                    to: '/auth/error'
+                },
+                {
+                    label: 'Access Denied',
+                    icon: 'pi pi-fw pi-lock',
+                    to: '/auth/access'
+                }
                 //     ]
                 // },
-                {
-                    label: 'Crud',
-                    icon: 'pi pi-fw pi-pencil',
-                    to: '/pages/crud'
-                }
+                // {
+                //     label: 'Crud',
+                //     icon: 'pi pi-fw pi-pencil',
+                //     to: '/pages/crud'
+                // }
             ]
         }
     ];

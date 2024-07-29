@@ -17,7 +17,7 @@ import { ProductService } from '../../../../demo/service/ProductService';
 import { Demo } from '@/types';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
-const Crud = () => {
+const Survey = () => {
     let emptyProduct: Demo.Product = {
         id: '',
         name: '',
@@ -328,10 +328,12 @@ const Crud = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="code" header="Kode" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="name" header="Nama Barang" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="code" header="Partner Path Name" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="name" header="Short Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Foto" body={imageBodyTemplate}></Column>
-                        <Column field="price" header="Lokasi" body={priceBodyTemplate} sortable></Column>
+                        <Column field="price" header="Email" body={priceBodyTemplate} sortable></Column>
+                        <Column field="name" header="Phone" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="category" header="Kategori" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
@@ -339,40 +341,186 @@ const Crud = () => {
 
                     <Dialog visible={productDialog} style={{ width: '450px' }} header="Detail Laporan" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         {product.image && <img src={`/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
-                        <div className="field">
-                            <label htmlFor="name">Nama Pelapor</label>
-                            <InputText
-                                id="name"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'name')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="name">Partner Path Name</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="name">Code Ref</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
                         </div>
-                        <div className="field">
-                            <label htmlFor="name">Nama Barang</label>
-                            <InputText
-                                id="name"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'name')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="name">Short Name</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="name">SP Short Name</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
                         </div>
+
                         <div className="field">
-                            <label htmlFor="description">Deskripsi Kerusakan</label>
+                            <label htmlFor="description">Description</label>
                             <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                         </div>
 
                         <div className="field">
+                            <label htmlFor="name">Title</label>
+                            <InputText
+                                id="name"
+                                value={product.name}
+                                onChange={(e) => onInputChange(e, 'name')}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !product.name
+                                })}
+                            />
+                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                        </div>
+
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="name">Job Position</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="name">Email</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                        </div>
+
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="name">Phone</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="name">Mobile</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="description">Address</label>
+                            <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                        </div>
+
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="name">Postal Code</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="name">Tax No</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            </div>
+                        </div>
+
+                        {/* <div className="field">
                             <label className="mb-3">Kategori</label>
                             <div className="formgrid grid">
                                 <div className="field-radiobutton col-6">
@@ -398,21 +546,21 @@ const Crud = () => {
                             <div className="field col">
                                 <label htmlFor="price">Lokasi</label>
                                 <InputText
-                                    id="name"
-                                    value={product.name}
-                                    onChange={(e) => onInputChange(e, 'name')}
-                                    required
-                                    autoFocus
-                                    className={classNames({
-                                        'p-invalid': submitted && !product.name
-                                    })}
-                                />
+                                id="name"
+                                value={product.name}
+                                onChange={(e) => onInputChange(e, 'name')}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !product.name
+                                })}
+                            />
                             </div>
                             <div className="field col">
                                 <label htmlFor="quantity">Jumlah Kerusakan Barang</label>
                                 <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} />
                             </div>
-                        </div>
+                        </div> */}
                     </Dialog>
 
                     <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
@@ -438,4 +586,4 @@ const Crud = () => {
     );
 };
 
-export default Crud;
+export default Survey;
