@@ -74,9 +74,9 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     <h4 className="mb-1">Admin</h4>
                     <p className="mt-1">admin@gmail.com</p>
                 </div>
-                <div className="flex flex-wrap justify-content-center gap-3 mb-4 mt-3">
-                <Button icon="pi pi-user-edit" severity="info" aria-label="User" />
-                <Button icon="pi pi-sign-out" severity="danger" aria-label="User" />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', marginTop: '12px' }}>
+                <Button style={{ width: '100px', height: '40px', marginBottom: '4px' }} label='Edit' icon="pi pi-user-edit" severity="info" aria-label="User" />
+                <Button style={{ width: '100px', height: '40px', marginTop: '4px' }} label='Logout' icon="pi pi-sign-out" severity="danger" aria-label="User" />
                 </div>
                 </Sidebar>
             </div>
