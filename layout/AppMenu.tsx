@@ -12,17 +12,43 @@ const AppMenu = () => {
 
     const model: AppMenuItem[] = [
         {
-            label: '',
+            label: 'Home',
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-                { label: 'Survey', icon: 'pi pi-fw pi-clone', to: '/uikit/survey' },
-                { label: 'Klaim', icon: 'pi pi-fw pi-file', to: '/uikit/klaim' }
+                { label: 'Form Klaim', icon: 'pi pi-fw pi-file', to: '/uikit/klaim' }
             ]
         },
         {
-            label: 'UI Components',
+            label: 'Survey',
             items: [
-                { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
+                {
+                    label: 'Aspek Penilaian',
+                    icon: 'pi pi-fw pi-file-edit',
+                    items: [
+                        {
+                            label: 'Aspek I',
+                            icon: 'pi pi-fw pi-file',
+                            to: '/uikit/survey'
+                        },
+                        {
+                            label: 'Aspek II',
+                            icon: 'pi pi-fw pi-file',
+                            to: '/uikit/survey'
+                        },
+                        {
+                            label: 'Aspek III',
+                            icon: 'pi pi-fw pi-file',
+                            to: '/uikit/survey'
+                        },
+                        {
+                            label: 'Aspek IV',
+                            icon: 'pi pi-fw pi-file',
+                            to: '/uikit/survey'
+                        }
+                    ]
+                },
+                // { label: 'Survey', icon: 'pi pi-fw pi-clone', to: '/uikit/survey' },
+                // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
                 // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
                 // { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
                 { label: 'Table', icon: 'pi pi-fw pi-table', to: '/uikit/table' }
@@ -33,8 +59,18 @@ const AppMenu = () => {
             ]
         },
         {
-            label: 'Utilities',
-            items: [{ label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', to: '/utilities/icons' }]
+            label: 'Pengaturan',
+            items: [
+                {
+                    label: 'Data User', icon: 'pi pi-fw pi-users',
+                },
+                {
+                    label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open',
+                },
+                {
+                    label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list',
+                },
+            ]
         },
         {
             label: 'Pages',
@@ -56,15 +92,20 @@ const AppMenu = () => {
                     to: '/auth/register'
                 },
                 {
-                    label: 'Error',
-                    icon: 'pi pi-fw pi-times-circle',
-                    to: '/auth/error'
+                    label: 'Icons', 
+                    icon: 'pi pi-fw pi-prime', 
+                    to: '/utilities/icons'
                 },
-                {
-                    label: 'Access Denied',
-                    icon: 'pi pi-fw pi-lock',
-                    to: '/auth/access'
-                }
+                // {
+                //     label: 'Error',
+                //     icon: 'pi pi-fw pi-times-circle',
+                //     to: '/auth/error'
+                // },
+                // {
+                //     label: 'Access Denied',
+                //     icon: 'pi pi-fw pi-lock',
+                //     to: '/auth/access'
+                // }
                 //     ]
                 // },
                 // {
