@@ -1,24 +1,74 @@
-/* eslint-disable @next/next/no-img-element */
-'use client';
+'use client'
+import { LayoutContext } from '@/layout/context/layoutcontext';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import React, { useContext, useState } from 'react';
-import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
-import { Password } from 'primereact/password';
-import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
+import { Password } from 'primereact/password';
+import { useContext, useState } from 'react';
 
-const LoginPage = () => {
+interface Props {
+    googleData: any;  
+}
+
+const LoginPage = ({ googleData }: Props) => {
+    console.log('Received data in component:', googleData); 
+    
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [checked, setChecked] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const { layoutConfig } = useContext(LayoutContext);
-
     const router = useRouter();
-    const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
+
+    const handleLogin = async () => {
+        setLoading(true);
+        setError('');
+
+        // Basic validation
+        if (!username || !password) {
+            setError('Username and password are required.');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const response = await axios.post('/api/login', { 
+                username,
+                password
+            });
+
+            console.log('Login successful:', response.data);
+            router.push('/');
+        } catch (err: unknown) {
+            console.error('Error during login:', err);
+        
+            let errorMessage = 'Login failed. Please try again.';
+        
+            if (axios.isAxiosError(err)) {
+                if (err.response) {
+                    console.error('Response error data:', err.response.data);
+                    errorMessage = err.response.data.message || 'Server responded with an error.';
+                } else if (err.request) {
+                    console.error('No response received:', err.request);
+                    errorMessage = 'No response received from the server. Please check your network connection.';
+                } else {
+                    console.error('Error message:', err.message);
+                    errorMessage = err.message;
+                }
+            } else if (err instanceof Error) {
+                console.error('Error message:', err.message);
+                errorMessage = err.message;
+            }
+        
+            setError(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <div className={containerClassName}>
+        <div className="container-classname"> {}
             <div className="flex flex-column align-items-center justify-content-center">
                 <div className="mb-5 w-6rem flex-shrink-0" />
                 <div
@@ -37,19 +87,41 @@ const LoginPage = () => {
 
                         <div>
                             <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
-                                Email
+                                Username
                             </label>
-                            <InputText id="email1" type="text" placeholder="Alamat Email" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
+                            <InputText
+                                id="email1"
+                                type="text"
+                                placeholder="Alamat Email atau Username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                className="w-full md:w-30rem mb-5"
+                                style={{ padding: '1rem' }}
+                            />
 
-                            <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
+                            <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
                                 Password
                             </label>
-                            <Password inputId="password1" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" toggleMask feedback={false} className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
+                            <Password
+                                inputId="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Password"
+                                toggleMask
+                                feedback={false}
+                                className="w-full mb-5"
+                                inputClassName="w-full p-3 md:w-30rem"
+                            />
 
                             <div className="flex align-items-center justify-content-between mb-1 gap-5">
-                                
+                                {error && <p className="text-red-500">{error}</p>}
                             </div>
-                            <Button label="Login" className="w-full p-3 text-xl" onClick={() => router.push('/')}></Button>
+                            <Button
+                                label={loading ? 'Loading...' : 'Login'}
+                                className="w-full p-3 text-xl"
+                                onClick={handleLogin}
+                                disabled={loading}
+                            />
                         </div>
                     </div>
                 </div>
