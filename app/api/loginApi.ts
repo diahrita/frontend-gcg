@@ -21,12 +21,12 @@ export const loginUser = async (username: string, password: string, router: any)
     }
 
     try {
-        const response = await axios.post('/api/login', { username, password });
+        const response = await axios.post('/api/authentication', { username, password });
 
-        // Check if the status code in the response is '200'
-        if (response.data.StatusCode === '200') {
-            // console.log('Login successful:', response.data);
-            
+        // Check if 'hash' is present and not empty
+        if (response.data.hash && response.data.hash.trim() !== '') {
+            console.log('Login successful:', response.data);
+
             toast.success('Login Sukses');
 
             // Store credentials in localStorage
