@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { NextRouter } from 'next/router'; // Import NextRouter dari next/router
+import { NextRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { getToken } from './token'; // Sesuaikan dengan path yang benar ke file token.ts
+import { getToken } from './token'; 
 
 export const loginUser = async (username: string, password: string, router: NextRouter) => {
     const loadingToastId = toast.loading('Proses login...');
@@ -41,7 +41,7 @@ export const loginUser = async (username: string, password: string, router: Next
                     }, 2000);
                 }
             } else {
-                toast.error('Hash tidak tersedia dalam respons.');
+                toast.error('Akun anda tidak terdaftar!');
             }
         } else {
             toast.error('Terjadi kesalahan jaringan!');
