@@ -12,9 +12,9 @@ export const metadata: Metadata = {
     viewport: { initialScale: 1, width: 'device-width' },
     openGraph: {
         type: 'website',
-        title: 'PrimeReact SAKAI-REACT',
+        title: 'SIMGO',
         url: 'https://sakai.primereact.org/',
-        description: 'The ultimate collection of design-agnostic, flexible and accessible React UI Components.',
+        description: 'Sistem Informasi Manajemen Good Corporate Governance',
         images: ['https://www.primefaces.org/static/social/sakai-react.png'],
         ttl: 604800
     },
