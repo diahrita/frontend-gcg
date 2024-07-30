@@ -33,7 +33,6 @@ const Klaim = () => {
             life: 3000
         });
     };
-    const [inputNumberValue, setInputNumberValue] = useState<number | null>(null);
 
     useEffect(() => {
         setDropdownItem(dropdownItems[0]);
@@ -43,25 +42,19 @@ const Klaim = () => {
         <div className="grid">
             <div className="col-12">
                 <div className="card">
-                    <h3>Form Klaim Kerusakan Barang</h3>
+                    <h4>Form Klaim Kerusakan Barang</h4>
                     <div className="p-fluid formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="firstname2">Kode Pelaporan</label>
                             <div className="p-inputgroup">
-                                <span className="p-inputgroup-addon">
-                                    <i className="pi pi-user"></i>
-                                </span>
-                                <InputText placeholder="Kode Pelaporan" />
+                                <InputText type="text" />
                             </div>
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="lastname2">Nama Barang</label>
                             <div className="p-inputgroup">
-                                <span className="p-inputgroup-addon">
-                                    <i className="pi pi-user"></i>
-                                </span>
-                                <InputText placeholder="Nama Barang" />
-                            </div>
+                                <InputText type="text" />
+                            </div>                       
                         </div>
                         <div className="field col-12">
                             <label htmlFor="firstname2">Upload Foto</label>
@@ -72,8 +65,8 @@ const Klaim = () => {
                             <InputTextarea id="address" rows={4} />
                         </div>
                         <div className="field col-12 md:col-6">
-                            <label htmlFor="city">Jumlah Kerusakan Barang</label>
-                            <InputNumber id="quantity" value={inputNumberValue} onValueChange={(e) => setInputNumberValue} />
+                            <label htmlFor="pnum" className="block mb-2">Jumlah Kerusakan Barang</label>
+                            <InputText id="pnum" keyfilter="pnum" className="w-full" />
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="state">Lokasi</label>
