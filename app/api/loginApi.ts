@@ -2,10 +2,8 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 export const loginUser = async (username: string, password: string, router: any) => {
-    // Show loading toast
     const loadingToastId = toast.loading('Proses login...');
 
-    // Basic validation
     if (!username && !password) {
         toast.error('Username dan password kosong');
         toast.dismiss(loadingToastId);
@@ -23,55 +21,48 @@ export const loginUser = async (username: string, password: string, router: any)
     try {
         const response = await axios.post('/api/authentication', { username, password });
 
-        // Check if 'hash' is present and not empty
-        if (response.data.hash && response.data.hash.trim() !== '') {
-            console.log('Login successful:', response.data);
+        // console.log('Response Data:', response.data);
 
-            toast.success('Login Sukses');
+        if (response.data.valid_mac && parseInt(response.data.valid_mac) > 0) {
+            // Login successful
+            toast.success('Login Sukses!');
 
             // Store credentials in localStorage
             localStorage.setItem('username', username);
-            localStorage.setItem('password', password); 
+            localStorage.setItem('password', password);
+
+            // Store hash in sessionStorage if available
+            if (response.data.hash && response.data.hash.trim() !== '') {
+                sessionStorage.setItem('hash', response.data.hash);
+
+                const storedHash = sessionStorage.getItem('hash');
+                console.log('Stored Hash:', storedHash);
+            }
 
             setTimeout(() => {
                 router.push('/');
-            }, 2000); 
+            }, 2000);
         } else {
-            console.error('Login failed:', response.data);
-            toast.error('Login gagal! Cek username dan password anda.');
+            // Handle invalid MAC case
+            toast.error('Terjadi kesalahan jaringan!');
         }
-    } catch (err: unknown) {
-        console.error('Error during login:', err);
 
-        let errorMessage = 'Login gagal! Cek username dan password anda.';
+    } catch (err: any) {
+        // console.error('Error during login:', err);
 
-        if (axios.isAxiosError(err)) {
-            if (err.response) {
-                console.error('Response error data:', err.response.data);
-                // Customize error messages based on response
-                if (err.response.data.message === 'Username tidak sesuai') {
-                    toast.error('Username tidak sesuai');
-                } else if (err.response.data.message === 'Password tidak sesuai') {
-                    toast.error('Password tidak sesuai');
-                } else if (err.response.data.message === 'Username dan password salah') {
-                    toast.error('Username dan password salah');
-                } else {
-                    toast.error('Terjadi kesalahan pada server');
-                }
-                errorMessage = err.response.data.message || 'Server responded with an error.';
-            } else if (err.request) {
-                console.error('No response received:', err.request);
-                toast.error('Tidak ada respons dari server. Periksa koneksi jaringan Anda.');
+        if (err.response) {
+            if (err.response.status === 503) {
+                toast.error('Server sedang dalam pemeliharaan. Silakan coba lagi nanti.');
+            } else if (err.response.data) {
+                console.error('Login failed:', err.response.data);
+                toast.error('Login gagal! Cek username dan password anda.');
             } else {
-                console.error('Error message:', err.message);
-                toast.error(err.message);
+                toast.error('Terjadi kesalahan saat login.');
             }
-        } else if (err instanceof Error) {
-            console.error('Error message:', err.message);
-            toast.error(err.message);
+        } else {
+            toast.error('Terjadi kesalahan saat login.');
         }
-
-        toast.error(errorMessage);
+        
     } finally {
         toast.dismiss(loadingToastId);
     }
