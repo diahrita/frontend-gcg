@@ -18,7 +18,7 @@ import { classNames } from 'primereact/utils';
 import React, { useEffect, useState } from 'react';
 import type { Demo } from '@/types';
 
-const KategoriPenilaian = () => {
+const TableDemo = () => {
     const [customers1, setCustomers1] = useState<Demo.Customer[]>([]);
     const [customers2, setCustomers2] = useState<Demo.Customer[]>([]);
     const [customers3, setCustomers3] = useState<Demo.Customer[]>([]);
@@ -62,7 +62,7 @@ const KategoriPenilaian = () => {
     const renderHeader1 = () => {
         return (
             <div className="flex justify-content-between">
-                <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined onClick={clearFilter1} />
+                {/* <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined onClick={clearFilter1} /> */}
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Keyword Search" />
@@ -352,7 +352,7 @@ const KategoriPenilaian = () => {
         return total;
     };
 
-    // const header1 = renderHeader1();
+    const header1 = renderHeader1();
 
     return (
         <div className="grid">
@@ -394,13 +394,13 @@ const KategoriPenilaian = () => {
                 </div>
             </div> */}
 
-            <div className="col-12">
+            {/* <div className="col-12">
                 <div className="card">
                     <h5>Frozen Columns</h5>
-                    {/* <ToggleButton checked={idFrozen} onChange={(e) => setIdFrozen(e.value)} onIcon="pi pi-lock" offIcon="pi pi-lock-open" onLabel="Unfreeze Id" offLabel="Freeze Id" style={{ width: '10rem' }} /> */}
+                    <ToggleButton checked={idFrozen} onChange={(e) => setIdFrozen(e.value)} onIcon="pi pi-lock" offIcon="pi pi-lock-open" onLabel="Unfreeze Id" offLabel="Freeze Id" style={{ width: '10rem' }} />
 
                     <DataTable value={customers2} scrollable scrollHeight="400px" loading={loading2} className="mt-3">
-                        {/* <Column field="name" header="Name" style={{ flexGrow: 1, flexBasis: '160px' }} frozen className="font-bold"></Column> */}
+                        <Column field="name" header="Name" style={{ flexGrow: 1, flexBasis: '160px' }} frozen className="font-bold"></Column>
                         <Column field="id" header="Id" style={{ flexGrow: 1, flexBasis: '100px' }} frozen={idFrozen} alignFrozen="left" bodyClassName={classNames({ 'font-bold': idFrozen })}></Column>
                         <Column field="country.name" header="Country" style={{ flexGrow: 1, flexBasis: '200px' }} body={countryBodyTemplate}></Column>
                         <Column field="date" header="Date" style={{ flexGrow: 1, flexBasis: '200px' }} body={dateBodyTemplate}></Column>
@@ -408,15 +408,15 @@ const KategoriPenilaian = () => {
                         <Column field="status" header="Status" style={{ flexGrow: 1, flexBasis: '200px' }} body={statusBodyTemplate}></Column>
                         <Column field="activity" header="Activity" style={{ flexGrow: 1, flexBasis: '200px' }}></Column>
                         <Column field="representative.name" header="Representative" style={{ flexGrow: 1, flexBasis: '200px' }} body={representativeBodyTemplate}></Column>
-                        {/* <Column field="balance" header="Balance" body={balanceTemplate} frozen style={{ flexGrow: 1, flexBasis: '120px' }} className="font-bold" alignFrozen="right"></Column> */}
+                        <Column field="balance" header="Balance" body={balanceTemplate} frozen style={{ flexGrow: 1, flexBasis: '120px' }} className="font-bold" alignFrozen="right"></Column>
                     </DataTable>
                 </div>
-            </div>
+            </div> */}
 
-            {/* <div className="col-12">
+            <div className="col-12">
                 <div className="card">
                     <h5>Row Expand</h5>
-                    <DataTable value={products} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll" rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header}>
+                    <DataTable value={products} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll" rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header1}>
                         <Column expander style={{ width: '3em' }} />
                         <Column field="name" header="Name" sortable />
                         <Column header="Image" body={imageBodyTemplate} />
@@ -425,7 +425,7 @@ const KategoriPenilaian = () => {
                         <Column field="inventoryStatus" header="Status" sortable body={statusBodyTemplate2} />
                     </DataTable>
                 </div>
-            </div> */}
+            </div>
 
             {/* <div className="col-12">
                 <div className="card">
@@ -455,4 +455,4 @@ const KategoriPenilaian = () => {
     );
 };
 
-export default KategoriPenilaian;
+export default TableDemo;

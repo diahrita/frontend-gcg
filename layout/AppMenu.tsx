@@ -15,7 +15,7 @@ const AppMenu = () => {
             label: 'Home',
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-                { label: 'Form Klaim', icon: 'pi pi-fw pi-file', to: '/uikit/klaim' },
+                { label: 'Form Klaim', icon: 'pi pi-fw pi-file', to: '/uikit/klaim' }
             ]
         },
         {
@@ -47,8 +47,8 @@ const AppMenu = () => {
                         }
                     ]
                 },
-                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open'},
-                { label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list'},
+                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' },
+                { label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list', to: '/uikit/kategori-penilaian' }
                 // { label: 'Survey', icon: 'pi pi-fw pi-clone', to: '/uikit/survey' },
                 // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
                 // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
@@ -64,8 +64,9 @@ const AppMenu = () => {
             label: 'Pengaturan',
             items: [
                 {
-                    label: 'Data User', icon: 'pi pi-fw pi-users',
-                },
+                    label: 'Data User',
+                    icon: 'pi pi-fw pi-users'
+                }
             ]
         },
         {
