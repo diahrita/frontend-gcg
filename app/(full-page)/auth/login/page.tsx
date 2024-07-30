@@ -10,6 +10,7 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import Link from 'next/link';
 
+
 const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [checked, setChecked] = useState(false);
@@ -40,7 +41,7 @@ const LoginPage = () => {
                             <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
                                 Email
                             </label>
-                            <InputText id="email1" type="text" placeholder="Alamat Email" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
+                            <InputText id="email" keyfilter="email" type="text" placeholder="Alamat Email" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
 
                             <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
                                 Password

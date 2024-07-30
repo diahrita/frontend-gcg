@@ -64,7 +64,7 @@ const AppMenu = () => {
             label: 'Pengaturan',
             items: [
                 {
-                    label: 'Data User', icon: 'pi pi-fw pi-users',
+                    label: 'Data User', icon: 'pi pi-fw pi-users', to: '/uikit/table',
                 },
             ]
         },

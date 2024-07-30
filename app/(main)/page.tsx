@@ -188,13 +188,13 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* <div className="col-12 xl:col-6">
+            <div className="col-12 xl:col-15">
                 <div className="card">
                     <h5>Sales Overview</h5>
                     <Chart type="line" data={lineData} options={lineOptions} />
                 </div>
 
-                <div className="card">
+                {/* <div className="card">
                     <div className="flex align-items-center justify-content-between mb-4">
                         <h5>Notifications</h5>
                         <div>
@@ -258,8 +258,8 @@ const Dashboard = () => {
                             </span>
                         </li>
                     </ul>
-                </div>
-            </div> */}
+                </div> */}
+            </div>
         </div>
     );
 };
