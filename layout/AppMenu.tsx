@@ -65,13 +65,9 @@ const AppMenu = () => {
             items: [
                 {
                     label: 'Data User',
-                    icon: 'pi pi-fw pi-users'
+                    icon: 'pi pi-fw pi-users',
+                    to: '/uikit/data-user'
                 }
-                // {
-                //     label: 'Data User',
-                //     icon: 'pi pi-fw pi-users',
-                //     to: '/uikit/table'
-                // }
             ]
         },
         {
