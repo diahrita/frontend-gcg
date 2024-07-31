@@ -15,7 +15,7 @@ import { Slider } from 'primereact/slider';
 import { ToggleButton } from 'primereact/togglebutton';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import type { Demo } from '@/types';
 
 const TableDemo = () => {
@@ -392,7 +392,7 @@ const TableDemo = () => {
                 </div>
             </div>
 
-            <div className="col-12">
+            {/* <div className="col-12">
                 <div className="card">
                     <h5>Data User</h5>
                     <DataTable
@@ -418,7 +418,7 @@ const TableDemo = () => {
                         <Column field="" header="Action" body={balanceTemplate} frozen style={{ flexGrow: 1, flexBasis: '120px' }} className="font-bold" alignFrozen="right"></Column>
                     </DataTable>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

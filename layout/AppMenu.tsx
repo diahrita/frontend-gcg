@@ -28,22 +28,22 @@ const AppMenu = () => {
                         {
                             label: 'Aspek I',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         },
                         {
                             label: 'Aspek II',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         },
                         {
                             label: 'Aspek III',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         },
                         {
                             label: 'Aspek IV',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         }
                     ]
                 },
@@ -66,7 +66,11 @@ const AppMenu = () => {
                 {
                     label: 'Data User',
                     icon: 'pi pi-fw pi-users',
+<<<<<<< HEAD
+                    to: '/uikit/survey',
+=======
                     to: '/uikit/data-user'
+>>>>>>> a2581e7cd934815c0d1d9e70cdbf336a4111a85c
                 }
             ]
         },

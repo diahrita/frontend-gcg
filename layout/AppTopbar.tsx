@@ -13,6 +13,7 @@ import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
+import { Inplace, InplaceDisplay, InplaceContent } from 'primereact/inplace';
 
 const megamenuItems = [
     {
@@ -61,6 +62,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             <Button label="Yes" icon="pi pi-check" onClick={() => setVisibleDialog(false)} autoFocus />
         </div>
     );
+    const [text, setText] = useState<string>('');
 
     return (
         <div className="layout-topbar">
@@ -112,7 +114,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                                 <InputText id="email" keyfilter="email" className="w-full" />
                             </div>
                             <Divider type="solid" />
-                            <div className="flex-auto mt-3 justify-between">
+                            {/* <div className="flex-auto mt-3 justify-between">
                                 <label htmlFor="password" className="font-bold block mb-1">
                                     Password
                                 </label>
@@ -121,8 +123,16 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                                     <Button label="Ubah Password" severity="secondary" outlined size="small" className="ml-auto" />
                                 </div>
                             </div>
-                            <Divider type="solid" />
-                            <div className="flex-auto mt-3 justify-between">
+                            <Divider type="solid" /> */}
+                                <Inplace closable>
+                                    <InplaceDisplay>{text || 'Ganti Password'}</InplaceDisplay>
+                                    <InplaceContent>
+                                        <InputText className="w-full mb-3" placeholder="Current Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
+                                        <InputText className="w-full mb-3" placeholder="New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
+                                        <InputText className="w-full mb-3" placeholder="Confirm New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
+                                    </InplaceContent>
+                                </Inplace>
+                            {/* <div className="flex-auto mt-3 justify-between">
                                 <label htmlFor="password" className="font-bold block mb-1">
                                     Hapus Akun
                                 </label>
@@ -130,7 +140,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                                     <p className="m-0">Hapus permanen akun Anda.</p>
                                     <Button label="Hapus Akun" severity="secondary" outlined size="small" className="ml-auto" />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </Dialog>
                 </Sidebar>
