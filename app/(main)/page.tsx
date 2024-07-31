@@ -1,13 +1,13 @@
 'use client';
 import useAuth from '@/app/api/hooks/useAuth';
+import Loading from '@/app/components/Loading';
 import { Demo } from '@/types';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartOptions } from 'chart.js';
 import { useRouter } from 'next/navigation';
 import { Menu } from 'primereact/menu';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../demo/service/ProductService';
 import { LayoutContext } from '../../layout/context/layoutcontext';
-import Link from 'next/link';
 
 
 const Dashboard = () => {
@@ -108,12 +108,13 @@ const Dashboard = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     if (!isAuthenticated) {
-        return <div>Please log in to access this content.</div>;
+        return <Loading />;
     }
+    
 
     return (
         <div className="grid">

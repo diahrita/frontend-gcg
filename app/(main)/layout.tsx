@@ -3,6 +3,8 @@ import useAuth from '@/app/api/hooks/useAuth';
 import { Metadata } from 'next';
 import Layout from '../../layout/layout';
 import { useRouter } from 'next/navigation';
+import Loading from '@/app/components/Loading';
+
 interface AppLayoutProps {
     children: React.ReactNode;
 }
@@ -28,12 +30,13 @@ export const metadata: Metadata = {
 export default function AppLayout({ children }: AppLayoutProps) {
     const { loading, isAuthenticated } = useAuth();
     const router = useRouter();
+
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     if (!isAuthenticated) {
-        return <div>Please log in to access this content.</div>;
+        return <Loading />;
     }
     
     return <Layout>{children}</Layout>;
