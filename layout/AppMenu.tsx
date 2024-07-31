@@ -47,8 +47,8 @@ const AppMenu = () => {
                         }
                     ]
                 },
-                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' },
-                { label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list', to: '/uikit/kategori-penilaian' }
+                { label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list', to: '/uikit/kategori-penilaian' },
+                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' }
                 // { label: 'Survey', icon: 'pi pi-fw pi-clone', to: '/uikit/survey' },
                 // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
                 // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
