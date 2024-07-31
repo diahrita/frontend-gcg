@@ -211,9 +211,7 @@ export const LayoutProvider = (props) => {
                         </p>
 
                         <h5>PrimeReact Theme</h5>
-                        <p>
-                            Sakai theming is based on the PrimeReact theme being used.
-                        </p>
+                        <p>Sakai theming is based on the PrimeReact theme being used.</p>
 
                         <h5>SASS Variables</h5>
                         <p>
