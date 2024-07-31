@@ -28,27 +28,27 @@ const AppMenu = () => {
                         {
                             label: 'Aspek I',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         },
                         {
                             label: 'Aspek II',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         },
                         {
                             label: 'Aspek III',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         },
                         {
                             label: 'Aspek IV',
                             icon: 'pi pi-fw pi-file',
-                            to: '/uikit/survey'
+                            to: '/uikit/table'
                         }
                     ]
                 },
-                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' },
-                { label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list', to: '/uikit/kategori-penilaian' }
+                { label: 'Kategori Penilaian', icon: 'pi pi-fw pi-list', to: '/uikit/kategori-penilaian' },
+                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' }
                 // { label: 'Survey', icon: 'pi pi-fw pi-clone', to: '/uikit/survey' },
                 // { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
                 // { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
@@ -65,7 +65,8 @@ const AppMenu = () => {
             items: [
                 {
                     label: 'Data User',
-                    icon: 'pi pi-fw pi-users'
+                    icon: 'pi pi-fw pi-users',
+                    to: '/uikit/survey',
                 }
                 // {
                 //     label: 'Data User',
