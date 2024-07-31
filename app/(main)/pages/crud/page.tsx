@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { Demo } from '@/types';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -14,7 +15,6 @@ import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
-import { Demo } from '@/types';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
 const Crud = () => {
@@ -211,29 +211,12 @@ const Crud = () => {
         );
     };
 
-    const codeBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Code</span>
-                {rowData.code}
-            </>
-        );
-    };
 
     const nameBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
                 <span className="p-column-title">Name</span>
                 {rowData.name}
-            </>
-        );
-    };
-
-    const imageBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Image</span>
-                <img src={`/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
             </>
         );
     };
@@ -328,13 +311,18 @@ const Crud = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="code" header="Kode" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="name" header="Nama Barang" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column header="Foto" body={imageBodyTemplate}></Column>
-                        <Column field="price" header="Lokasi" body={priceBodyTemplate} sortable></Column>
-                        <Column field="category" header="Kategori" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        
+                        <Column  header="Kode" sortable  headerStyle={{ minWidth: '15rem' }}></Column>
+
+                        <Column  header="Nama Barang" sortable  headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column header="Foto" ></Column>
+                        <Column field="price" header="Lokasi" sortable></Column>
+                        <Column field="category" header="Kategori" sortable headerStyle={{ minWidth: '10rem' }}></Column>
+
+                        <Column field="inventoryStatus" header="Status"  sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                        
+                        <Column  headerStyle={{ minWidth: '10rem' }}></Column>
+                        
                     </DataTable>
 
                     <Dialog visible={productDialog} style={{ width: '450px' }} header="Detail Laporan" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>

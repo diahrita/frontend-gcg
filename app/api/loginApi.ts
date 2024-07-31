@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { NextRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { getToken } from './token'; 
+import { getToken } from './token/jwtToken'; 
 
 export const loginUser = async (username: string, password: string, router: NextRouter) => {
     const loadingToastId = toast.loading('Proses login...');
@@ -35,6 +35,7 @@ export const loginUser = async (username: string, password: string, router: Next
                 // Mendapatkan token setelah login berhasil
                 const token = await getToken(username);
 
+                
                 if (token) {
                     setTimeout(() => {
                         router.push('/');

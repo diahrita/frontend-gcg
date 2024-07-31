@@ -7,6 +7,7 @@ import { Menu } from 'primereact/menu';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../demo/service/ProductService';
 import { LayoutContext } from '../../layout/context/layoutcontext';
+import useAuth from '@/app/api/hooks/useAuth';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -35,13 +36,7 @@ const Dashboard = () => {
 
     const router = useRouter();
 
-    // useEffect(() => {
-    //     const authStatus = localStorage.getItem('authStatus');
-
-    //     if (authStatus !== 'loggedIn') {
-    //         router.push('/auth/login'); // Arahkan ke halaman login jika tidak terautentikasi
-    //     }
-    // }, [router]);
+    useAuth();
 
 
     const [products, setProducts] = useState<Demo.Product[]>([]);
