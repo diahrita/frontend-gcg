@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Demo } from '@/types';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -11,13 +10,14 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
-import { Toolbar } from 'primereact/toolbar';
+// import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
+import { Demo } from '@/types';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
-const Crud = () => {
+const BankSoal = () => {
     let emptyProduct: Demo.Product = {
         id: '',
         name: '',
@@ -148,13 +148,13 @@ const Crud = () => {
         return id;
     };
 
-    const exportCSV = () => {
-        dt.current?.exportCSV();
-    };
+    // const exportCSV = () => {
+    //     dt.current?.exportCSV();
+    // };
 
-    const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
-    };
+    // const confirmDeleteSelected = () => {
+    //     setDeleteProductsDialog(true);
+    // };
 
     const deleteSelectedProducts = () => {
         let _products = (products as any)?.filter((val: any) => !(selectedProducts as any)?.includes(val));
@@ -191,32 +191,49 @@ const Crud = () => {
         setProduct(_product);
     };
 
-    const leftToolbarTemplate = () => {
+    // const leftToolbarTemplate = () => {
+    //     return (
+    //         <React.Fragment>
+    //             <div className="my-2">
+    //                 <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+    //                 <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !(selectedProducts as any).length} />
+    //             </div>
+    //         </React.Fragment>
+    //     );
+    // };
+
+    // const rightToolbarTemplate = () => {
+    //     return (
+    //         <React.Fragment>
+    //             <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
+    //             <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
+    //         </React.Fragment>
+    //     );
+    // };
+
+    const codeBodyTemplate = (rowData: Demo.Product) => {
         return (
-            <React.Fragment>
-                <div className="my-2">
-                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !(selectedProducts as any).length} />
-                </div>
-            </React.Fragment>
+            <>
+                <span className="p-column-title">Code</span>
+                {rowData.code}
+            </>
         );
     };
-
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-            </React.Fragment>
-        );
-    };
-
 
     const nameBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
                 <span className="p-column-title">Name</span>
                 {rowData.name}
+            </>
+        );
+    };
+
+    const imageBodyTemplate = (rowData: Demo.Product) => {
+        return (
+            <>
+                <span className="p-column-title">Image</span>
+                <img src={`/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
             </>
         );
     };
@@ -230,23 +247,23 @@ const Crud = () => {
         );
     };
 
-    const categoryBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </>
-        );
-    };
+    // const categoryBodyTemplate = (rowData: Demo.Product) => {
+    //     return (
+    //         <>
+    //             <span className="p-column-title">Category</span>
+    //             {rowData.category}
+    //         </>
+    //     );
+    // };
 
-    const statusBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Status</span>
-                <span className={`product-badge status-${rowData.inventoryStatus?.toLowerCase()}`}>{rowData.inventoryStatus}</span>
-            </>
-        );
-    };
+    // const statusBodyTemplate = (rowData: Demo.Product) => {
+    //     return (
+    //         <>
+    //             <span className="p-column-title">Status</span>
+    //             <span className={`product-badge status-${rowData.inventoryStatus?.toLowerCase()}`}>{rowData.inventoryStatus}</span>
+    //         </>
+    //     );
+    // };
 
     const actionBodyTemplate = (rowData: Demo.Product) => {
         return (
@@ -291,7 +308,7 @@ const Crud = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    {/* <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar> */}
 
                     <DataTable
                         ref={dt}
@@ -301,7 +318,7 @@ const Crud = () => {
                         dataKey="id"
                         paginator
                         rows={10}
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[10, 25, 50, 100]}
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
@@ -310,48 +327,49 @@ const Crud = () => {
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
+                        {/* <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column> */}
                         <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="code" header="Partner Path Name" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="name" header="Short Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Foto" body={imageBodyTemplate}></Column>
                         <Column field="price" header="Email" body={priceBodyTemplate} sortable></Column>
                         <Column field="name" header="Phone" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="category" header="Kategori" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                        {/* <Column field="category" header="Kategori" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
+                        {/* <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column> */}
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
+                    {/* pesan edit */}
                     <Dialog visible={productDialog} style={{ width: '450px' }} header="Detail Laporan" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         {product.image && <img src={`/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
                         <div className="formgrid grid">
                             <div className="field col">
-                            <label htmlFor="name">Partner Path Name</label>
-                            <InputText
-                                id="name"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'name')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                                <label htmlFor="name">Partner Path Name</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                             </div>
                             <div className="field col">
-                            <label htmlFor="name">Code Ref</label>
-                            <InputText
-                                id="name"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'name')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                                <label htmlFor="name">Code Ref</label>
+                                <InputText
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
+                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                             </div>
                         </div>
                         <div className="formgrid grid">
@@ -384,25 +402,25 @@ const Crud = () => {
                                 {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                             </div>
                         </div>
-                        
+
                         <div className="field">
                             <label htmlFor="description">Description</label>
                             <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                         </div>
 
                         <div className="field">
-                                <label htmlFor="name">Title</label>
-                                <InputText
-                                    id="name"
-                                    value={product.name}
-                                    onChange={(e) => onInputChange(e, 'name')}
-                                    required
-                                    autoFocus
-                                    className={classNames({
-                                        'p-invalid': submitted && !product.name
-                                    })}
-                                />
-                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            <label htmlFor="name">Title</label>
+                            <InputText
+                                id="name"
+                                value={product.name}
+                                onChange={(e) => onInputChange(e, 'name')}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !product.name
+                                })}
+                            />
+                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                         </div>
 
                         <div className="formgrid grid">
@@ -466,7 +484,7 @@ const Crud = () => {
                                 {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                             </div>
                         </div>
-                        
+
                         <div className="field">
                             <label htmlFor="description">Address</label>
                             <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
@@ -503,7 +521,7 @@ const Crud = () => {
                             </div>
                         </div>
 
-                        {/* <div className="field">
+                        <div className="field">
                             <label className="mb-3">Kategori</label>
                             <div className="formgrid grid">
                                 <div className="field-radiobutton col-6">
@@ -529,23 +547,24 @@ const Crud = () => {
                             <div className="field col">
                                 <label htmlFor="price">Lokasi</label>
                                 <InputText
-                                id="name"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'name')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
+                                    id="name"
+                                    value={product.name}
+                                    onChange={(e) => onInputChange(e, 'name')}
+                                    required
+                                    autoFocus
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.name
+                                    })}
+                                />
                             </div>
                             <div className="field col">
                                 <label htmlFor="quantity">Jumlah Kerusakan Barang</label>
                                 <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} />
                             </div>
-                        </div> */}
+                        </div>
                     </Dialog>
 
+                    {/* Pesan button sampah */}
                     <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
@@ -557,16 +576,16 @@ const Crud = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                    {/* <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {product && <span>Are you sure you want to delete the selected products?</span>}
                         </div>
-                    </Dialog>
+                    </Dialog> */}
                 </div>
             </div>
         </div>
     );
 };
 
-export default Crud;
+export default BankSoal;
