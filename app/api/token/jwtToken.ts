@@ -12,10 +12,8 @@ export const getToken = async (username: string) => {
     try {
         const response = await axios.post('/api/token', { username, hash });
 
-        // Simpan token yang diterima di sessionStorage
         sessionStorage.setItem('token', response.data.token);
 
-        // Cek token yang tersimpan di sessionStorage
         const storedToken = sessionStorage.getItem('token');
         console.log('Stored Token:', storedToken);
 

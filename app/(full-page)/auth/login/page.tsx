@@ -22,7 +22,6 @@ const LoginPage = ({ googleData }: Props) => {
     const [passwordError, setPasswordError] = useState('');
     const { layoutConfig } = useContext(LayoutContext);
     
-   
 
     useEffect(() => {
         const token = sessionStorage.getItem('token');
@@ -60,7 +59,6 @@ const LoginPage = ({ googleData }: Props) => {
 
         try {
             const token = await loginUser(username, password, router);
-
             // Simpan token dan waktu kedaluwarsa (6 jam)
             const expirationTime = Date.now() + 6 * 60 * 60 * 1000; // 6 jam dalam milidetik
             sessionStorage.setItem('token', token);

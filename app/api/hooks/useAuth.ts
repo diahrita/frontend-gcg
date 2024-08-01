@@ -13,11 +13,10 @@ const useAuth = () => {
             const token = sessionStorage.getItem('token');
             if (token) {
                 setIsAuthenticated(true);
-                // Redirect to home if already authenticated
-                router.push('/'); // Redirect ke halaman utama jika sudah login
+                router.push('/'); 
             } else {
                 setIsAuthenticated(false);
-                router.push('/auth/login'); // Redirect ke login jika belum login
+                router.push('/auth/login');
             }
             setLoading(false);
         };

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(req: NextRequest) {
     const token = req.cookies.get('token'); 
     const loginUrl = new URL('/auth/login', req.url);
-    const homeUrl = new URL('/', req.url); // Halaman utama
+    const homeUrl = new URL('/', req.url);
 
     // Redirect jika tidak ada token dan bukan ke halaman login
     if (!token && !loginUrl.pathname.includes('/auth/login')) {

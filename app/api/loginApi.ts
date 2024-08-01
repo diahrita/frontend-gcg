@@ -3,7 +3,6 @@ import { NextRouter } from 'next/router';
 import { getToken } from './token/jwtToken';
 
 export const loginUser = async (username: string, password: string, router: NextRouter): Promise<string> => {
-    // Validasi input username dan password
     if (!username || !password) {
         throw new Error('Username atau password tidak boleh kosong');
     }
@@ -18,7 +17,7 @@ export const loginUser = async (username: string, password: string, router: Next
             if (response.data.hash && response.data.hash.trim() !== '') {
                 sessionStorage.setItem('hash', response.data.hash);
                 const storedHash = sessionStorage.getItem('hash');
-                console.log('Stored Hash:', storedHash);
+                // console.log('Stored Hash:', storedHash);
 
                 // Mendapatkan token setelah login berhasil
                 const token = await getToken(username);
