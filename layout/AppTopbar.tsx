@@ -27,7 +27,7 @@ const megamenuItems = [
                 }
             ]
         ]
-    },
+    }
 ];
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
@@ -79,12 +79,6 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                <div className="flex gap-3">
-                    <span className="p-input-icon-left">
-                        <i className="pi pi-search" />
-                        <InputText value={searchValue} onChange={(e) => setSearchValue(e.target.value)} placeholder="Search" />
-                    </span>
-                </div>
                 <div className="mx-2"></div>
                 <div className="flex gap-2 justify-content-center">
                     <Button icon="pi pi-user" onClick={() => setVisibleRight(true)} />
@@ -99,11 +93,10 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                         <p className="mt-1">admin@gmail.com</p>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', marginTop: '12px' }}>
-                        <Button style={{ width: '100px', height: '40px', marginBottom: '4px' }} label='Edit' icon="pi pi-user-edit" severity="info" aria-label="User" onClick={() => setVisibleDialog(true)} />
+                        <Button style={{ width: '100px', height: '40px', marginBottom: '4px' }} label="Edit" icon="pi pi-user-edit" severity="info" aria-label="User" onClick={() => setVisibleDialog(true)} />
                         <Toast ref={toast} />
-                        <ConfirmDialog visible={visibleConfirmDialog} onHide={() => setVisibleConfirmDialog(false)} message="Anda yakin ingin logout?" 
-                            header="Logout" icon="pi pi-sign-out" accept={accept} reject={reject} />
-                        <Button style={{ width: '100px', height: '40px', marginTop: '4px' }} onClick={() => setVisibleConfirmDialog(true)} icon="pi pi-check" label="Logout" severity="danger"/>
+                        <ConfirmDialog visible={visibleConfirmDialog} onHide={() => setVisibleConfirmDialog(false)} message="Anda yakin ingin logout?" header="Logout" icon="pi pi-sign-out" accept={accept} reject={reject} />
+                        <Button style={{ width: '100px', height: '40px', marginTop: '4px' }} onClick={() => setVisibleConfirmDialog(true)} icon="pi pi-check" label="Logout" severity="danger" />
                     </div>
                     <Dialog header="Edit Profile" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={footerContent}>
                         <div className="card">
@@ -114,33 +107,14 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                                 <InputText id="email" keyfilter="email" className="w-full" />
                             </div>
                             <Divider type="solid" />
-                            {/* <div className="flex-auto mt-3 justify-between">
-                                <label htmlFor="password" className="font-bold block mb-1">
-                                    Password
-                                </label>
-                                <div className="flex items-center justify-between">
-                                    <p className="m-0">Ubah Password.</p>
-                                    <Button label="Ubah Password" severity="secondary" outlined size="small" className="ml-auto" />
-                                </div>
-                            </div>
-                            <Divider type="solid" /> */}
-                                <Inplace closable>
-                                    <InplaceDisplay>{text || 'Ganti Password'}</InplaceDisplay>
-                                    <InplaceContent>
-                                        <InputText className="w-full mb-3" placeholder="Current Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
-                                        <InputText className="w-full mb-3" placeholder="New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
-                                        <InputText className="w-full mb-3" placeholder="Confirm New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
-                                    </InplaceContent>
-                                </Inplace>
-                            {/* <div className="flex-auto mt-3 justify-between">
-                                <label htmlFor="password" className="font-bold block mb-1">
-                                    Hapus Akun
-                                </label>
-                                <div className="flex items-center justify-between">
-                                    <p className="m-0">Hapus permanen akun Anda.</p>
-                                    <Button label="Hapus Akun" severity="secondary" outlined size="small" className="ml-auto" />
-                                </div>
-                            </div> */}
+                            <Inplace closable>
+                                <InplaceDisplay>{text || 'Ganti Password'}</InplaceDisplay>
+                                <InplaceContent>
+                                    <InputText className="w-full mb-3" placeholder="Current Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
+                                    <InputText className="w-full mb-3" placeholder="New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
+                                    <InputText className="w-full mb-3" placeholder="Confirm New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
+                                </InplaceContent>
+                            </Inplace>
                         </div>
                     </Dialog>
                 </Sidebar>
