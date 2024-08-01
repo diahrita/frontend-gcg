@@ -1,6 +1,6 @@
 'use client';
 import useAuth from '@/app/api/hooks/useAuth';
-import { fetchBusinessPartnerData } from '@/app/api/pathner/partnerData';
+import { fetchBusinessPartnerData } from '@/app/api/partner/partnerData';
 import Loading from '@/app/components/Loading';
 import { Demo } from '@/types';
 import { ChartOptions } from 'chart.js';
