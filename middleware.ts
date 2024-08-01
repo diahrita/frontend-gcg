@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
-    
     const token = req.cookies.get('token'); 
     const loginUrl = new URL('/auth/login', req.url);
+    const homeUrl = new URL('/', req.url); // Halaman utama
 
+    // Redirect jika tidak ada token dan bukan ke halaman login
     if (!token && !loginUrl.pathname.includes('/auth/login')) {
         return NextResponse.redirect(loginUrl);
+    }
+
+    // Redirect jika sudah login dan mencoba mengakses halaman login
+    if (token && loginUrl.pathname.includes('/auth/login')) {
+        return NextResponse.redirect(homeUrl);
     }
 
     // CORS headers

@@ -6,55 +6,83 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { useContext, useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
+import './styles.css';
 
 interface Props {
     googleData: any;
 }
 
 const LoginPage = ({ googleData }: Props) => {
+    const router = useRouter();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const { layoutConfig } = useContext(LayoutContext);
-    const router = useRouter();
+    
+   
 
-    // Load saved credentials from localStorage
     useEffect(() => {
-        const savedUsername = localStorage.getItem('username');
-        const savedPassword = localStorage.getItem('password');
-        if (savedUsername) {
-            setUsername(savedUsername);
+        const token = sessionStorage.getItem('token');
+        const expirationTime = sessionStorage.getItem('expirationTime');
+
+        if (token && expirationTime) {
+            const isExpired = Date.now() > parseInt(expirationTime);
+            if (!isExpired) {
+                router.push('/');
+            } else {
+                // Jika token expired, hapus dari sessionStorage
+                sessionStorage.removeItem('token');
+                sessionStorage.removeItem('expirationTime');
+            }
         }
-        if (savedPassword) {
-            setPassword(savedPassword);
-        }
-    }, []);
+    }, [router]);
 
     const handleLogin = async () => {
         setLoading(true);
         setError('');
+        setUsernameError('');
+        setPasswordError('');
+
+        if (!username) {
+            setUsernameError('Username belum diisi');
+            setLoading(false);
+            return;
+        }
+
+        if (!password) {
+            setPasswordError('Password belum diisi');
+            setLoading(false);
+            return;
+        }
+
         try {
-            await loginUser(username, password, router); 
+            const token = await loginUser(username, password, router);
+
+            // Simpan token dan waktu kedaluwarsa (6 jam)
+            const expirationTime = Date.now() + 6 * 60 * 60 * 1000; // 6 jam dalam milidetik
+            sessionStorage.setItem('token', token);
+            sessionStorage.setItem('expirationTime', expirationTime.toString());
         } catch (err) {
-            setError('Terjadi kesalahan. Silakan coba lagi.');
+            setError('Login gagal. Silakan periksa username dan password Anda.');
         } finally {
             setLoading(false);
         }
     };
 
-    // Handle changes to username with validation
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value.slice(0, 20); 
-        setUsername(input);
+        setUsername(e.target.value.slice(0, 20));
+        setUsernameError('');
     };
 
-    // Handle changes to password with validation //Cross-Site Scripting
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const input = e.target.value.slice(0, 20);
-        setPassword(input);
+        setPassword(e.target.value.slice(0, 20));
+        setPasswordError('');
     };
+
+
 
     return (
         <div className="container-classname">
@@ -75,17 +103,22 @@ const LoginPage = ({ googleData }: Props) => {
                         </div>
 
                         <div>
+                            <div className="flex align-items-center justify-content-between mb-1 gap-5">
+                                {error && <p className="text-red-500">{error}</p>} 
+                            </div>
+
                             <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
                                 Username
                             </label>
                             <InputText
                                 id="username"
                                 type="text"
-                                placeholder="Alamat Email atau Username"
+                                placeholder={usernameError || "Alamat Email atau Username"}
                                 value={username}
                                 onChange={handleUsernameChange}
-                                className="w-full md:w-30rem mb-5"
+                                className={`w-full md:w-30rem mb-5 ${usernameError ? 'border-red-500 input-error' : ''}`}
                                 style={{ padding: '1rem' }}
+                                disabled={loading}
                             />
 
                             <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
@@ -95,16 +128,15 @@ const LoginPage = ({ googleData }: Props) => {
                                 inputId="password"
                                 value={password}
                                 onChange={handlePasswordChange}
-                                placeholder="Password"
+                                placeholder={passwordError || "Password"}
                                 toggleMask
                                 feedback={false}
-                                className="w-full mb-5"
-                                inputClassName="w-full p-3 md:w-30rem"
+                                className={`w-full mb-5 ${passwordError ? 'border-red-500 input-error' : ''}`}
+                                inputClassName={`w-full p-3 md:w-30rem ${passwordError ? 'border-red-500 input-error' : ''}`}
+                                disabled={loading}
                             />
 
-                            <div className="flex align-items-center justify-content-between mb-1 gap-5">
-                                {error && <p className="text-red-500">{error}</p>}
-                            </div>
+                            <div className="flex align-items-center justify-content-between mb-1 gap-5" />
                             <Button
                                 label={loading ? 'Loading...' : 'Login'}
                                 className="w-full p-3 text-xl"
@@ -116,7 +148,6 @@ const LoginPage = ({ googleData }: Props) => {
                 </div>
                 <div className="mb-5 w-6rem flex-shrink-0" />
             </div>
-            <Toaster position="top-right" />
         </div>
     );
 };
