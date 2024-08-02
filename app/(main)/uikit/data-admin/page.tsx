@@ -46,6 +46,12 @@ const DataAdmin = () => {
         partner.tax_no !== "-"
     ) || [];
 
+    
+    const dataWithDisplayId = filteredData.map((partner, index) => ({
+        ...partner,
+        id : index + 1 
+    }));
+
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
@@ -68,7 +74,16 @@ const DataAdmin = () => {
         return (
             <>
                 <span className="p-column-title">Name</span>
-                {partner.contact_ref || 'No Contact Ref'}
+                {partner.contact_ref || 'No Name Ref'}
+            </>
+        );
+    };
+
+    const contactBodyTemplate = (partner: DataPartner) => {
+        return (
+            <>
+                <span className="p-column-title">Contact</span>
+                {partner.phone || 'No Contact Ref'}
             </>
         );
     };
@@ -102,7 +117,7 @@ const DataAdmin = () => {
             <div className="col-12">
                 <div className="card">
                     <DataTable
-                        value={filteredData}
+                        value={dataWithDisplayId}
                         dataKey="id"
                         paginator
                         rows={5}
@@ -114,8 +129,9 @@ const DataAdmin = () => {
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="displayId" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="contact_ref" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
@@ -126,3 +142,4 @@ const DataAdmin = () => {
 };
 
 export default DataAdmin;
+
