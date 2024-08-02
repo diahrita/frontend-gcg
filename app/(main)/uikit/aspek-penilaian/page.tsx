@@ -9,6 +9,7 @@ import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
+import { Rating } from 'primereact/rating';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
@@ -17,22 +18,18 @@ import { ProductService } from '../../../../demo/service/ProductService';
 import { Demo } from '@/types';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
-const AspekPenilaian = () => {
+const Crud = () => {
     let emptyProduct: Demo.Product = {
         id: '',
         name: '',
-        image: '',
-        description: '',
-        category: '',
-        price: 0,
-        quantity: 0,
-        inventoryStatus: 'PENDING'
+        email: '',
+        description: ''
     };
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    // const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
+    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
@@ -64,6 +61,10 @@ const AspekPenilaian = () => {
 
     const hideDeleteProductDialog = () => {
         setDeleteProductDialog(false);
+    };
+
+    const hideDeleteProductsDialog = () => {
+        setDeleteProductsDialog(false);
     };
 
     const saveProduct = () => {
@@ -144,14 +145,8 @@ const AspekPenilaian = () => {
         return id;
     };
 
-    const exportCSV = () => {
-        dt.current?.exportCSV();
-    };
-
-    const onCategoryChange = (e: RadioButtonChangeEvent) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
+    const confirmDeleteSelected = () => {
+        setDeleteProductsDialog(true);
     };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
@@ -160,24 +155,6 @@ const AspekPenilaian = () => {
         _product[`${name}`] = val;
 
         setProduct(_product);
-    };
-
-    const onInputNumberChange = (e: InputNumberValueChangeEvent, name: string) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
-    };
-
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-            </React.Fragment>
-        );
     };
 
     const codeBodyTemplate = (rowData: Demo.Product) => {
@@ -198,29 +175,11 @@ const AspekPenilaian = () => {
         );
     };
 
-    const imageBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Image</span>
-                <img src={`/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
-            </>
-        );
-    };
-
-    const statusBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Status</span>
-                <span className={`product-badge status-${rowData.inventoryStatus?.toLowerCase()}`}>{rowData.inventoryStatus}</span>
-            </>
-        );
-    };
-
     const actionBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" onClick={() => editProduct(rowData)} />
-                {/* <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteProduct(rowData)} /> */}
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editProduct(rowData)} />
+                <Button icon="pi pi-trash" rounded severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
             </>
         );
     };
@@ -228,10 +187,13 @@ const AspekPenilaian = () => {
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Aspek Penilaian</h5>
-            <span className="block mt-2 md:mt-0 p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span>
+            <div className="flex">
+                <span className="block mt-2 md:mt-0 p-input-icon-left mr-3">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                </span>
+                <Button label="New" icon="pi pi-plus" severity="secondary" />
+            </div>
         </div>
     );
 
@@ -253,7 +215,6 @@ const AspekPenilaian = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -263,7 +224,7 @@ const AspekPenilaian = () => {
                         dataKey="id"
                         paginator
                         rows={10}
-                        rowsPerPageOptions={[10, 25, 50, 100]}
+                        rowsPerPageOptions={[5, 10, 25]}
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
@@ -272,32 +233,16 @@ const AspekPenilaian = () => {
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        <Column field="aspek" header="Aspek" body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="deskripsi" header="Deskripsi" body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="bobot" header="Bobot" body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="code" header="No" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="name" header="Aspek Penilaian" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="name" header="Deskripsi" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '30rem' }}></Column>
+                        <Column field="name" header="Bobot" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Detail Laporan" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="name">Aspek</label>
-                                <InputText
-                                    id="code"
-                                    value={product.code}
-                                    onChange={(e) => onInputChange(e, 'code')}
-                                    required
-                                    autoFocus
-                                    className={classNames({
-                                        'p-invalid': submitted && !product.name
-                                    })}
-                                />
-                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                            </div>
-                        </div>
-
+                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Deskripsi</label>
+                            <label htmlFor="name">Aspek Penilaian</label>
                             <InputText
                                 id="name"
                                 value={product.name}
@@ -308,22 +253,26 @@ const AspekPenilaian = () => {
                                     'p-invalid': submitted && !product.name
                                 })}
                             />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            {submitted && !product.name && <small className="p-invalid">Apek is required.</small>}
                         </div>
-
                         <div className="field">
-                            <label htmlFor="name">Bobot</label>
-                            <InputText
-                                id="name"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'name')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            <label htmlFor="description">Deskripsi</label>
+                            <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="description">Bobot</label>
+                            <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} />
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                        <div className="flex align-items-center justify-content-center">
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            {product && (
+                                <span>
+                                    Are you sure you want to delete <b>{product.name}</b>?
+                                </span>
+                            )}
                         </div>
                     </Dialog>
                 </div>
@@ -332,4 +281,4 @@ const AspekPenilaian = () => {
     );
 };
 
-export default AspekPenilaian;
+export default Crud;

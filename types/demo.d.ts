@@ -122,7 +122,6 @@ declare namespace Demo {
         id?: string;
         code?: string;
         name: string;
-        email: string;
         description: string;
         image?: string;
         price?: number;
@@ -131,6 +130,7 @@ declare namespace Demo {
         inventoryStatus?: InventoryStatus;
         orders?: ProductOrder[];
         [key: string]: string | string[] | number | boolean | undefined | ProductOrder[] | InventoryStatus;
+        email: string;
     };
 
     type ProductOrder = {

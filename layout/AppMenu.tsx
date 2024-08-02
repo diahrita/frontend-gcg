@@ -19,7 +19,7 @@ const AppMenu = () => {
             ]
         },
         {
-            label: 'Asissment',
+            label: 'Assessment',
             items: [
                 {
                     label: 'Penilaian',
@@ -49,46 +49,29 @@ const AppMenu = () => {
                     to: '/uikit/data-admin'
                 }
             ]
-        },
-        {
-            label: 'Pages',
-            icon: 'pi pi-fw pi-briefcase',
-            to: '/pages',
-            items: [
-                {
-                    label: 'Login',
-                    icon: 'pi pi-fw pi-sign-in',
-                    to: '/auth/login'
-                },
-                {
-                    label: 'Register',
-                    icon: 'pi pi-fw pi-sign-in',
-                    to: '/auth/register'
-                },
-                {
-                    label: 'Icons',
-                    icon: 'pi pi-fw pi-prime',
-                    to: '/utilities/icons'
-                }
-                // {
-                //     label: 'Error',
-                //     icon: 'pi pi-fw pi-times-circle',
-                //     to: '/auth/error'
-                // },
-                // {
-                //     label: 'Access Denied',
-                //     icon: 'pi pi-fw pi-lock',
-                //     to: '/auth/access'
-                // }
-                //     ]
-                // },
-                // {
-                //     label: 'Crud',
-                //     icon: 'pi pi-fw pi-pencil',
-                //     to: '/pages/crud'
-                // }
-            ]
         }
+        // {
+        //     label: 'Pages',
+        //     icon: 'pi pi-fw pi-briefcase',
+        //     to: '/pages',
+        //     items: [
+        //         {
+        //             label: 'Login',
+        //             icon: 'pi pi-fw pi-sign-in',
+        //             to: '/auth/login'
+        //         },
+        //         {
+        //             label: 'Register',
+        //             icon: 'pi pi-fw pi-sign-in',
+        //             to: '/auth/register'
+        //         },
+        //         {
+        //             label: 'Icons',
+        //             icon: 'pi pi-fw pi-prime',
+        //             to: '/utilities/icons'
+        //         }
+        //     ]
+        // }
     ];
 
     return (

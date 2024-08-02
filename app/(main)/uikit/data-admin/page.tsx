@@ -239,7 +239,7 @@ const DataAdmin = () => {
 
                     <Dialog visible={productDialog} style={{ width: '450px' }} header="Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">username</label>
+                            <label htmlFor="name">Username</label>
                             <InputText
                                 id="name"
                                 value={product.name}
@@ -254,6 +254,20 @@ const DataAdmin = () => {
                         </div>
                         <div className="field">
                             <label htmlFor="name">Email</label>
+                            <InputText
+                                id="name"
+                                value={product.email}
+                                onChange={(e) => onInputChange(e, 'email')}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !product.email
+                                })}
+                            />
+                            {submitted && !product.email && <small className="p-invalid">Emial is required.</small>}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="name">Password</label>
                             <InputText
                                 id="name"
                                 value={product.email}

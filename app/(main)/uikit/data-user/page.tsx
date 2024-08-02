@@ -391,34 +391,6 @@ const TableDemo = () => {
                     </DataTable>
                 </div>
             </div>
-
-            {/* <div className="col-12">
-                <div className="card">
-                    <h5>Data User</h5>
-                    <DataTable
-                        value={customers1}
-                        paginator
-                        className="p-datatable-gridlines"
-                        showGridlines
-                        rows={10}
-                        dataKey="id"
-                        filters={filters1}
-                        filterDisplay="menu"
-                        loading={loading1}
-                        responsiveLayout="scroll"
-                        emptyMessage="No customers found."
-                        header={header1}
-                    >
-                        <Column field="id" header="Id" style={{ flexGrow: 1, flexBasis: '100px' }} frozen={idFrozen} alignFrozen="left" bodyClassName={classNames({ 'font-bold': idFrozen })}></Column>
-                        <Column field="name" header="Name" style={{ flexGrow: 1, flexBasis: '160px' }} frozen body={representativeBodyTemplate} className="font-bold" filter filterPlaceholder="Search by name"></Column>
-                        <Column field="representative.name" header="Email" style={{ flexGrow: 1, flexBasis: '200px' }}></Column>
-                        <Column field="company" header="Company" style={{ flexGrow: 1, flexBasis: '200px' }}></Column>
-                        <Column field="status" header="Status" style={{ flexGrow: 1, flexBasis: '200px' }} body={statusBodyTemplate}></Column>
-                        <Column field="activity" header="Activity" style={{ flexGrow: 1, flexBasis: '200px' }}></Column>
-                        <Column field="" header="Action" body={balanceTemplate} frozen style={{ flexGrow: 1, flexBasis: '120px' }} className="font-bold" alignFrozen="right"></Column>
-                    </DataTable>
-                </div>
-            </div> */}
         </div>
     );
 };
