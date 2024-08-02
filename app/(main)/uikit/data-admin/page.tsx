@@ -22,6 +22,7 @@ const DataAdmin = () => {
         id: '',
         name: '',
         email: '',
+        nomor: '',
         description: ''
     };
 
@@ -182,6 +183,15 @@ const DataAdmin = () => {
         );
     };
 
+    const teleponBodyTemplate = (rowData: Demo.Product) => {
+        return (
+            <>
+                <span className="p-column-title">Telepon</span>
+                {rowData.nomor}
+            </>
+        );
+    };
+
     const actionBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
@@ -234,6 +244,7 @@ const DataAdmin = () => {
                         <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="name" header="Username" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="nomor" header="No Telepon" sortable body={teleponBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
