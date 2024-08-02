@@ -10,29 +10,35 @@ export const loginUser = async (username: string, password: string, router: Next
     try {
         const response = await axios.post('/api/authentication', { username, password });
 
-        if (response.data.valid_mac && parseInt(response.data.valid_mac) > 0) {
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
+        if (response.status === 200) {
+            const data = response.data;
 
-            if (response.data.hash && response.data.hash.trim() !== '') {
-                sessionStorage.setItem('hash', response.data.hash);
-                const storedHash = sessionStorage.getItem('hash');
-                // console.log('Stored Hash:', storedHash);
+            if (data.valid_mac && parseInt(data.valid_mac) > 0) {
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
 
-                // Mendapatkan token setelah login berhasil
-                const token = await getToken(username);
+                if (data.hash && data.hash.trim() !== '') {
+                    sessionStorage.setItem('hash', data.hash);
+                    const storedHash = sessionStorage.getItem('hash');
+                    // console.log('Stored Hash:', storedHash);
 
-                if (token) {
-                    router.push('/');
-                    return token;
+                    // Mendapatkan token setelah login berhasil
+                    const token = await getToken(username);
+
+                    if (token) {
+                        router.push('/');
+                        return token;
+                    } else {
+                        throw new Error('Lakukan sekali lagi.');
+                    }
                 } else {
-                    throw new Error('Gagal mendapatkan token.');
+                    throw new Error('Akun anda tidak terdaftar!');
                 }
             } else {
-                throw new Error('Akun anda tidak terdaftar!');
+                throw new Error('Terjadi kesalahan jaringan!');
             }
         } else {
-            throw new Error('Terjadi kesalahan jaringan!');
+            throw new Error('Login gagal! Cek username dan password anda.');
         }
 
     } catch (err: any) {

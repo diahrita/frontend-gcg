@@ -1,3 +1,4 @@
+import { DataPartner } from '@/types/partner';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -17,7 +18,11 @@ export const fetchBusinessPartnerData = async () => {
         });
 
         // Log the data to the console
-        console.log('Business Partner Data:', response.data);
+         console.log('Business Partner Data:', response.data);
+
+        const data: DataPartner[] = response.data;
+        // Save the data to session storage
+        sessionStorage.setItem('businessPartnerData', JSON.stringify(data));
 
         return response.data;
     } 

@@ -1,247 +1,91 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { fetchBusinessPartnerData } from '@/app/api/partner/partnerData';
+import { DataPartner } from '@/types/partner';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { Dialog } from 'primereact/dialog';
-import { FileUpload } from 'primereact/fileupload';
-import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
-import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
-import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
-import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../../../demo/service/ProductService';
-import { Demo } from '@/types';
+import React, { useEffect, useState } from 'react';
 
-/* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
 const DataAdmin = () => {
-    let emptyProduct: Demo.Product = {
-        id: '',
-        name: '',
-        image: '',
-        description: '',
-        category: '',
-        price: 0,
-        quantity: 0,
-        inventoryStatus: 'PENDING'
-    };
-
-    const [products, setProducts] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-    const [product, setProduct] = useState<Demo.Product>(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
-    // const [globalFilter, setGlobalFilter] = useState('');
-    const toast = useRef<Toast>(null);
-    const dt = useRef<DataTable<any>>(null);
+    const [data, setData] = useState<DataPartner[] | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        ProductService.getProducts().then((data) => setProducts(data as any));
+        const savedData = sessionStorage.getItem('businessPartnerData');
+        if (savedData) {
+            setData(JSON.parse(savedData));
+            setLoading(false);
+        } else {
+            fetchBusinessPartnerData().then(result => {
+                if (result) {
+                    setData(result);
+                    sessionStorage.setItem('businessPartnerData', JSON.stringify(result));
+                } else {
+                    setError('Failed to fetch data from API');
+                }
+                setLoading(false);
+            }).catch(() => {
+                setError('Failed to fetch data from API');
+                setLoading(false);
+            });
+        }
     }, []);
 
-    const formatCurrency = (value: number) => {
-        return value.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        });
-    };
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
-    const openNew = () => {
-        setProduct(emptyProduct);
-        setSubmitted(false);
-        setProductDialog(true);
-    };
-
-    const hideDialog = () => {
-        setSubmitted(false);
-        setProductDialog(false);
-    };
-
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
-    };
-
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
-    };
-
-    const saveProduct = () => {
-        setSubmitted(true);
-
-        if (product.name.trim()) {
-            let _products = [...(products as any)];
-            let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
-
-                _products[index] = _product;
-                toast.current?.show({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Product Updated',
-                    life: 3000
-                });
-            } else {
-                _product.id = createId();
-                _product.image = 'product-placeholder.svg';
-                _products.push(_product);
-                toast.current?.show({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Product Created',
-                    life: 3000
-                });
-            }
-
-            setProducts(_products as any);
-            setProductDialog(false);
-            setProduct(emptyProduct);
-        }
-    };
-
-    const editProduct = (product: Demo.Product) => {
-        setProduct({ ...product });
-        setProductDialog(true);
-    };
-
-    const confirmDeleteProduct = (product: Demo.Product) => {
-        setProduct(product);
-        setDeleteProductDialog(true);
-    };
-
-    const deleteProduct = () => {
-        let _products = (products as any)?.filter((val: any) => val.id !== product.id);
-        setProducts(_products);
-        setDeleteProductDialog(false);
-        setProduct(emptyProduct);
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Product Deleted',
-            life: 3000
-        });
-    };
-
-    const findIndexById = (id: string) => {
-        let index = -1;
-        for (let i = 0; i < (products as any)?.length; i++) {
-            if ((products as any)[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    };
-
-    const createId = () => {
-        let id = '';
-        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    };
-
-    const exportCSV = () => {
-        dt.current?.exportCSV();
-    };
-
-    const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
-    };
-
-    const deleteSelectedProducts = () => {
-        let _products = (products as any)?.filter((val: any) => !(selectedProducts as any)?.includes(val));
-        setProducts(_products);
-        setDeleteProductsDialog(false);
-        setSelectedProducts(null);
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Products Deleted',
-            life: 3000
-        });
-    };
-
-    const onCategoryChange = (e: RadioButtonChangeEvent) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
-    };
-
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        const val = (e.target && e.target.value) || '';
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
-    };
-
-    const onInputNumberChange = (e: InputNumberValueChangeEvent, name: string) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
-    };
+    const filteredData = data?.filter(partner => 
+        partner.short_name !== "-" ||
+        partner.email !== "-" ||
+        partner.phone !== "-" ||
+        partner.add_street1 !== "-" ||
+        partner.postal_code !== "-" ||
+        partner.tax_no !== "-"
+    ) || [];
 
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                {/* <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" /> */}
-                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
+                <Button label="New" icon="pi pi-plus" severity="success" className="mr-2" />
+                <Button label="Export" icon="pi pi-upload" severity="help" />
             </React.Fragment>
         );
     };
 
-    const codeBodyTemplate = (rowData: Demo.Product) => {
+    const idBodyTemplate = (partner: DataPartner) => {
         return (
             <>
-                <span className="p-column-title">Code</span>
-                {rowData.code}
+                <span className="p-column-title">Id</span>
+                {partner.id}
             </>
         );
     };
 
-    const nameBodyTemplate = (rowData: Demo.Product) => {
+    const nameBodyTemplate = (partner: DataPartner) => {
         return (
             <>
                 <span className="p-column-title">Name</span>
-                {rowData.name}
+                {partner.contact_ref || 'No Contact Ref'}
             </>
         );
     };
 
-    const emailBodyTemplate = (rowData: Demo.Product) => {
+    const emailBodyTemplate = (partner: DataPartner) => {
         return (
             <>
-                <span className="p-column-title">Emial</span>
-                {formatCurrency(rowData.price as number)}
+                <span className="p-column-title">Email</span>
+                {partner.email || 'No Email'}
             </>
         );
     };
 
-    const roleBodyTemplate = (rowData: Demo.Product) => {
+    const actionBodyTemplate = (partner: DataPartner) => {
         return (
             <>
-                <span className="p-column-title">Role</span>
-                {rowData.category}
-            </>
-        );
-    };
-
-    const actionBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" onClick={() => editProduct(rowData)} />
-                {/* <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteProduct(rowData)} /> */}
+                <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" />
             </>
         );
     };
@@ -250,132 +94,31 @@ const DataAdmin = () => {
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Data Admin</h5>
             <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
-            {/* <span className="block mt-2 md:mt-0 p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span> */}
         </div>
-    );
-
-    const productDialogFooter = (
-        <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
-        </>
-    );
-    const deleteProductDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteProduct} />
-        </>
-    );
-    const deleteProductsDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedProducts} />
-        </>
     );
 
     return (
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
-                    <Toast ref={toast} />
-
                     <DataTable
-                        ref={dt}
-                        value={products}
-                        selection={selectedProducts}
-                        onSelectionChange={(e) => setSelectedProducts(e.value as any)}
+                        value={filteredData}
                         dataKey="id"
                         paginator
-                        rows={10}
-                        rowsPerPageOptions={[10, 25, 50, 100]}
+                        rows={5}
+                        rowsPerPageOptions={[5, 10, 15, 20]}
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        // globalFilter={globalFilter}
-                        emptyMessage="No products found."
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+                        emptyMessage="No data found."
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="name" header="Username" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="role" header="Role" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
-
-                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Detail Laporan" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="code">Id</label>
-                                <InputText
-                                    id="code"
-                                    value={product.code}
-                                    onChange={(e) => onInputChange(e, 'code')}
-                                    required
-                                    autoFocus
-                                    className={classNames({
-                                        'p-invalid': submitted && !product.name
-                                    })}
-                                />
-                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                            </div>
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="name">Username</label>
-                            <InputText
-                                id="name"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'name')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="email">Email</label>
-                            <InputText
-                                id="email"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'email')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="role">Role</label>
-                            <InputText
-                                id="role"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'role')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                    </Dialog>
-
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
-                        </div>
-                    </Dialog>
                 </div>
             </div>
         </div>

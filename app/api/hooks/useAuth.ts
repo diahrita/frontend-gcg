@@ -13,7 +13,7 @@ const useAuth = () => {
             const token = sessionStorage.getItem('token');
             if (token) {
                 setIsAuthenticated(true);
-                router.push('/'); 
+                router.push('/');
             } else {
                 setIsAuthenticated(false);
                 router.push('/auth/login');

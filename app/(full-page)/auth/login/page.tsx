@@ -32,7 +32,6 @@ const LoginPage = ({ googleData }: Props) => {
             if (!isExpired) {
                 router.push('/');
             } else {
-                // Jika token expired, hapus dari sessionStorage
                 sessionStorage.removeItem('token');
                 sessionStorage.removeItem('expirationTime');
             }
