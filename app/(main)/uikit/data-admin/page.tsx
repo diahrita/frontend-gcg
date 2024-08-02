@@ -17,39 +17,28 @@ import { ProductService } from '../../../../demo/service/ProductService';
 import { Demo } from '@/types';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
-const DataAdmin = () => {
+const Crud = () => {
     let emptyProduct: Demo.Product = {
         id: '',
         name: '',
-        image: '',
-        description: '',
-        category: '',
-        price: 0,
-        quantity: 0,
-        inventoryStatus: 'PENDING'
+        email: '',
+        description: ''
     };
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
-    // const [globalFilter, setGlobalFilter] = useState('');
+    const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
+    const [floatValue, setFloatValue] = useState('');
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
     }, []);
-
-    const formatCurrency = (value: number) => {
-        return value.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        });
-    };
 
     const openNew = () => {
         setProduct(emptyProduct);
@@ -60,10 +49,6 @@ const DataAdmin = () => {
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
-    };
-
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
     };
 
     const hideDeleteProductsDialog = () => {
@@ -107,24 +92,6 @@ const DataAdmin = () => {
     const editProduct = (product: Demo.Product) => {
         setProduct({ ...product });
         setProductDialog(true);
-    };
-
-    const confirmDeleteProduct = (product: Demo.Product) => {
-        setProduct(product);
-        setDeleteProductDialog(true);
-    };
-
-    const deleteProduct = () => {
-        let _products = (products as any)?.filter((val: any) => val.id !== product.id);
-        setProducts(_products);
-        setDeleteProductDialog(false);
-        setProduct(emptyProduct);
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Product Deleted',
-            life: 3000
-        });
     };
 
     const findIndexById = (id: string) => {
@@ -191,11 +158,20 @@ const DataAdmin = () => {
         setProduct(_product);
     };
 
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                </div>
+            </React.Fragment>
+        );
+    };
+
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                {/* <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" /> */}
+                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
                 <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
             </React.Fragment>
         );
@@ -222,17 +198,8 @@ const DataAdmin = () => {
     const emailBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
-                <span className="p-column-title">Emial</span>
-                {formatCurrency(rowData.price as number)}
-            </>
-        );
-    };
-
-    const roleBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Role</span>
-                {rowData.category}
+                <span className="p-column-title">Email</span>
+                {rowData.email}
             </>
         );
     };
@@ -240,8 +207,7 @@ const DataAdmin = () => {
     const actionBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" onClick={() => editProduct(rowData)} />
-                {/* <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteProduct(rowData)} /> */}
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editProduct(rowData)} />
             </>
         );
     };
@@ -249,11 +215,10 @@ const DataAdmin = () => {
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Data Admin</h5>
-            <Toolbar className="mb-4" right={rightToolbarTemplate}></Toolbar>
-            {/* <span className="block mt-2 md:mt-0 p-input-icon-left">
+            <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span> */}
+            </span>
         </div>
     );
 
@@ -263,12 +228,7 @@ const DataAdmin = () => {
             <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
         </>
     );
-    const deleteProductDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteProduct} />
-        </>
-    );
+
     const deleteProductsDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductsDialog} />
@@ -281,6 +241,7 @@ const DataAdmin = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
@@ -290,11 +251,11 @@ const DataAdmin = () => {
                         dataKey="id"
                         paginator
                         rows={10}
-                        rowsPerPageOptions={[10, 25, 50, 100]}
+                        rowsPerPageOptions={[5, 10, 25]}
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        // globalFilter={globalFilter}
+                        globalFilter={globalFilter}
                         emptyMessage="No products found."
                         header={header}
                         responsiveLayout="scroll"
@@ -302,30 +263,12 @@ const DataAdmin = () => {
                         <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="name" header="Username" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="role" header="Role" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Detail Laporan" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="code">Id</label>
-                                <InputText
-                                    id="code"
-                                    value={product.code}
-                                    onChange={(e) => onInputChange(e, 'code')}
-                                    required
-                                    autoFocus
-                                    className={classNames({
-                                        'p-invalid': submitted && !product.name
-                                    })}
-                                />
-                                {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                            </div>
-                        </div>
-
+                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Username</label>
+                            <label htmlFor="name">username</label>
                             <InputText
                                 id="name"
                                 value={product.name}
@@ -336,44 +279,21 @@ const DataAdmin = () => {
                                     'p-invalid': submitted && !product.name
                                 })}
                             />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            {submitted && !product.name && <small className="p-invalid">Username is required.</small>}
                         </div>
-
                         <div className="field">
-                            <label htmlFor="email">Email</label>
+                            <label htmlFor="name">Email</label>
                             <InputText
-                                id="email"
-                                value={product.name}
+                                id="name"
+                                value={product.email}
                                 onChange={(e) => onInputChange(e, 'email')}
                                 required
                                 autoFocus
                                 className={classNames({
-                                    'p-invalid': submitted && !product.name
+                                    'p-invalid': submitted && !product.email
                                 })}
                             />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                        </div>
-
-                        <div className="field">
-                            <label htmlFor="role">Role</label>
-                            <InputText
-                                id="role"
-                                value={product.name}
-                                onChange={(e) => onInputChange(e, 'role')}
-                                required
-                                autoFocus
-                                className={classNames({
-                                    'p-invalid': submitted && !product.name
-                                })}
-                            />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                        </div>
-                    </Dialog>
-
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
+                            {submitted && !product.email && <small className="p-invalid">Emial is required.</small>}
                         </div>
                     </Dialog>
                 </div>
@@ -382,4 +302,4 @@ const DataAdmin = () => {
     );
 };
 
-export default DataAdmin;
+export default Crud;
