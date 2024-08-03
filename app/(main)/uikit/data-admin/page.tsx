@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import { fetchBusinessPartnerData } from '@/app/api/partner/partnerData';
 import { DataPartner } from '@/types/partner';
@@ -14,42 +13,51 @@ const DataAdmin = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+      
+        const storedError = sessionStorage.getItem('error');
+        if (storedError) {
+            setError(storedError);
+            setLoading(false);
+            return;
+        }
+
         const savedData = sessionStorage.getItem('businessPartnerData');
         if (savedData) {
             setData(JSON.parse(savedData));
             setLoading(false);
         } else {
-            fetchBusinessPartnerData().then(result => {
-                if (result) {
-                    setData(result);
-                    sessionStorage.setItem('businessPartnerData', JSON.stringify(result));
-                } else {
-                    setError('Failed to fetch data from API');
-                }
-                setLoading(false);
-            }).catch(() => {
-                setError('Failed to fetch data from API');
-                setLoading(false);
-            });
+            fetchBusinessPartnerData()
+                .then(result => {
+                    if (result.data) {
+                        setData(result.data);
+                        sessionStorage.setItem('businessPartnerData', JSON.stringify(result.data));
+                        sessionStorage.removeItem('error');
+                    } else {
+                        setError('Maaf, server sedang dalam pemeliharaan.');
+                    }
+                    setLoading(false);
+                })
+                .catch(() => {
+                    setError('Terjadi kesalahan saat mengambil data.');
+                    setLoading(false);
+                });
         }
     }, []);
 
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
 
-    const filteredData = data?.filter(partner => 
+    const filteredData = (data && Array.isArray(data) ? data : []).filter(partner => 
         partner.short_name !== "-" ||
         partner.email !== "-" ||
         partner.phone !== "-" ||
         partner.add_street1 !== "-" ||
         partner.postal_code !== "-" ||
         partner.tax_no !== "-"
-    ) || [];
+    );
 
-    
     const dataWithDisplayId = filteredData.map((partner, index) => ({
         ...partner,
-        id : index + 1 
+        id: index + 1 
     }));
 
     const rightToolbarTemplate = () => {
@@ -116,6 +124,11 @@ const DataAdmin = () => {
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
+                    {error && (
+                        <div className="error-message" style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '1rem' }}>
+                            {error}
+                        </div>
+                    )}
                     <DataTable
                         value={dataWithDisplayId}
                         dataKey="id"
@@ -125,7 +138,7 @@ const DataAdmin = () => {
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
-                        emptyMessage="No data found."
+                        emptyMessage="No data available"
                         header={header}
                         responsiveLayout="scroll"
                     >
@@ -142,4 +155,3 @@ const DataAdmin = () => {
 };
 
 export default DataAdmin;
-
