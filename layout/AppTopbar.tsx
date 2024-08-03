@@ -17,7 +17,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const topbarmenubuttonRef = useRef(null);
     const [visibleRight, setVisibleRight] = useState(false);
     const [visibleConfirmDialog, setVisibleConfirmDialog] = useState(false);
-    const [profile, setProfile] = useState<{ email: string; username: string } | null>(null);
+    const [profile, setProfile] = useState<{ email: string; type_user: string } | null>(null);
     const toast = useRef<Toast>(null);
     
     useImperativeHandle(ref, () => ({
@@ -79,7 +79,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     </div>
 
                     <div className="text-center">
-                        <h4 className="mb-1">{profile?.username || '-'}</h4>
+                        <h4 className="mb-1">{profile?.type_user || '-'}</h4>
                         <p className="mt-1">{profile?.email || 'Email not found'}</p>
                     </div>
 
