@@ -1,9 +1,10 @@
 'use client';
+
 import useAuth from '@/app/api/hooks/useAuth';
-import { Metadata } from 'next';
-import Layout from '../../layout/layout';
-import { useRouter } from 'next/navigation';
 import Loading from '@/app/components/Loading';
+import { Metadata } from 'next';
+import { useEffect } from 'react';
+import Layout from '../../layout/layout';
 
 interface AppLayoutProps {
     children: React.ReactNode;
@@ -29,15 +30,21 @@ export const metadata: Metadata = {
 
 export default function AppLayout({ children }: AppLayoutProps) {
     const { loading, isAuthenticated } = useAuth();
-    const router = useRouter();
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('lastVisitedPage', window.location.pathname);
+        }
+    }, []); 
 
     if (loading) {
         return <Loading />;
     }
 
     if (!isAuthenticated) {
-        return <Loading />;
+       
+        return <Loading />; 
     }
-    
+
     return <Layout>{children}</Layout>;
 }

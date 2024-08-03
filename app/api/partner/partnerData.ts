@@ -1,9 +1,9 @@
 import { Messages } from '@/app/hendlererror/message/messages';
 import { handleError } from '@/app/hendlererror/server/errorHandler';
+import { APIEndpoints } from '@/app/route/apiEndpoints';
+import { AuthHeaders } from '@/app/route/authHeaders';
 import { DataPartner } from '@/types/partner';
 import axios from 'axios';
-import { APIEndpoints } from '../route/apiEndpoints';
-import { AuthHeaders } from '../route/authHeaders';
 
 interface FetchResult {
     status: number;

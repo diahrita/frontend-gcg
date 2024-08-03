@@ -1,17 +1,7 @@
 'use client';
-import useAuth from '@/app/api/hooks/useAuth';
-import Loading from '@/app/components/Loading';
 
 const Dashboard = () => {
-    const { loading, isAuthenticated } = useAuth();
-    if (loading) {
-        return <Loading />;
-    }
-
-    if (!isAuthenticated) {
-        return <Loading />;
-    }
-
+ 
     return (
         <div className="grid">
             <div className="col-12 lg:col-6 xl:col-3">

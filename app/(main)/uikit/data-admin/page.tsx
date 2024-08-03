@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Toolbar } from 'primereact/toolbar';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const DataAdmin = () => {
     const [data, setData] = useState<DataPartner[] | null>(null);
@@ -13,21 +13,21 @@ const DataAdmin = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-      
-        const storedError = sessionStorage.getItem('error');
-        if (storedError) {
-            setError(storedError);
-            setLoading(false);
-            return;
-        }
+        const fetchData = async () => {
+            const storedError = sessionStorage.getItem('error');
+            if (storedError) {
+                setError(storedError);
+                setLoading(false);
+                return;
+            }
 
-        const savedData = sessionStorage.getItem('businessPartnerData');
-        if (savedData) {
-            setData(JSON.parse(savedData));
-            setLoading(false);
-        } else {
-            fetchBusinessPartnerData()
-                .then(result => {
+            const savedData = sessionStorage.getItem('businessPartnerData');
+            if (savedData) {
+                setData(JSON.parse(savedData));
+                setLoading(false);
+            } else {
+                try {
+                    const result = await fetchBusinessPartnerData();
                     if (result.data) {
                         setData(result.data);
                         sessionStorage.setItem('businessPartnerData', JSON.stringify(result.data));
@@ -35,14 +35,27 @@ const DataAdmin = () => {
                     } else {
                         setError('Maaf, server sedang dalam pemeliharaan.');
                     }
-                    setLoading(false);
-                })
-                .catch(() => {
+                } catch {
                     setError('Terjadi kesalahan saat mengambil data.');
-                    setLoading(false);
-                });
-        }
-    }, []);
+                }
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+
+        // Set an interval to periodically check for errors
+        const errorCheckInterval = setInterval(() => {
+            const storedError = sessionStorage.getItem('error');
+            if (storedError && storedError !== error) {
+                setError(storedError);
+            }
+        }, 5000); 
+    
+        sessionStorage.removeItem('error');
+        return () => clearInterval(errorCheckInterval); 
+    }, [error]);
+
 
     if (loading) return <p>Loading...</p>;
 
@@ -60,58 +73,46 @@ const DataAdmin = () => {
         id: index + 1 
     }));
 
-    const rightToolbarTemplate = () => {
-        return (
-            <React.Fragment>
-                <Button label="New" icon="pi pi-plus" severity="success" className="mr-2" />
-                <Button label="Export" icon="pi pi-upload" severity="help" />
-            </React.Fragment>
-        );
-    };
+    const rightToolbarTemplate = () => (
+        <>
+            <Button label="New" icon="pi pi-plus" severity="success" className="mr-2" />
+            <Button label="Export" icon="pi pi-upload" severity="help" />
+        </>
+    );
 
-    const idBodyTemplate = (partner: DataPartner) => {
-        return (
-            <>
-                <span className="p-column-title">Id</span>
-                {partner.id}
-            </>
-        );
-    };
+    const idBodyTemplate = (partner: DataPartner) => (
+        <>
+            <span className="p-column-title">Id</span>
+            {partner.id}
+        </>
+    );
 
-    const nameBodyTemplate = (partner: DataPartner) => {
-        return (
-            <>
-                <span className="p-column-title">Name</span>
-                {partner.contact_ref || 'No Name Ref'}
-            </>
-        );
-    };
+    const nameBodyTemplate = (partner: DataPartner) => (
+        <>
+            <span className="p-column-title">Name</span>
+            {partner.contact_ref || 'No Name Ref'}
+        </>
+    );
 
-    const contactBodyTemplate = (partner: DataPartner) => {
-        return (
-            <>
-                <span className="p-column-title">Contact</span>
-                {partner.phone || 'No Contact Ref'}
-            </>
-        );
-    };
+    const contactBodyTemplate = (partner: DataPartner) => (
+        <>
+            <span className="p-column-title">Contact</span>
+            {partner.phone || 'No Contact Ref'}
+        </>
+    );
 
-    const emailBodyTemplate = (partner: DataPartner) => {
-        return (
-            <>
-                <span className="p-column-title">Email</span>
-                {partner.email || 'No Email'}
-            </>
-        );
-    };
+    const emailBodyTemplate = (partner: DataPartner) => (
+        <>
+            <span className="p-column-title">Email</span>
+            {partner.email || 'No Email'}
+        </>
+    );
 
-    const actionBodyTemplate = (partner: DataPartner) => {
-        return (
-            <>
-                <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" />
-            </>
-        );
-    };
+    const actionBodyTemplate = (partner: DataPartner) => (
+        <>
+            <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" />
+        </>
+    );
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">

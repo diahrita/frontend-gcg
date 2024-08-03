@@ -1,4 +1,4 @@
-import { Messages } from '../message/messages'; 
+import { Messages } from '../message/messages';
 
 export const handleError = (error: any): { status: number; message: string } => {
     let status = 500;
@@ -7,8 +7,31 @@ export const handleError = (error: any): { status: number; message: string } => 
     if (error.response) {
         status = error.response.status;
         switch (status) {
+            case 400:
+                message = Messages.BAD_REQUEST;
+                if (error.response.data) {
+                    const clientError = error.response.data.error;
+                    switch (clientError) {
+                        case 'validation':
+                            message = Messages.VALIDATION_ERROR;
+                            break;
+                        case 'syntax':
+                            message = Messages.SYNTAX_ERROR;
+                            break;
+                        case 'parameter':
+                            message = Messages.PARAMETER_ERROR;
+                            break;
+                        default:
+                            message = Messages.BAD_REQUEST;
+                            break;
+                    }
+                }
+                break;
             case 401:
                 message = Messages.TOKEN_INVALID;
+                break;
+            case 402:
+                message = Messages.PAYMENT_REQUIRED;
                 break;
             case 403:
                 message = Messages.PERMISSION_DENIED;
@@ -53,7 +76,7 @@ export const handleError = (error: any): { status: number; message: string } => 
     }
 
     // Simpan pesan error ke sessionStorage
-    sessionStorage.setItem('error', message);
+    sessionStorage.setItem(Messages.ERROR, message);
 
     return { status, message };
 };

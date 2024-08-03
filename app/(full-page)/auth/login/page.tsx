@@ -1,11 +1,10 @@
 'use client';
-import { loginUser } from '@/app/api/loginApi';
-import { LayoutContext } from '@/layout/context/layoutcontext';
+import { loginUser } from '@/app/api/login/loginApi';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles.css';
 
 interface Props {
@@ -20,8 +19,6 @@ const LoginPage = ({ googleData }: Props) => {
     const [error, setError] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const { layoutConfig } = useContext(LayoutContext);
-    
 
     useEffect(() => {
         const token = sessionStorage.getItem('token');
@@ -35,6 +32,13 @@ const LoginPage = ({ googleData }: Props) => {
                 sessionStorage.removeItem('token');
                 sessionStorage.removeItem('expirationTime');
             }
+        }
+
+        // Ambil pesan error dari sessionStorage
+        const storedError = sessionStorage.getItem('error');
+        if (storedError) {
+            setError(storedError);
+            sessionStorage.removeItem('error');
         }
     }, [router]);
 
@@ -59,11 +63,12 @@ const LoginPage = ({ googleData }: Props) => {
         try {
             const token = await loginUser(username, password, router);
             // Simpan token dan waktu kedaluwarsa (6 jam)
-            const expirationTime = Date.now() + 6 * 60 * 60 * 1000; // 6 jam dalam milidetik
+            const expirationTime = Date.now() + 6 * 60 * 60 * 1000; 
             sessionStorage.setItem('token', token);
             sessionStorage.setItem('expirationTime', expirationTime.toString());
-        } catch (err) {
-            setError('Login gagal. Silakan periksa username dan password Anda.');
+        } catch (err: any) {
+            setError(err.message);
+            sessionStorage.removeItem('error');
         } finally {
             setLoading(false);
         }
@@ -72,14 +77,14 @@ const LoginPage = ({ googleData }: Props) => {
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value.slice(0, 20));
         setUsernameError('');
+        setError('');
     };
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value.slice(0, 20));
         setPasswordError('');
+        setError('');
     };
-
-
 
     return (
         <div className="container-classname">
@@ -100,8 +105,8 @@ const LoginPage = ({ googleData }: Props) => {
                         </div>
 
                         <div>
-                            <div className="flex align-items-center justify-content-between mb-1 gap-5">
-                                {error && <p className="text-red-500">{error}</p>} 
+                           <div className="flex align-items-center justify-content-between mb-1 gap-5">
+                                {error && <p className="text-red-500" style={{ whiteSpace: 'pre-line' }}>{error}</p>}
                             </div>
 
                             <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
