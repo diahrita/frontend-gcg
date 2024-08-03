@@ -1,5 +1,9 @@
+import { Messages } from '@/app/hendlererror/message/messages';
+import { handleError } from '@/app/hendlererror/server/errorHandler';
 import { DataPartner } from '@/types/partner';
 import axios from 'axios';
+import { APIEndpoints } from '../route/apiEndpoints';
+import { AuthHeaders } from '../route/authHeaders';
 
 interface FetchResult {
     status: number;
@@ -7,55 +11,29 @@ interface FetchResult {
 }
 
 export const fetchBusinessPartnerData = async (): Promise<FetchResult> => {
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem(Messages.TOKEN);
 
     if (!token) {
         // Simpan pesan error ke sessionStorage
-        sessionStorage.setItem('error', 'Token tidak ditemukan di session storage.');
+        sessionStorage.setItem(Messages.ERROR, Messages.TOKEN_NOT_FOUND);
         return { status: 401, data: null };
     }
 
     try {
-        const response = await axios.get('/api/erp/business_partner', {  
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+        const response = await axios.get(APIEndpoints.BUSINESS_PARTNER, { 
+            headers: AuthHeaders.getBearerToken(token),
         });
-
-        // Log the data to the console
-        console.log('Business Partner Data:', response.data);
-
+        // console.log('Business Partner Data:', response.data);
         const data: DataPartner[] = response.data;
         // Save the data to session storage
         sessionStorage.setItem('businessPartnerData', JSON.stringify(data));
-
         // Clear any previous error messages from sessionStorage
         sessionStorage.removeItem('error');
-
         return { status: response.status, data };
 
-    } catch (err: any) {
-        let status = 500;
-        let errorMessage = 'Terjadi kesalahan. Silakan coba lagi nanti.';
-
-        if (err.response) {
-            status = err.response.status;
-            switch (status) {
-                case 401:
-                    errorMessage = 'Token tidak valid atau kadaluarsa. Silakan login kembali.';
-                    break;
-                case 502:
-                case 500:
-                    errorMessage = 'Terjadi kesalahan pada server. Silakan coba lagi nanti.';
-                    break;
-            }
-        } else {
-            errorMessage = 'Terjadi kesalahan jaringan. Silakan coba lagi nanti.';
-        }
-
-        // Simpan pesan error ke sessionStorage
-        sessionStorage.setItem('error', errorMessage);
-
+    }  catch (err: any) {
+        const { status, message } = handleError(err);
+        
         return { status, data: null };
     }
 };
