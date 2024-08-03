@@ -27,7 +27,7 @@ export const loginUser = async (username: string, password: string, router: Retu
 
                 // Mendapatkan token
                 const token = await getToken(username);
-                const profile = await getProfile(username)
+                const profile = await getProfile(username);
 
                 if (token) {
                     sessionStorage.removeItem(Messages.ERROR);

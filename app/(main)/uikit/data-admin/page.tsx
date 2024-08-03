@@ -52,7 +52,6 @@ const DataAdmin = () => {
                 setError(storedError);
             }
         }, 5000); 
-    
         sessionStorage.removeItem(Messages.ERROR);
         return () => clearInterval(errorCheckInterval); 
     }, [error]);
