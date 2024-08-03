@@ -4,7 +4,8 @@ import { APIEndpoints } from '@/app/route/apiEndpoints';
 import { getAuthHeaders } from '@/app/route/authHeaders';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { getToken } from '../token/jwtToken';
+import { getToken, startTokenRefresh } from '../data/jwtToken';
+import { getProfile } from '../data/profileToken';
 
 export const loginUser = async (username: string, password: string, router: ReturnType<typeof useRouter>): Promise<string> => {
     
@@ -22,13 +23,16 @@ export const loginUser = async (username: string, password: string, router: Retu
             // Memeriksa hash
             if (hash?.trim()) {
                 sessionStorage.setItem('hash', hash);
+                sessionStorage.setItem('username', username);
 
                 // Mendapatkan token
                 const token = await getToken(username);
+                const profile = await getProfile(username)
 
                 if (token) {
                     sessionStorage.removeItem(Messages.ERROR);
-                    router.push('/'); // Navigasi menggunakan router dari useRouter
+                    router.push('/'); 
+                    startTokenRefresh(username);
                     return token;
                 } else {
                     throw new Error(Messages.TOKEN_INVALID);

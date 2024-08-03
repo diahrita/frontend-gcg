@@ -1,5 +1,5 @@
 // src/api/authHeaders.ts
-import { getToken } from '@/app/api/token/jwtToken';
+import { getToken } from '@/app/api/data/jwtToken';
 
 export const AuthHeaders = {
     getBearerToken: (token: string) => ({

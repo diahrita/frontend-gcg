@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { useContext } from 'react';
+import { AppMenuItem } from '@/types';
+import { useContext } from 'react';
 import AppMenuitem from './AppMenuitem';
 import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
-import Link from 'next/link';
-import { AppMenuItem } from '@/types';
 
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
@@ -70,23 +69,7 @@ const AppMenu = () => {
                     icon: 'pi pi-fw pi-prime',
                     to: '/utilities/icons'
                 }
-                // {
-                //     label: 'Error',
-                //     icon: 'pi pi-fw pi-times-circle',
-                //     to: '/auth/error'
-                // },
-                // {
-                //     label: 'Access Denied',
-                //     icon: 'pi pi-fw pi-lock',
-                //     to: '/auth/access'
-                // }
-                //     ]
-                // },
-                // {
-                //     label: 'Crud',
-                //     icon: 'pi pi-fw pi-pencil',
-                //     to: '/pages/crud'
-                // }
+              
             ]
         }
     ];
