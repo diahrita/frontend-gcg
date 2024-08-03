@@ -8,7 +8,7 @@ import { FileUpload } from 'primereact/fileupload';
 import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
+// import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
@@ -17,33 +17,48 @@ import { ProductService } from '../../../../demo/service/ProductService';
 import { Demo } from '@/types';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
-const DataAdmin = () => {
+const Crud = () => {
     let emptyProduct: Demo.Product = {
         id: '',
         name: '',
-        email: '',
-        nomor: '',
-        description: ''
+        mail: '',
+        telepon: '',
+        password: ''
+        // image: '',
+        // description: '',
+        // category: '',
+        // price: 0,
+        // quantity: 0,
+        // rating: 0
+        // inventoryStatus: 'INSTOCK'
     };
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [selectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const [floatValue, setFloatValue] = useState('');
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
     }, []);
 
+    const formatCurrency = (value: number) => {
+        return value.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        });
+    };
+
     const openNew = () => {
         setProduct(emptyProduct);
         setSubmitted(false);
         setProductDialog(true);
+        setIsEditMode(false);
     };
 
     const hideDialog = () => {
@@ -88,6 +103,7 @@ const DataAdmin = () => {
     const editProduct = (product: Demo.Product) => {
         setProduct({ ...product });
         setProductDialog(true);
+        setIsEditMode(true);
     };
 
     const findIndexById = (id: string) => {
@@ -113,12 +129,6 @@ const DataAdmin = () => {
 
     const exportCSV = () => {
         dt.current?.exportCSV();
-    };
-
-    const onCategoryChange = (e: RadioButtonChangeEvent) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
     };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
@@ -174,11 +184,11 @@ const DataAdmin = () => {
         );
     };
 
-    const emailBodyTemplate = (rowData: Demo.Product) => {
+    const mailBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
-                <span className="p-column-title">Email</span>
-                {rowData.email}
+                <span className="p-column-title">Mail</span>
+                {rowData.mail}
             </>
         );
     };
@@ -187,7 +197,7 @@ const DataAdmin = () => {
         return (
             <>
                 <span className="p-column-title">Telepon</span>
-                {rowData.nomor}
+                {rowData.telepon}
             </>
         );
     };
@@ -228,7 +238,6 @@ const DataAdmin = () => {
                         ref={dt}
                         value={products}
                         selection={selectedProducts}
-                        onSelectionChange={(e) => setSelectedProducts(e.value as any)}
                         dataKey="id"
                         paginator
                         rows={10}
@@ -243,14 +252,14 @@ const DataAdmin = () => {
                     >
                         <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="name" header="Username" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="nomor" header="No Telepon" sortable body={teleponBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="mail" header="Email" sortable body={mailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="telepon" header="No Telepon" sortable body={teleponBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
-                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={productDialog} style={{ width: '450px' }} header={isEditMode ? 'Edit Data Admin' : 'Tambah Data Admin'} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Username</label>
+                            <label htmlFor="Username">Username</label>
                             <InputText
                                 id="name"
                                 value={product.name}
@@ -263,34 +272,50 @@ const DataAdmin = () => {
                             />
                             {submitted && !product.name && <small className="p-invalid">Username is required.</small>}
                         </div>
+
                         <div className="field">
-                            <label htmlFor="name">Email</label>
+                            <label htmlFor="mail">Email</label>
                             <InputText
-                                id="name"
-                                value={product.email}
-                                onChange={(e) => onInputChange(e, 'email')}
+                                id="mail"
+                                value={product.mail}
+                                onChange={(e) => onInputChange(e, 'mail')}
                                 required
-                                autoFocus
                                 className={classNames({
-                                    'p-invalid': submitted && !product.email
+                                    'p-invalid': submitted && !product.mail
                                 })}
                             />
-                            {submitted && !product.email && <small className="p-invalid">Emial is required.</small>}
+                            {submitted && !product.mail && <small className="p-invalid">Email is required.</small>}
                         </div>
+
                         <div className="field">
-                            <label htmlFor="name">Password</label>
+                            <label htmlFor="telepon">No Telepon</label>
                             <InputText
-                                id="name"
-                                value={product.email}
-                                onChange={(e) => onInputChange(e, 'email')}
+                                id="telepon"
+                                value={product.telepon}
+                                onChange={(e) => onInputChange(e, 'telepon')}
                                 required
-                                autoFocus
                                 className={classNames({
-                                    'p-invalid': submitted && !product.email
+                                    'p-invalid': submitted && !product.telepon
                                 })}
                             />
-                            {submitted && !product.email && <small className="p-invalid">Emial is required.</small>}
+                            {submitted && !product.telepon && <small className="p-invalid">No Telepon is required.</small>}
                         </div>
+
+                        {!isEditMode && (
+                            <div className="field">
+                                <label htmlFor="password">Password</label>
+                                <InputText
+                                    id="password"
+                                    value={product.password}
+                                    onChange={(e) => onInputChange(e, 'password')}
+                                    required
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.password
+                                    })}
+                                />
+                                {submitted && !product.password && <small className="p-invalid">Password is required.</small>}
+                            </div>
+                        )}
                     </Dialog>
                 </div>
             </div>
@@ -298,4 +323,4 @@ const DataAdmin = () => {
     );
 };
 
-export default DataAdmin;
+export default Crud;

@@ -10,7 +10,6 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import Link from 'next/link';
 
-
 const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [checked, setChecked] = useState(false);
@@ -32,7 +31,7 @@ const LoginPage = () => {
                 >
                     <div className="w-full surface-card py-4 px-2 sm:px-8" style={{ borderRadius: '53px' }}>
                         <div className="text-center mb-5">
-                            <img src="/layout/images/tps.png" alt="Image" height="100" className="mb-3" />
+                            <img src="/tps_1722671016723.json" alt="Image" height="100" className="mb-3" />
                             <div className="text-900 text-3xl font-medium mb-3">Selamat Datang</div>
                             <span className="text-600 font-medium">Login untuk melanjutkan</span>
                         </div>
