@@ -18,7 +18,7 @@ export const getToken = async (username: string) => {
         sessionStorage.setItem(Messages.TOKEN, response.data.token);
 
         const storedToken = sessionStorage.getItem(Messages.TOKEN);
-        console.log('Stored Token:', storedToken);
+        // console.log('Stored Token:', storedToken);
 
         return response.data.token;
     } catch (err: any) {

@@ -14,7 +14,6 @@ export const getProfile = async (username: string) => {
     try {
         // Mendapatkan data profil menggunakan hash dan username
         const response = await axios.post(APIEndpoints.TOKEN_API, { username, hash });
-
         const profileData = response.data.data as DataProfile;
         const email = profileData.email;
         const typeUser = profileData.type_user;
@@ -24,15 +23,11 @@ export const getProfile = async (username: string) => {
             email: email,
             type_user: typeUser,
         };
-
-       
         sessionStorage.setItem('profile', JSON.stringify(profile));
 
         const storedProfile = sessionStorage.getItem('profile');
-        console.log('Stored Profile:', storedProfile);
-
+        // console.log('Stored Profile:', storedProfile);
         sessionStorage.removeItem(Messages.ERROR);
-
         return { status: response.status, data: profileData };
     } catch (err: any) {
         const { message } = handleError(err);

@@ -33,15 +33,20 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         }
     }, []);
 
-    const handleLogout = () => {
-        // Clear sessionStorage
-        sessionStorage.clear();
-        
-        // Optionally clear localStorage if you use it
-        localStorage.clear();
+    const getImageSrc = () => {
+        if (profile?.type_user === 'PUBLIC') {
+            return '/layout/images/public.png';
+        } else if (profile?.type_user === 'TAMU') {
+            return '/layout/images/guest.png';
+        } else {
+            return '/layout/images/user.png';
+        }
+    };
 
-        // Redirect user to login page or home page
-        window.location.href = '/auth/login';  
+    const handleLogout = () => {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.location.href = '/auth/login';
     };
 
     const accept = () => {
@@ -74,8 +79,10 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 </div>
 
                 <Sidebar visible={visibleRight} position="right" onHide={() => setVisibleRight(false)}>
+
+
                     <div className="flex flex-wrap justify-content-center gap-3 mb-4">
-                        <i className="pi pi-user" style={{ fontSize: '2.5rem', color: 'slateblue' }}></i>
+                    <img src={getImageSrc()} width="80px" height={'65px'} alt="logo" />
                     </div>
 
                     <div className="text-center">
