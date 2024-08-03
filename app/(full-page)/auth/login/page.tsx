@@ -1,5 +1,6 @@
 'use client';
 import { loginUser } from '@/app/api/login/loginApi';
+import { Messages } from '@/app/hendlererror/message/messages';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -49,13 +50,13 @@ const LoginPage = ({ googleData }: Props) => {
         setPasswordError('');
 
         if (!username) {
-            setUsernameError('Username belum diisi');
+            setUsernameError(Messages.USERNAME_ERROR_PLACEHOLDER);
             setLoading(false);
             return;
         }
 
         if (!password) {
-            setPasswordError('Password belum diisi');
+            setPasswordError(Messages.PASSWORD_ERROR_PLACEHOLDER);
             setLoading(false);
             return;
         }
@@ -100,8 +101,8 @@ const LoginPage = ({ googleData }: Props) => {
                     <div className="w-full surface-card py-4 px-2 sm:px-8" style={{ borderRadius: '53px' }}>
                         <div className="text-center mb-5">
                             <img src="/layout/images/tps.png" alt="Image" height="100" className="mb-3" />
-                            <div className="text-900 text-3xl font-medium mb-3">Selamat Datang</div>
-                            <span className="text-600 font-medium">Login untuk melanjutkan</span>
+                            <div className="text-900 text-3xl font-medium mb-3">{Messages.WELCOME_TEXT}</div>
+                            <span className="text-600 font-medium">{Messages.LOGIN_PROMPT_TEXT}</span>
                         </div>
 
                         <div>
@@ -110,12 +111,12 @@ const LoginPage = ({ googleData }: Props) => {
                             </div>
 
                             <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
-                                Username
+                                {Messages.DEFAULT_USERNAME}
                             </label>
                             <InputText
                                 id="username"
                                 type="text"
-                                placeholder={usernameError || "Alamat Email atau Username"}
+                                placeholder={usernameError || Messages.DEFAULT_USERNAME_PLACEHOLDER}
                                 value={username}
                                 onChange={handleUsernameChange}
                                 className={`w-full md:w-30rem mb-5 ${usernameError ? 'border-red-500 input-error' : ''}`}
@@ -124,13 +125,13 @@ const LoginPage = ({ googleData }: Props) => {
                             />
 
                             <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
-                                Password
+                                {Messages.DEFAULT_PASSWORD_PLACEHOLDER}
                             </label>
                             <Password
                                 inputId="password"
                                 value={password}
                                 onChange={handlePasswordChange}
-                                placeholder={passwordError || "Password"}
+                                placeholder={passwordError || Messages.DEFAULT_PASSWORD_PLACEHOLDER}
                                 toggleMask
                                 feedback={false}
                                 className={`w-full mb-5 ${passwordError ? 'border-red-500 input-error' : ''}`}
@@ -140,7 +141,7 @@ const LoginPage = ({ googleData }: Props) => {
 
                             <div className="flex align-items-center justify-content-between mb-1 gap-5" />
                             <Button
-                                label={loading ? 'Loading...' : 'Login'}
+                                label={loading ? Messages.BUTTON_LOADING_TEXT : Messages.BUTTON_LOGIN_TEXT}
                                 className="w-full p-3 text-xl"
                                 onClick={handleLogin}
                                 disabled={loading}

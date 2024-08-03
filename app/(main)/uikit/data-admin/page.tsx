@@ -1,5 +1,6 @@
 'use client';
 import { fetchBusinessPartnerData } from '@/app/api/partner/partnerData';
+import { Messages } from '@/app/hendlererror/message/messages';
 import { DataPartner } from '@/types/partner';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -14,7 +15,7 @@ const DataAdmin = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const storedError = sessionStorage.getItem('error');
+            const storedError = sessionStorage.getItem(Messages.ERROR);
             if (storedError) {
                 setError(storedError);
                 setLoading(false);
@@ -31,12 +32,12 @@ const DataAdmin = () => {
                     if (result.data) {
                         setData(result.data);
                         sessionStorage.setItem('businessPartnerData', JSON.stringify(result.data));
-                        sessionStorage.removeItem('error');
+                        sessionStorage.removeItem(Messages.ERROR);
                     } else {
-                        setError('Maaf, server sedang dalam pemeliharaan.');
+                        setError(Messages.REQUEST_ERROR);
                     }
                 } catch {
-                    setError('Terjadi kesalahan saat mengambil data.');
+                    setError(Messages.TIMEOUT_ERROR);
                 }
                 setLoading(false);
             }
@@ -46,13 +47,13 @@ const DataAdmin = () => {
 
         // Set an interval to periodically check for errors
         const errorCheckInterval = setInterval(() => {
-            const storedError = sessionStorage.getItem('error');
+            const storedError = sessionStorage.getItem(Messages.ERROR);
             if (storedError && storedError !== error) {
                 setError(storedError);
             }
         }, 5000); 
     
-        sessionStorage.removeItem('error');
+        sessionStorage.removeItem(Messages.ERROR);
         return () => clearInterval(errorCheckInterval); 
     }, [error]);
 

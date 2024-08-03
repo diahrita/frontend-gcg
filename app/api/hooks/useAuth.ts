@@ -1,3 +1,4 @@
+import { Messages } from '@/app/hendlererror/message/messages';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -13,7 +14,7 @@ const useAuth = () => {
         };
 
         const checkAuth = () => {
-            const token = sessionStorage.getItem('token');
+            const token = sessionStorage.getItem(Messages.TOKEN);
             const lastVisitedPage = sessionStorage.getItem('lastVisitedPage') || '/';
             const defaultPage = '/'; 
             if (token) {

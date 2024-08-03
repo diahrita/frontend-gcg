@@ -28,7 +28,7 @@ export const fetchBusinessPartnerData = async (): Promise<FetchResult> => {
         // Save the data to session storage
         sessionStorage.setItem('businessPartnerData', JSON.stringify(data));
         // Clear any previous error messages from sessionStorage
-        sessionStorage.removeItem('error');
+        sessionStorage.removeItem(Messages.ERROR);
         return { status: response.status, data };
 
     }  catch (err: any) {

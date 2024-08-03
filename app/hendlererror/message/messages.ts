@@ -4,8 +4,15 @@ export const Messages = {
     ERROR: 'error',
     TOKEN: 'token',
     // Pesan Login
-
-
+    USERNAME_ERROR_PLACEHOLDER : 'Username belum diisi',
+    PASSWORD_ERROR_PLACEHOLDER : 'Password belum diisi',
+    DEFAULT_USERNAME : 'Username',
+    DEFAULT_USERNAME_PLACEHOLDER : 'Alamat Email atau Username',
+    DEFAULT_PASSWORD_PLACEHOLDER : 'Password',
+    WELCOME_TEXT : 'Selamat Datang',
+    LOGIN_PROMPT_TEXT : 'Login untuk melanjutkan',
+    BUTTON_LOADING_TEXT : 'Loading...',
+    BUTTON_LOGIN_TEXT : 'Login',
     // Pesan error 400
     BAD_REQUEST: 'Permintaan tidak dapat dipahami atau kehilangan parameter yang diperlukan.',
     VALIDATION_ERROR: 'Terjadi kesalahan validasi. Silakan periksa input Anda.',
