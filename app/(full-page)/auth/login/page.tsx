@@ -8,12 +8,9 @@ import { Password } from 'primereact/password';
 import { useEffect, useState } from 'react';
 import './styles.css';
 
-interface Props {
-    googleData: any;
-}
 
-const LoginPage = ({ googleData }: Props) => {
-    const router = useRouter();
+const LoginPage = () => {
+    const router = useRouter() ;
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);

@@ -3,10 +3,10 @@ import { handleError } from '@/app/hendlererror/server/errorHandler';
 import { APIEndpoints } from '@/app/route/apiEndpoints';
 import { getAuthHeaders } from '@/app/route/authHeaders';
 import axios from 'axios';
-import { NextRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { getToken } from '../token/jwtToken';
 
-export const loginUser = async (username: string, password: string, router: NextRouter): Promise<string> => {
+export const loginUser = async (username: string, password: string, router: ReturnType<typeof useRouter>): Promise<string> => {
     
     if (!username || !password) {
         throw new Error(Messages.VALIDATION_ERROR);
@@ -28,7 +28,7 @@ export const loginUser = async (username: string, password: string, router: Next
 
                 if (token) {
                     sessionStorage.removeItem(Messages.ERROR);
-                    router.push('/');
+                    router.push('/'); // Navigasi menggunakan router dari useRouter
                     return token;
                 } else {
                     throw new Error(Messages.TOKEN_INVALID);
