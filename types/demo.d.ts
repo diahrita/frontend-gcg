@@ -130,6 +130,8 @@ declare namespace Demo {
         inventoryStatus?: InventoryStatus;
         orders?: ProductOrder[];
         [key: string]: string | string[] | number | boolean | undefined | ProductOrder[] | InventoryStatus;
+        email: string;
+        nomor: number;
     };
 
     type ProductOrder = {

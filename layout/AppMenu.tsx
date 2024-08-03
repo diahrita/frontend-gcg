@@ -18,7 +18,7 @@ const AppMenu = () => {
             ]
         },
         {
-            label: 'Asissment',
+            label: 'Assessment',
             items: [
                 {
                     label: 'Penilaian',
