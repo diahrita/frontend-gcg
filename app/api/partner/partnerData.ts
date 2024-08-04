@@ -10,11 +10,10 @@ interface FetchResult {
     data: DataPartner[] | null;
 }
 
-export const fetchBusinessPartnerData = async (): Promise<FetchResult> => {
+export const fetchBusinessPartnerData = async (page: number = 1, limit: number = 5): Promise<FetchResult> => {
     const token = sessionStorage.getItem(Messages.TOKEN);
 
     if (!token) {
-        // Simpan pesan error ke sessionStorage
         sessionStorage.setItem(Messages.ERROR, Messages.TOKEN_NOT_FOUND);
         return { status: 401, data: null };
     }
@@ -22,18 +21,17 @@ export const fetchBusinessPartnerData = async (): Promise<FetchResult> => {
     try {
         const response = await axios.get(APIEndpoints.BUSINESS_PARTNER, { 
             headers: AuthHeaders.getBearerToken(token),
+            params: {
+                page: page,
+                limit: limit
+            }
         });
-        // console.log('Business Partner Data:', response.data);
         const data: DataPartner[] = response.data;
-        // Save the data to session storage
-        sessionStorage.setItem('businessPartnerData', JSON.stringify(data));
-        // Clear any previous error messages from sessionStorage
         sessionStorage.removeItem(Messages.ERROR);
         return { status: response.status, data };
 
     }  catch (err: any) {
         const { status, message } = handleError(err);
-        
         return { status, data: null };
     }
 };
