@@ -5,6 +5,13 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { ProgressBar } from 'primereact/progressbar';
+import { Dialog } from 'primereact/dialog';
+import { FileUpload } from 'primereact/fileupload';
+import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
+import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
+// import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
+import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 
 
@@ -40,6 +47,14 @@ const DataAdmin = () => {
             {partner.phone || 'No Contact Ref'}
         </>
     );
+    const mailBodyTemplate = (rowData: Demo.Product) => {
+        return (
+            <>
+                <span className="p-column-title">Mail</span>
+                {rowData.mail}
+            </>
+        );
+    };
 
     const emailBodyTemplate = (partner: DataPartner) => (
         <>
@@ -47,6 +62,14 @@ const DataAdmin = () => {
             {partner.email || 'No Email'}
         </>
     );
+    const teleponBodyTemplate = (rowData: Demo.Product) => {
+        return (
+            <>
+                <span className="p-column-title">Telepon</span>
+                {rowData.telepon}
+            </>
+        );
+    };
 
     const actionBodyTemplate = (partner: DataPartner) => (
         <>
@@ -80,6 +103,9 @@ const DataAdmin = () => {
                     )}
                     <DataTable
                         value={dataWithDisplayId}
+                        ref={dt}
+                        value={products}
+                        selection={selectedProducts}
                         dataKey="id"
                         paginator
                         rows={5}
@@ -96,8 +122,73 @@ const DataAdmin = () => {
                         <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="name" header="Username" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="mail" header="Email" sortable body={mailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="telepon" header="No Telepon" sortable body={teleponBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
+
+                    <Dialog visible={productDialog} style={{ width: '450px' }} header={isEditMode ? 'Edit Data Admin' : 'Tambah Data Admin'} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                        <div className="field">
+                            <label htmlFor="Username">Username</label>
+                            <InputText
+                                id="name"
+                                value={product.name}
+                                onChange={(e) => onInputChange(e, 'name')}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !product.name
+                                })}
+                            />
+                            {submitted && !product.name && <small className="p-invalid">Username is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="mail">Email</label>
+                            <InputText
+                                id="mail"
+                                value={product.mail}
+                                onChange={(e) => onInputChange(e, 'mail')}
+                                required
+                                className={classNames({
+                                    'p-invalid': submitted && !product.mail
+                                })}
+                            />
+                            {submitted && !product.mail && <small className="p-invalid">Email is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="telepon">No Telepon</label>
+                            <InputText
+                                id="telepon"
+                                value={product.telepon}
+                                onChange={(e) => onInputChange(e, 'telepon')}
+                                required
+                                className={classNames({
+                                    'p-invalid': submitted && !product.telepon
+                                })}
+                            />
+                            {submitted && !product.telepon && <small className="p-invalid">No Telepon is required.</small>}
+                        </div>
+
+                        {!isEditMode && (
+                            <div className="field">
+                                <label htmlFor="password">Password</label>
+                                <InputText
+                                    id="password"
+                                    value={product.password}
+                                    onChange={(e) => onInputChange(e, 'password')}
+                                    required
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.password
+                                    })}
+                                />
+                                {submitted && !product.password && <small className="p-invalid">Password is required.</small>}
+                            </div>
+                        )}
+                    </Dialog>
                 </div>
             </div>
         </div>
@@ -105,3 +196,4 @@ const DataAdmin = () => {
 };
 
 export default DataAdmin;
+export default Crud;
