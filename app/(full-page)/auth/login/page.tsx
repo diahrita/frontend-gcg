@@ -1,6 +1,7 @@
 'use client';
 import { useLoginLogic } from '@/app/api/login/logic/loginLogic';
 import { Messages } from '@/app/hendlererror/message/messages';
+import Head from 'next/head';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
@@ -20,6 +21,11 @@ const LoginPage = () => {
     } = useLoginLogic();
 
     return (
+        <>
+         <Head>
+                <title>SIMGO</title>
+                <meta name="description" content="Sistem Informasi Manajemen Good Corporate Governance" />
+            </Head>
         <div className="container-classname">
             <div className="flex flex-column align-items-center justify-content-center">
                 <div className="mb-5 w-6rem flex-shrink-0" />
@@ -84,6 +90,7 @@ const LoginPage = () => {
                 <div className="mb-5 w-6rem flex-shrink-0" />
             </div>
         </div>
+        </>
     );
 };
 
