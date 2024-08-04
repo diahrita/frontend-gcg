@@ -8,10 +8,8 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Toolbar } from 'primereact/toolbar';
 
 
-
 const DataAdmin = () => {
     const { dataWithDisplayId, loading, error, handlePageChange } = useDataAdminLogic();
-   
 
     const rightToolbarTemplate = () => (
         <>
