@@ -15,11 +15,11 @@ export const metadata: Metadata = {
         title: 'SIMGO',
         url: 'https://sakai.primereact.org/',
         description: 'Sistem Informasi Manajemen Good Corporate Governance',
-        images: ['https://www.primefaces.org/static/social/sakai-react.png'],
+        images: [`/layout/images/tps.png`],
         ttl: 604800
     },
     icons: {
-        icon: '/favicon.ico'
+        icon: [`/layout/images/pelindo.png`]
     }
 };
 
