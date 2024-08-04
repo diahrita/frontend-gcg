@@ -2,31 +2,13 @@
 
 import useAuth from '@/app/api/hooks/useAuth';
 import Loading from '@/app/components/Loading';
-import { Metadata } from 'next';
+import Head from 'next/head';
 import { useEffect } from 'react';
 import Layout from '../../layout/layout';
 
 interface AppLayoutProps {
     children: React.ReactNode;
 }
-
-export const metadata: Metadata = {
-    title: 'SIMGO',
-    description: 'Sistem Informasi Manajemen Good Corporate Governance',
-    robots: { index: false, follow: false },
-    viewport: { initialScale: 1, width: 'device-width' },
-    openGraph: {
-        type: 'website',
-        title: 'SIMGO',
-        url: 'https://sakai.primereact.org/',
-        description: 'Sistem Informasi Manajemen Good Corporate Governance',
-        images: ['https://www.primefaces.org/static/social/sakai-react.png'],
-        ttl: 604800
-    },
-    icons: {
-        icon: '/favicon.ico'
-    }
-};
 
 export default function AppLayout({ children }: AppLayoutProps) {
     const { loading, isAuthenticated } = useAuth();
@@ -42,9 +24,25 @@ export default function AppLayout({ children }: AppLayoutProps) {
     }
 
     if (!isAuthenticated) {
-       
         return <Loading />; 
     }
 
-    return <Layout>{children}</Layout>;
+    return (
+        <>
+            <Head>
+                <title>SIMGO</title>
+                <meta name="description" content="Sistem Informasi Manajemen Good Corporate Governance" />
+                <meta name="robots" content="noindex, nofollow" />
+                <meta name="viewport" content="initial-scale=1, width=device-width" />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="SIMGO" />
+                <meta property="og:url" content="https://sakai.primereact.org/" />
+                <meta property="og:description" content="Sistem Informasi Manajemen Good Corporate Governance" />
+                <meta property="og:image" content="https://www.primefaces.org/static/social/sakai-react.png" />
+                <meta property="og:ttl" content="604800" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <Layout>{children}</Layout>
+        </>
+    );
 }
