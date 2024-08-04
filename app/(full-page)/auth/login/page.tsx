@@ -1,88 +1,23 @@
 'use client';
-import { loginUser } from '@/app/api/login/loginApi';
+import { useLoginLogic } from '@/app/api/login/logic/loginLogic';
 import { Messages } from '@/app/hendlererror/message/messages';
-import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
-import { useEffect, useState } from 'react';
 import './styles.css';
 
-
 const LoginPage = () => {
-    const router = useRouter() ;
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [usernameError, setUsernameError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-
-    useEffect(() => {
-        const token = sessionStorage.getItem('token');
-        const expirationTime = sessionStorage.getItem('expirationTime');
-
-        if (token && expirationTime) {
-            const isExpired = Date.now() > parseInt(expirationTime);
-            if (!isExpired) {
-                router.push('/');
-            } else {
-                sessionStorage.removeItem('token');
-                sessionStorage.removeItem('expirationTime');
-            }
-        }
-
-        // Ambil pesan error dari sessionStorage
-        const storedError = sessionStorage.getItem('error');
-        if (storedError) {
-            setError(storedError);
-            sessionStorage.removeItem('error');
-        }
-    }, [router]);
-
-    const handleLogin = async () => {
-        setLoading(true);
-        setError('');
-        setUsernameError('');
-        setPasswordError('');
-
-        if (!username) {
-            setUsernameError(Messages.USERNAME_ERROR_PLACEHOLDER);
-            setLoading(false);
-            return;
-        }
-
-        if (!password) {
-            setPasswordError(Messages.PASSWORD_ERROR_PLACEHOLDER);
-            setLoading(false);
-            return;
-        }
-
-        try {
-            const token = await loginUser(username, password, router);
-            // Simpan token dan waktu kedaluwarsa (6 jam)
-            const expirationTime = Date.now() + 6 * 60 * 60 * 1000; 
-            sessionStorage.setItem('token', token);
-            sessionStorage.setItem('expirationTime', expirationTime.toString());
-        } catch (err: any) {
-            setError(err.message);
-            sessionStorage.removeItem('error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value.slice(0, 20));
-        setUsernameError('');
-        setError('');
-    };
-
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value.slice(0, 20));
-        setPasswordError('');
-        setError('');
-    };
+    const {
+        username,
+        password,
+        loading,
+        error,
+        usernameError,
+        passwordError,
+        handleLogin,
+        handleUsernameChange,
+        handlePasswordChange,
+    } = useLoginLogic();
 
     return (
         <div className="container-classname">
@@ -103,7 +38,7 @@ const LoginPage = () => {
                         </div>
 
                         <div>
-                           <div className="flex align-items-center justify-content-between mb-1 gap-5">
+                            <div className="flex align-items-center justify-content-between mb-1 gap-5">
                                 {error && <p className="text-red-500" style={{ whiteSpace: 'pre-line' }}>{error}</p>}
                             </div>
 
