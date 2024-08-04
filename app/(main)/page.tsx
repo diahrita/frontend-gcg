@@ -1,8 +1,15 @@
 'use client';
 
+import Head from "next/head";
+
 const Dashboard = () => {
  
     return (
+        <>
+        <Head>
+                <title>SIMGO</title>
+                <meta name="description" content="Sistem Informasi Manajemen Good Corporate Governance" />
+            </Head>
         <div className="grid">
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
@@ -64,6 +71,8 @@ const Dashboard = () => {
                 </div>
             </div>
         </div>
+
+        </>
     );
 };
 
