@@ -10,6 +10,7 @@ import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
 import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { LayoutContext } from './context/layoutcontext';
+import { stopTokenRefresh } from '@/app/api/data/jwtToken';
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
@@ -46,6 +47,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     };
 
     const handleLogout = () => {
+        stopTokenRefresh();
         sessionStorage.clear();
         localStorage.clear();
         window.location.href = '/auth/login';

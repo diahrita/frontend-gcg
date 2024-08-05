@@ -10,7 +10,7 @@ export const fetchBusinessPartnerData = async (page: number = 1, limit: number =
     if (typeof window === 'undefined') {
         return null;
     }
-    
+
     let token = sessionStorage.getItem(Messages.TOKEN);
     
     if (!token) {
@@ -40,7 +40,7 @@ const startFetchingData = () => {
     const intervalId = setInterval(async () => {
         const data = await fetchBusinessPartnerData();
         // console.log(data); 
-    }, 20000);
+    }, 17000);
 
     
 };
