@@ -15,7 +15,7 @@ const AppMenu = () => {
             label: 'Home',
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-                { label: 'Form Klaim', icon: 'pi pi-fw pi-file', to: '/uikit/klaim' }
+                { label: 'Form Survey', icon: 'pi pi-fw pi-file', to: '/uikit/form-survey' }
             ]
         },
         {

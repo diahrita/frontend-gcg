@@ -14,6 +14,10 @@ import { Divider } from 'primereact/divider';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import { Inplace, InplaceDisplay, InplaceContent } from 'primereact/inplace';
+import { Menu } from 'primereact/menu';
+import { MenuItem } from 'primereact/menuitem';
+import { Avatar } from 'primereact/avatar';
+import { Badge } from 'primereact/badge';
 
 const megamenuItems = [
     {
@@ -64,6 +68,44 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     );
     const [text, setText] = useState<string>('');
 
+    const menuRight = useRef<Menu>(null);
+    const items: MenuItem[] = [
+        {
+            template: () => {
+                return (
+                    <div className="">
+                        <div className="flex flex-column align-items-center py-2 px-2">
+                            <Avatar icon={'pi pi-user'} size="large" style={{ backgroundColor: '#2196F3', color: '#ffffff' }} className="mr-2 mb-2" shape="circle" />
+                            <div className="text-center">
+                                <h5 className="mb-1">Admin</h5>
+                                <span className="">admin@gmail.com</span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        },
+        {
+            separator: true
+        },
+        {
+            template: () => {
+                return (
+                    <Link href="/uikit/edit-profile" legacyBehavior>
+                        <a className="p-menuitem-link">
+                            <span className="p-menuitem-icon pi pi-user-edit"></span>
+                            <span className="p-menuitem-text">Edit</span>
+                        </a>
+                    </Link>
+                );
+            }
+        },
+        {
+            label: 'Logout',
+            icon: 'pi pi-sign-out'
+        }
+    ];
+
     return (
         <div className="layout-topbar">
             <Link href="/" className="layout-topbar-logo">
@@ -79,45 +121,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                <div className="mx-2"></div>
                 <div className="flex gap-2 justify-content-center">
-                    <Button icon="pi pi-user" onClick={() => setVisibleRight(true)} />
+                    <Toast ref={toast}></Toast>
+                    <Menu className='card flex-column align-items-center py-2 px-2' model={items} popup ref={menuRight} id="popup_menu_right" popupAlignment="right" />
+                    <Button icon="pi pi-user" className="mr-2" onClick={(event) => menuRight.current?.toggle(event)} aria-controls="popup_menu_right" aria-haspopup />
                 </div>
-
-                <Sidebar visible={visibleRight} position="right" onHide={() => setVisibleRight(false)}>
-                    <div className="flex flex-wrap justify-content-center gap-3 mb-4">
-                        <i className="pi pi-user" style={{ fontSize: '2.5rem', color: 'slateblue' }}></i>
-                    </div>
-                    <div className="text-center">
-                        <h4 className="mb-1">Admin</h4>
-                        <p className="mt-1">admin@gmail.com</p>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', marginTop: '12px' }}>
-                        <Button style={{ width: '100px', height: '40px', marginBottom: '4px' }} label="Edit" icon="pi pi-user-edit" severity="info" aria-label="User" onClick={() => setVisibleDialog(true)} />
-                        <Toast ref={toast} />
-                        <ConfirmDialog visible={visibleConfirmDialog} onHide={() => setVisibleConfirmDialog(false)} message="Anda yakin ingin logout?" header="Logout" icon="pi pi-sign-out" accept={accept} reject={reject} />
-                        <Button style={{ width: '100px', height: '40px', marginTop: '4px' }} onClick={() => setVisibleConfirmDialog(true)} icon="pi pi-check" label="Logout" severity="danger" />
-                    </div>
-                    <Dialog header="Edit Profile" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={footerContent}>
-                        <div className="card">
-                            <div className="flex-auto">
-                                <label htmlFor="email" className="font-bold block mb-2">
-                                    Email
-                                </label>
-                                <InputText id="email" keyfilter="email" className="w-full" />
-                            </div>
-                            <Divider type="solid" />
-                            <Inplace closable>
-                                <InplaceDisplay>{text || 'Ganti Password'}</InplaceDisplay>
-                                <InplaceContent>
-                                    <InputText className="w-full mb-3" placeholder="Current Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
-                                    <InputText className="w-full mb-3" placeholder="New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
-                                    <InputText className="w-full mb-3" placeholder="Confirm New Password" value={text} onChange={(e) => setText(e.target.value)} autoFocus />
-                                </InplaceContent>
-                            </Inplace>
-                        </div>
-                    </Dialog>
-                </Sidebar>
             </div>
         </div>
     );

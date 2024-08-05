@@ -42,7 +42,7 @@ const Klaim = () => {
         <div className="grid">
             <div className="col-12">
                 <div className="card">
-                    <h4>Form Klaim Kerusakan Barang</h4>
+                    <h4>Form Survey</h4>
                     <div className="p-fluid formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="firstname2">Kode Pelaporan</label>
