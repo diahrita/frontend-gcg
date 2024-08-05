@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -10,13 +9,13 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
-// import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
 import { Demo } from '@/types';
+import { Toolbar } from 'primereact/toolbar';
 
-/* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
+
 const BankSoal = () => {
     let emptyProduct: Demo.Product = {
         id: '',
@@ -148,18 +147,14 @@ const BankSoal = () => {
         return id;
     };
 
-    // const exportCSV = () => {
-    //     dt.current?.exportCSV();
-    // };
+    const exportCSV = () => {
+        dt.current?.exportCSV();
+    };
 
-    // const confirmDeleteSelected = () => {
-    //     setDeleteProductsDialog(true);
-    // };
 
     const deleteSelectedProducts = () => {
         let _products = (products as any)?.filter((val: any) => !(selectedProducts as any)?.includes(val));
         setProducts(_products);
-        setDeleteProductsDialog(false);
         setSelectedProducts(null);
         toast.current?.show({
             severity: 'success',
@@ -191,25 +186,15 @@ const BankSoal = () => {
         setProduct(_product);
     };
 
-    // const leftToolbarTemplate = () => {
-    //     return (
-    //         <React.Fragment>
-    //             <div className="my-2">
-    //                 <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-    //                 <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !(selectedProducts as any).length} />
-    //             </div>
-    //         </React.Fragment>
-    //     );
-    // };
 
-    // const rightToolbarTemplate = () => {
-    //     return (
-    //         <React.Fragment>
-    //             <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-    //             <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-    //         </React.Fragment>
-    //     );
-    // };
+    const rightToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                 <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
+            </React.Fragment>
+        );
+    };
 
     const codeBodyTemplate = (rowData: Demo.Product) => {
         return (
@@ -247,23 +232,6 @@ const BankSoal = () => {
         );
     };
 
-    // const categoryBodyTemplate = (rowData: Demo.Product) => {
-    //     return (
-    //         <>
-    //             <span className="p-column-title">Category</span>
-    //             {rowData.category}
-    //         </>
-    //     );
-    // };
-
-    // const statusBodyTemplate = (rowData: Demo.Product) => {
-    //     return (
-    //         <>
-    //             <span className="p-column-title">Status</span>
-    //             <span className={`product-badge status-${rowData.inventoryStatus?.toLowerCase()}`}>{rowData.inventoryStatus}</span>
-    //         </>
-    //     );
-    // };
 
     const actionBodyTemplate = (rowData: Demo.Product) => {
         return (
@@ -308,8 +276,9 @@ const BankSoal = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
-                    {/* <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar> */}
+                     <Toolbar className="mb-4"  right={rightToolbarTemplate}></Toolbar>
 
+                    
                     <DataTable
                         ref={dt}
                         value={products}
@@ -327,15 +296,13 @@ const BankSoal = () => {
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        {/* <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column> */}
+                        
                         <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="code" header="Partner Path Name" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column field="name" header="Short Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Foto" body={imageBodyTemplate}></Column>
                         <Column field="price" header="Email" body={priceBodyTemplate} sortable></Column>
                         <Column field="name" header="Phone" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        {/* <Column field="category" header="Kategori" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column> */}
-                        {/* <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column> */}
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
@@ -575,13 +542,6 @@ const BankSoal = () => {
                             )}
                         </div>
                     </Dialog>
-
-                    {/* <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
-                        </div>
-                    </Dialog> */}
                 </div>
             </div>
         </div>
