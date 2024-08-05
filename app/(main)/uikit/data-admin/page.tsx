@@ -7,8 +7,6 @@ import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-// import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
@@ -25,7 +23,7 @@ const Crud = () => {
         telepon: '',
         password: ''
         // image: '',
-        // description: '',
+        // description: ''
         // category: '',
         // price: 0,
         // quantity: 0,
