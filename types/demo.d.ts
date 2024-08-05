@@ -122,14 +122,17 @@ declare namespace Demo {
         id?: string;
         code?: string;
         name: string;
-        description: string;
+        description?: string;
         image?: string;
         price?: number;
         category?: string;
         quantity?: number;
-        inventoryStatus?: InventoryStatus;
+        // inventoryStatus?: InventoryStatus;
         orders?: ProductOrder[];
         [key: string]: string | string[] | number | boolean | undefined | ProductOrder[] | InventoryStatus;
+        mail: string;
+        telepon: string;
+        password?: string;
     };
 
     type ProductOrder = {

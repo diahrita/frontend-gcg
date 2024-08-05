@@ -8,33 +8,36 @@ import { FileUpload } from 'primereact/fileupload';
 import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
+// import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { Toast } from 'primereact/toast';
-// import { Toolbar } from 'primereact/toolbar';
+import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
 import { Demo } from '@/types';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
-const BankSoal = () => {
+const Crud = () => {
     let emptyProduct: Demo.Product = {
         id: '',
         name: '',
-        image: '',
-        description: '',
-        category: '',
-        price: 0,
-        quantity: 0,
-        inventoryStatus: 'PENDING'
+        mail: '',
+        telepon: '',
+        password: ''
+        // image: '',
+        // description: '',
+        // category: '',
+        // price: 0,
+        // quantity: 0,
+        // rating: 0
+        // inventoryStatus: 'INSTOCK'
     };
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [selectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
@@ -55,19 +58,12 @@ const BankSoal = () => {
         setProduct(emptyProduct);
         setSubmitted(false);
         setProductDialog(true);
+        setIsEditMode(false);
     };
 
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
-    };
-
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
-    };
-
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
     };
 
     const saveProduct = () => {
@@ -104,6 +100,12 @@ const BankSoal = () => {
         }
     };
 
+    const editProduct = (product: Demo.Product) => {
+        setProduct({ ...product });
+        setProductDialog(true);
+        setIsEditMode(true);
+    };
+
     const findIndexById = (id: string) => {
         let index = -1;
         for (let i = 0; i < (products as any)?.length; i++) {
@@ -125,10 +127,8 @@ const BankSoal = () => {
         return id;
     };
 
-    const onCategoryChange = (e: RadioButtonChangeEvent) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
+    const exportCSV = () => {
+        dt.current?.exportCSV();
     };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
@@ -145,6 +145,25 @@ const BankSoal = () => {
         _product[`${name}`] = val;
 
         setProduct(_product);
+    };
+
+    const leftToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <div className="my-2">
+                    <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
+                </div>
+            </React.Fragment>
+        );
+    };
+
+    const rightToolbarTemplate = () => {
+        return (
+            <React.Fragment>
+                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
+                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
+            </React.Fragment>
+        );
     };
 
     const codeBodyTemplate = (rowData: Demo.Product) => {
@@ -165,19 +184,47 @@ const BankSoal = () => {
         );
     };
 
-    const priceBodyTemplate = (rowData: Demo.Product) => {
+    const mailBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
-                <span className="p-column-title">Price</span>
-                {formatCurrency(rowData.price as number)}
+                <span className="p-column-title">Mail</span>
+                {rowData.mail}
+            </>
+        );
+    };
+
+    const teleponBodyTemplate = (rowData: Demo.Product) => {
+        return (
+            <>
+                <span className="p-column-title">Telepon</span>
+                {rowData.telepon}
+            </>
+        );
+    };
+
+    const actionBodyTemplate = (rowData: Demo.Product) => {
+        return (
+            <>
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editProduct(rowData)} />
             </>
         );
     };
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Data Pelaporan Kerusakan Barang</h5>
+            <h5 className="m-0">Kategori Penilaian</h5>
+            <span className="block mt-2 md:mt-0 p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+            </span>
         </div>
+    );
+
+    const productDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
+        </>
     );
 
     return (
@@ -185,16 +232,16 @@ const BankSoal = () => {
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
+                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
                     <DataTable
                         ref={dt}
                         value={products}
                         selection={selectedProducts}
-                        onSelectionChange={(e) => setSelectedProducts(e.value as any)}
                         dataKey="id"
                         paginator
                         rows={10}
-                        rowsPerPageOptions={[10, 25, 50, 100]}
+                        rowsPerPageOptions={[5, 10, 25]}
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
@@ -203,16 +250,76 @@ const BankSoal = () => {
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        <Column field="code" header="Id" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="code" header="Partner Path Name" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="name" header="Short Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="price" header="Email" body={priceBodyTemplate} sortable headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="name" header="Phone" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="code" header="No" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="name" header="Nilai" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="mail" header="Persen" sortable body={mailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
+
+                    <Dialog visible={productDialog} style={{ width: '450px' }} header={isEditMode ? 'Edit Data Admin' : 'Tambah Data Admin'} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                        <div className="field">
+                            <label htmlFor="Username">Username</label>
+                            <InputText
+                                id="name"
+                                value={product.name}
+                                onChange={(e) => onInputChange(e, 'name')}
+                                required
+                                autoFocus
+                                className={classNames({
+                                    'p-invalid': submitted && !product.name
+                                })}
+                            />
+                            {submitted && !product.name && <small className="p-invalid">Username is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="mail">Email</label>
+                            <InputText
+                                id="mail"
+                                value={product.mail}
+                                onChange={(e) => onInputChange(e, 'mail')}
+                                required
+                                className={classNames({
+                                    'p-invalid': submitted && !product.mail
+                                })}
+                            />
+                            {submitted && !product.mail && <small className="p-invalid">Email is required.</small>}
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="telepon">No Telepon</label>
+                            <InputText
+                                id="telepon"
+                                value={product.telepon}
+                                onChange={(e) => onInputChange(e, 'telepon')}
+                                required
+                                className={classNames({
+                                    'p-invalid': submitted && !product.telepon
+                                })}
+                            />
+                            {submitted && !product.telepon && <small className="p-invalid">No Telepon is required.</small>}
+                        </div>
+
+                        {!isEditMode && (
+                            <div className="field">
+                                <label htmlFor="password">Password</label>
+                                <InputText
+                                    id="password"
+                                    value={product.password}
+                                    onChange={(e) => onInputChange(e, 'password')}
+                                    required
+                                    className={classNames({
+                                        'p-invalid': submitted && !product.password
+                                    })}
+                                />
+                                {submitted && !product.password && <small className="p-invalid">Password is required.</small>}
+                            </div>
+                        )}
+                    </Dialog>
                 </div>
             </div>
         </div>
     );
 };
 
-export default BankSoal;
+export default Crud;
