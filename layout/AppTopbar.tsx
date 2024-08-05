@@ -67,10 +67,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         {
             template: () => (
                 <div className="flex flex-column align-items-center py-2 px-2">
-                         <img src={getImageSrc()} width="80px" height={'65px'} alt="profile" />
-                    <div className="text-center">
-                        <h5 className="mb-1">{profile?.type_user || '-'}</h5>
-                        <span>{profile?.email || 'Email not found'}</span>
+                         <img src={getImageSrc()} width="45px" height={'45px'} alt="profile" />
+                    <div className="text-center mt-2">
+                        <span className="font-bold mb-1">{profile?.type_user || '-'}</span>
+                        <br></br>
+                        <p>{profile?.email || 'Email not found'}</p>
                     </div>
                 </div>
             )

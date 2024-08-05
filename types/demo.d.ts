@@ -117,6 +117,18 @@ declare namespace Demo {
         createdAt: number;
     }
 
+    type Soal = {
+        id?: number;
+        pertanyaan?: string;
+        jumlah?: number;
+        jawaban?: number;
+        grup?: string;
+        created_at?: string;
+        modified_at?: string;
+        show?: number;
+        [key: string]: any; 
+    };
+
     //ProductService
     type Product = {
         id?: string;

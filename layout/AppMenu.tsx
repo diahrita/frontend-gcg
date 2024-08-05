@@ -40,7 +40,7 @@ const AppMenu = () => {
             ]
         },
         {
-            label: 'Pengaturan',
+            label: 'Setting',
             items: [
                 {
                     label: 'Data Admin',
@@ -49,29 +49,29 @@ const AppMenu = () => {
                 }
             ]
         },
-        {
-            label: 'Pages',
-            icon: 'pi pi-fw pi-briefcase',
-            to: '/pages',
-            items: [
-                {
-                    label: 'Login',
-                    icon: 'pi pi-fw pi-sign-in',
-                    to: '/auth/login'
-                },
-                {
-                    label: 'Register',
-                    icon: 'pi pi-fw pi-sign-in',
-                    to: '/auth/register'
-                },
-                {
-                    label: 'Icons',
-                    icon: 'pi pi-fw pi-prime',
-                    to: '/utilities/icons'
-                }
+        // {
+        //     label: 'Pages',
+        //     icon: 'pi pi-fw pi-briefcase',
+        //     to: '/pages',
+        //     items: [
+        //         {
+        //             label: 'Login',
+        //             icon: 'pi pi-fw pi-sign-in',
+        //             to: '/auth/login'
+        //         },
+        //         {
+        //             label: 'Register',
+        //             icon: 'pi pi-fw pi-sign-in',
+        //             to: '/auth/register'
+        //         },
+        //         {
+        //             label: 'Icons',
+        //             icon: 'pi pi-fw pi-prime',
+        //             to: '/utilities/icons'
+        //         }
               
-            ]
-        }
+        //     ]
+        // }
     ];
 
     return (
