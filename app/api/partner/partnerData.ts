@@ -5,17 +5,11 @@ import { AuthHeaders } from '@/app/route/authHeaders';
 import { DataPartner } from '@/types/partner';
 import axios from 'axios';
 
-interface FetchResult {
-    status: number;
-    data: DataPartner[] | null;
-}
-
-export const fetchBusinessPartnerData = async (page: number = 1, limit: number = 5): Promise<FetchResult> => {
+export const fetchBusinessPartnerData = async (page: number = 1, limit: number = 5) => {
     const token = sessionStorage.getItem(Messages.TOKEN);
 
     if (!token) {
-        sessionStorage.setItem(Messages.ERROR, Messages.TOKEN_NOT_FOUND);
-        return { status: 401, data: null };
+        return null; 
     }
 
     try {
@@ -28,10 +22,24 @@ export const fetchBusinessPartnerData = async (page: number = 1, limit: number =
         });
         const data: DataPartner[] = response.data;
         sessionStorage.removeItem(Messages.ERROR);
-        return { status: response.status, data };
-
-    }  catch (err: any) {
+        return response.data;
+       
+    } catch (err: any) {
         const { status, message } = handleError(err);
         return { status, data: null };
     }
 };
+
+
+const startFetchingData = () => {
+   
+    const intervalId = setInterval(async () => {
+        const data = await fetchBusinessPartnerData();
+        // console.log(data); 
+    }, 20000); 
+
+    clearInterval(intervalId)
+};
+
+
+startFetchingData();
