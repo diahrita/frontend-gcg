@@ -9,6 +9,34 @@ import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
 import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { LayoutContext } from './context/layoutcontext';
+import { MegaMenu } from 'primereact/megamenu';
+import { Sidebar } from 'primereact/sidebar';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { Dialog } from 'primereact/dialog';
+import { Divider } from 'primereact/divider';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
+import { Inplace, InplaceDisplay, InplaceContent } from 'primereact/inplace';
+import { Menu } from 'primereact/menu';
+import { MenuItem } from 'primereact/menuitem';
+import { Avatar } from 'primereact/avatar';
+import { Badge } from 'primereact/badge';
+
+const megamenuItems = [
+    {
+        label: 'Profile',
+        icon: 'pi pi-fw pi-user mr-2 text-2xl',
+        items: [
+            [
+                {
+                    label: 'Kids',
+                    items: [{ label: 'Kids Item' }, { label: 'Kids Item' }]
+                }
+            ]
+        ]
+    }
+];
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
@@ -55,8 +83,54 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     };
 
     const reject = () => {
-        toast.current?.show({ severity: 'warn', summary: 'Logout cancelled', detail: 'You have cancelled the logout', life: 3000 });
+        toast.current?.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
     };
+
+    const footerContent = (
+        <div>
+            <Button label="No" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
+            <Button label="Yes" icon="pi pi-check" onClick={() => setVisibleDialog(false)} autoFocus />
+        </div>
+    );
+    const [text, setText] = useState<string>('');
+
+    const menuRight = useRef<Menu>(null);
+    const items: MenuItem[] = [
+        {
+            template: () => {
+                return (
+                    <div className="">
+                        <div className="flex flex-column align-items-center py-2 px-2">
+                            <Avatar icon={'pi pi-user'} size="large" style={{ backgroundColor: '#2196F3', color: '#ffffff' }} className="mr-2 mb-2" shape="circle" />
+                            <div className="text-center">
+                                <h5 className="mb-1">Admin</h5>
+                                <span className="">admin@gmail.com</span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        },
+        {
+            separator: true
+        },
+        {
+            template: () => {
+                return (
+                    <Link href="/uikit/edit-profile" legacyBehavior>
+                        <a className="p-menuitem-link">
+                            <span className="p-menuitem-icon pi pi-user-edit"></span>
+                            <span className="p-menuitem-text">Edit</span>
+                        </a>
+                    </Link>
+                );
+            }
+        },
+        {
+            label: 'Logout',
+            icon: 'pi pi-sign-out'
+        }
+    ];
 
     return (
         <div className="layout-topbar">
@@ -73,32 +147,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                <div className="mx-2"></div>
                 <div className="flex gap-2 justify-content-center">
-                    <Button icon="pi pi-user" onClick={() => setVisibleRight(true)} />
+                    <Toast ref={toast}></Toast>
+                    <Menu className='card flex-column align-items-center py-2 px-2' model={items} popup ref={menuRight} id="popup_menu_right" popupAlignment="right" />
+                    <Button icon="pi pi-user" className="mr-2" onClick={(event) => menuRight.current?.toggle(event)} aria-controls="popup_menu_right" aria-haspopup />
                 </div>
-
-                <Sidebar visible={visibleRight} position="right" onHide={() => setVisibleRight(false)}>
-
-
-                    <div className="flex flex-wrap justify-content-center gap-3 mb-4">
-                    <img src={getImageSrc()} width="80px" height={'65px'} alt="logo" />
-                    </div>
-
-                    <div className="text-center">
-                        <h4 className="mb-1">{profile?.type_user || '-'}</h4>
-                        <p className="mt-1">{profile?.email || 'Email not found'}</p>
-                    </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px', marginTop: '12px' }}>
-                        <Button style={{ width: '100px', height: '40px', marginBottom: '4px' }} label="Edit" icon="pi pi-user-edit" severity="info" aria-label="User"/>
-
-                        <Toast ref={toast} />
-                        <ConfirmDialog visible={visibleConfirmDialog} onHide={() => setVisibleConfirmDialog(false)} message="Are you sure you want to logout?" header="Logout" icon="pi pi-sign-out" accept={accept} reject={reject} />
-
-                        <Button style={{ width: '100px', height: '40px', marginTop: '4px' }} onClick={() => setVisibleConfirmDialog(true)} icon="pi pi-check" label="Logout" severity="danger" />
-                    </div>
-                </Sidebar>
             </div>
         </div>
     );
