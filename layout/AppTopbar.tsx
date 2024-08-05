@@ -1,23 +1,13 @@
-/* eslint-disable @next/next/no-img-element */
-
 import { AppTopbarRef } from '@/types';
 import Link from 'next/link';
+import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
-import { ConfirmDialog } from 'primereact/confirmdialog';
-import { Sidebar } from 'primereact/sidebar';
-import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
-import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { LayoutContext } from './context/layoutcontext';
-import { MegaMenu } from 'primereact/megamenu';
-import { InputText } from 'primereact/inputtext';
-import { Dialog } from 'primereact/dialog';
-import { Divider } from 'primereact/divider';
-import { Inplace, InplaceDisplay, InplaceContent } from 'primereact/inplace';
 import { Menu } from 'primereact/menu';
 import { MenuItem } from 'primereact/menuitem';
-import { Avatar } from 'primereact/avatar';
-import { Badge } from 'primereact/badge';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+import { forwardRef, useContext, useImperativeHandle, useRef, useState } from 'react';
+import { LayoutContext } from './context/layoutcontext';
 
 const megamenuItems = [
     {
@@ -39,56 +29,32 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const menubuttonRef = useRef(null);
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
-    const [visibleRight, setVisibleRight] = useState(false);
-    const [visibleConfirmDialog, setVisibleConfirmDialog] = useState(false);
-    const [profile, setProfile] = useState<{ email: string; type_user: string } | null>(null);
-    const toast = useRef<Toast>(null);
+
+
+    const [visibleDialog, setVisibleDialog] = useState(false);
     
+    const toast = useRef<Toast>(null);
+
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
         topbarmenu: topbarmenuRef.current,
         topbarmenubutton: topbarmenubuttonRef.current
     }));
 
-    useEffect(() => {
-        const storedProfile = sessionStorage.getItem('profile');
-        if (storedProfile) {
-            setProfile(JSON.parse(storedProfile));
-        }
-    }, []);
-
-    const getImageSrc = () => {
-        if (profile?.type_user === 'PUBLIC') {
-            return '/layout/images/public.png';
-        } else if (profile?.type_user === 'TAMU') {
-            return '/layout/images/guest.png';
-        } else {
-            return '/layout/images/user.png';
-        }
-    };
-
-    const handleLogout = () => {
-        sessionStorage.clear();
-        localStorage.clear();
-        window.location.href = '/auth/login';
-    };
-
     const accept = () => {
-        handleLogout();
-        toast.current?.show({ severity: 'info', summary: 'Logged out', detail: 'You have successfully logged out', life: 3000 });
+        toast.current?.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
     };
 
     const reject = () => {
         toast.current?.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
     };
 
-    // const footerContent = (
-    //     <div>
-    //         <Button label="No" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
-    //         <Button label="Yes" icon="pi pi-check" onClick={() => setVisibleDialog(false)} autoFocus />
-    //     </div>
-    // );
-
+    const footerContent = (
+        <div>
+            <Button label="No" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
+            <Button label="Yes" icon="pi pi-check" onClick={() => setVisibleDialog(false)} autoFocus />
+        </div>
+    );
     const [text, setText] = useState<string>('');
 
     const menuRight = useRef<Menu>(null);
