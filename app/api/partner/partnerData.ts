@@ -40,7 +40,7 @@ const startFetchingData = () => {
     const intervalId = setInterval(async () => {
         const data = await fetchBusinessPartnerData();
         // console.log(data); 
-    }, 17000);
+    }, 15000);
 
     
 };

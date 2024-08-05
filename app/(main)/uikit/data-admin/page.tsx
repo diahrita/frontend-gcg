@@ -105,7 +105,7 @@ const DataAdmin = () => {
         }
     };
 
-    const editProduct = (product: Demo.Product) => {
+    const addAdmin = (product: Demo.Product) => {
         setProduct({ ...product });
         setProductDialog(true);
         setIsEditMode(true);
@@ -195,7 +195,7 @@ const DataAdmin = () => {
 
     const actionBodyTemplate = (partner: DataPartner) => (
         <>
-            <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" onClick={() => editProduct(partner as any)} />
+            <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" />
         </>
     );
 
@@ -275,6 +275,7 @@ const DataAdmin = () => {
                 <div className="field">
                     <label htmlFor="telepon">Telepon</label>
                     <InputText id="telepon" value={product.telepon} onChange={(e) => onInputChange(e, 'telepon')} required className={classNames({ 'p-invalid': submitted && !product.telepon })} />
+                   
                     {submitted && !product.telepon && <small className="p-invalid">Telepon is required.</small>}
                 </div>
                 <div className="field">
@@ -283,6 +284,7 @@ const DataAdmin = () => {
                     {submitted && !product.password && <small className="p-invalid">Password is required.</small>}
                 </div>
             </Dialog>
+            
         </div>
     );
 };

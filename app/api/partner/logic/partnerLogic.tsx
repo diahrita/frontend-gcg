@@ -12,6 +12,7 @@ export const useDataAdminLogic = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const result = await fetchBusinessPartnerData(page, limit);
                 if (result) {

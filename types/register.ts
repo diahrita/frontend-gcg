@@ -1,4 +1,4 @@
-export type RegisterPayload = {
+export type RegisterAdmin = {
     username: string;
     password: string;
     short_name: string;

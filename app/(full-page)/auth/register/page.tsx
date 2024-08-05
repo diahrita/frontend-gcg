@@ -1,84 +1,103 @@
-/* eslint-disable @next/next/no-img-element */
-'use client';
-import { useRouter } from 'next/navigation';
-import React, { useContext, useState } from 'react';
-import { Checkbox } from 'primereact/checkbox';
-import { Button } from 'primereact/button';
-import { Password } from 'primereact/password';
-import { LayoutContext } from '../../../../layout/context/layoutcontext';
-import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
-import Link from 'next/link';
+'use client'
+import { regisAdmin } from '@/app/api/register/regisAdmin'; // Ganti dengan path yang sesuai
+import { RegisterAdmin } from '@/types/register';
+import React, { useState } from 'react';
+import './Register.css'; // Ganti dengan file CSS Anda
 
-const RegisterPage = () => {
+const Register: React.FC = () => {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [checked, setChecked] = useState(false);
-    const { layoutConfig } = useContext(LayoutContext);
+    const [shortName, setShortName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [formattedData, setFormattedData] = useState<string | null>(null);
 
-    const router = useRouter();
-    const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
-    const [value, setValue] = useState<string>('');
+    const handleRegister = async () => {
+        const registrationData: RegisterAdmin = {
+            username,
+            password,
+            short_name: shortName,
+            email,
+            phone,
+        };
+
+        const result = await regisAdmin(registrationData);
+
+        if (result.status === 200) {
+            setSuccess('Registration successful!');
+            setError(null);
+            // Format data to JSON string with double quotes
+            setFormattedData(JSON.stringify(registrationData, null, 4));
+        } else {
+            setError('Registration failed. Please try again.');
+            setSuccess(null);
+            setFormattedData(null);
+        }
+    };
 
     return (
-        <div className={containerClassName}>
-            <div className="flex flex-column align-items-center justify-content-center">
-                <div className="mb-5 w-6rem flex-shrink-0" />
-                <div
-                    style={{
-                        borderRadius: '56px',
-                        padding: '0.3rem',
-                        background: 'linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)'
-                    }}
-                >
-                    <div className="w-full surface-card py-4 px-2 sm:px-8" style={{ borderRadius: '53px' }}>
-                        <div className="text-center mb-5">
-                            <img src="/layout/images/tps.png" alt="Image" height="100" className="mb-3" />
-                            <div className="text-900 text-3xl font-medium mb-3">Selamat Datang</div>
-                            <span className="text-600 font-medium">Silahkan register terlebih dahulu!</span>
-                        </div>
-
-                        <div>
-                            <label htmlFor="nama" className="block text-900 text-xl font-medium mb-2">
-                                Nama
-                            </label>
-                            <InputText id="nama" type="text" placeholder="Nama" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
-
-                            <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
-                                Email
-                            </label>
-                            <InputText id="email" keyfilter="email" type="text" placeholder="Alamat Email" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
-
-                            <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
-                                Password
-                            </label>
-                            <Password
-                                inputId="password1"
-                                value={value}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
-                                placeholder="Password"
-                                toggleMask
-                                className="w-full mb-5"
-                                inputClassName="w-full p-3 md:w-30rem"
-                            />
-
-                            <div className="flex align-items-center justify-content-between mb-1 gap-5"></div>
-                            <Button label="Register" className="w-full p-3 text-xl" onClick={() => router.push('/')}></Button>
-
-                            <div className="text-center mb-5">
-                                <div className="text-600 font-medium mb-3" style={{ paddingTop: '1rem' }}>
-                                    Sudah Punya Akun?{' '}
-                                    <Link href="/auth/login" className="underline text-blue-600">
-                                        Masuk
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="mb-5 w-6rem flex-shrink-0" />
+        <div className="register-container">
+            <h1>Register Admin</h1>
+            {error && <div className="error-message">{error}</div>}
+            {success && <div className="success-message">{success}</div>}
+            
+            <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
             </div>
+            <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="shortName">Short Name</label>
+                <input
+                    type="text"
+                    id="shortName"
+                    value={shortName}
+                    onChange={(e) => setShortName(e.target.value)}
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="phone">Phone</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                />
+            </div>
+            <button onClick={handleRegister}>Register</button>
+            
+            {formattedData && (
+                <div className="formatted-data">
+                    <h2>Formatted Data</h2>
+                    <pre>{formattedData}</pre>
+                </div>
+            )}
         </div>
     );
 };
 
-export default RegisterPage;
+export default Register;

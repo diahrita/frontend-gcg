@@ -10,7 +10,9 @@ import { getProfile } from '../data/profileToken';
 export const loginUser = async (username: string, password: string, router: ReturnType<typeof useRouter>): Promise<string> => {
     
     if (!username || !password) {
-        throw new Error(Messages.VALIDATION_ERROR);
+        const errorMsg = Messages.VALIDATION_ERROR;
+        console.error('Validation Error:', errorMsg); // Log validation error
+        throw new Error(errorMsg);
     }
 
     try {
@@ -35,17 +37,24 @@ export const loginUser = async (username: string, password: string, router: Retu
                     startTokenRefresh(username);
                     return token;
                 } else {
-                    throw new Error(Messages.TOKEN_INVALID);
+                    const errorMsg = Messages.TOKEN_INVALID;
+                    console.error('Token Error:', errorMsg); // Log token error
+                    throw new Error(errorMsg);
                 }
             } else {
-                throw new Error(Messages.BAD_REQUEST); 
+                const errorMsg = Messages.BAD_REQUEST;
+                console.error('Bad Request Error:', errorMsg); // Log bad request error
+                throw new Error(errorMsg);
             }
         } else {
-            throw new Error(Messages.BAD_REQUEST); 
+            const errorMsg = Messages.BAD_REQUEST;
+            console.error('Bad Request Error:', errorMsg); // Log bad request error
+            throw new Error(errorMsg);
         }
 
     } catch (err: any) {
         const { message } = handleError(err);
+        console.error('API Error:', message); // Log API error
         throw new Error(message);
     }
 };
