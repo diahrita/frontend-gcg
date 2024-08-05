@@ -13,24 +13,25 @@ export const useDataAdminLogic = () => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            setError(null);
+
             try {
                 const result = await fetchBusinessPartnerData(page, limit);
-                if (result) {
-                    setData(result);
+                if (result && result.data) {
+                    setData(result.data);
                     sessionStorage.removeItem(Messages.ERROR);
                 } else {
                     setError(Messages.GENERIC_ERROR);
                 }
-            } catch (err) {
-                setError(Messages.GENERIC_ERROR); 
+            } catch (err: any) {
+                setError(err.message || Messages.GENERIC_ERROR);
             } finally {
                 setLoading(false);
             }
         };
 
-      
         fetchData();
-    }, [page, limit]); 
+    }, [page, limit]);
 
     const handlePageChange = (event: { first: number; rows: number; }) => {
         const newPage = Math.floor(event.first / event.rows) + 1;

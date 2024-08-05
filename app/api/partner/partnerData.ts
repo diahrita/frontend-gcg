@@ -31,6 +31,7 @@ export const fetchBusinessPartnerData = async (page: number = 1, limit: number =
        
     } catch (err: any) {
         const { status, message } = handleError(err);
+        // console.error("Error fetching data:", message);
         return { status, data: null };
     }
 };
