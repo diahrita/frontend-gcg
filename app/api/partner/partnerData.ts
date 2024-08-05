@@ -6,8 +6,13 @@ import { DataPartner } from '@/types/partner';
 import axios from 'axios';
 
 export const fetchBusinessPartnerData = async (page: number = 1, limit: number = 5) => {
-    const token = sessionStorage.getItem(Messages.TOKEN);
-
+ 
+    if (typeof window === 'undefined') {
+        return null;
+    }
+    
+    let token = sessionStorage.getItem(Messages.TOKEN);
+    
     if (!token) {
         return null; 
     }
@@ -32,14 +37,12 @@ export const fetchBusinessPartnerData = async (page: number = 1, limit: number =
 
 
 const startFetchingData = () => {
-   
     const intervalId = setInterval(async () => {
         const data = await fetchBusinessPartnerData();
         // console.log(data); 
-    }, 20000); 
+    }, 20000);
 
-    clearInterval(intervalId)
+    
 };
-
 
 startFetchingData();
