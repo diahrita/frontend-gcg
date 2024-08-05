@@ -32,6 +32,7 @@ const DataAdmin = () => {
     });
     const [selectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
+    const [newProductDialog, setNewProductDialog] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
@@ -39,13 +40,6 @@ const DataAdmin = () => {
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
     }, []);
-
-    const formatCurrency = (value: number) => {
-        return value.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        });
-    };
 
     const openNew = () => {
         setProduct({
@@ -56,13 +50,13 @@ const DataAdmin = () => {
             password: ''
         });
         setSubmitted(false);
-        setProductDialog(true);
-        setIsEditMode(false);
+        setNewProductDialog(true);
     };
 
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
+        setNewProductDialog(false);
     };
 
     const saveProduct = () => {
@@ -108,7 +102,6 @@ const DataAdmin = () => {
     const editProduct = (product: Demo.Product) => {
         setProduct({ ...product });
         setProductDialog(true);
-        setIsEditMode(true);
     };
 
     const findIndexById = (id: string) => {
@@ -216,23 +209,24 @@ const DataAdmin = () => {
         </>
     );
 
+    const newProductDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
+        </>
+    );
+
     return (
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
                     {loading && (
                         <div style={{ padding: '10px', display: 'inline-block', width: '100%', position: 'relative' }}>
-                            <span style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#333' }}>
-                                Loading...
-                            </span>
+                            <span style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#333' }}>Loading...</span>
                             <ProgressBar mode="indeterminate" style={{ marginTop: '10px', height: '8px', width: '100%' }} />
                         </div>
                     )}
-                    {error && (
-                        <div style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '1rem' }}>
-                            {error}
-                        </div>
-                    )}
+                    {error && <div style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '1rem' }}>{error}</div>}
 
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
@@ -257,11 +251,30 @@ const DataAdmin = () => {
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
-
                 </div>
             </div>
 
-            <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+            {/* Edit Data */}
+            <Dialog visible={productDialog} style={{ width: '450px' }} header="Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                <div className="field">
+                    <label htmlFor="name">Name</label>
+                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                    {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                </div>
+                <div className="field">
+                    <label htmlFor="mail">Mail</label>
+                    <InputText id="mail" value={product.mail} onChange={(e) => onInputChange(e, 'mail')} required className={classNames({ 'p-invalid': submitted && !product.mail })} />
+                    {submitted && !product.mail && <small className="p-invalid">Mail is required.</small>}
+                </div>
+                <div className="field">
+                    <label htmlFor="telepon">Telepon</label>
+                    <InputText id="telepon" value={product.telepon} onChange={(e) => onInputChange(e, 'telepon')} required className={classNames({ 'p-invalid': submitted && !product.telepon })} />
+                    {submitted && !product.telepon && <small className="p-invalid">Telepon is required.</small>}
+                </div>
+            </Dialog>
+
+            {/* New Data */}
+            <Dialog visible={newProductDialog} style={{ width: '450px' }} header="Tambah Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                 <div className="field">
                     <label htmlFor="name">Name</label>
                     <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
