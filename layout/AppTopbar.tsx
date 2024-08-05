@@ -10,13 +10,9 @@ import { classNames } from 'primereact/utils';
 import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { LayoutContext } from './context/layoutcontext';
 import { MegaMenu } from 'primereact/megamenu';
-import { Sidebar } from 'primereact/sidebar';
-import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Toast } from 'primereact/toast';
 import { Inplace, InplaceDisplay, InplaceContent } from 'primereact/inplace';
 import { Menu } from 'primereact/menu';
 import { MenuItem } from 'primereact/menuitem';
@@ -86,12 +82,13 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         toast.current?.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
     };
 
-    const footerContent = (
-        <div>
-            <Button label="No" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
-            <Button label="Yes" icon="pi pi-check" onClick={() => setVisibleDialog(false)} autoFocus />
-        </div>
-    );
+    // const footerContent = (
+    //     <div>
+    //         <Button label="No" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
+    //         <Button label="Yes" icon="pi pi-check" onClick={() => setVisibleDialog(false)} autoFocus />
+    //     </div>
+    // );
+
     const [text, setText] = useState<string>('');
 
     const menuRight = useRef<Menu>(null);
