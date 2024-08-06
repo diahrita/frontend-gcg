@@ -117,6 +117,18 @@ declare namespace Demo {
         createdAt: number;
     }
 
+    type Soal = {
+        id?: number;
+        pertanyaan?: string;
+        jumlah?: number;
+        jawaban?: number;
+        grup?: string;
+        created_at?: string;
+        modified_at?: string;
+        show?: number;
+        [key: string]: any;
+    };
+
     //ProductService
     type Product = {
         id?: string;
@@ -133,6 +145,23 @@ declare namespace Demo {
         mail: string;
         telepon: string;
         password?: string;
+    };
+
+    type Aspek = {
+        id?: string;
+        aspekpenilaian: string;
+        deskripsi?: string;
+        bobot?: string;
+        [key: string]: any;
+    };
+
+    type Kategori = {
+        id?: string;
+        item: string;
+        aspek?: number;
+        indikator?: number;
+        parameter?: number;
+        [key: string]: any;
     };
 
     type ProductOrder = {
@@ -174,7 +203,6 @@ declare namespace Demo {
         };
     };
 
-
     interface Contact {
         id: number;
         partner_path_name: string;
@@ -193,7 +221,6 @@ declare namespace Demo {
         postal_code: string;
         tax_no: string;
     }
-    
 
     interface Event extends EventInput {
         location?: string;
