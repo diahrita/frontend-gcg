@@ -11,6 +11,7 @@ import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
+import { Password } from 'primereact/password';
 import { ProgressBar } from 'primereact/progressbar';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
@@ -370,13 +371,14 @@ const DataAdmin = () => {
 
                     <div className="field">
                         <label htmlFor="password">Password</label>
-                        <InputText
+                        <Password
                             type="password"
                             id="password"
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
                             required
+                            toggleMask
                             placeholder={submitted && !formData.password ? 'Password is required' : 'Password'}
                             className={classNames('input-field', { 'input-invalid': submitted && !formData.password })}
                         />
