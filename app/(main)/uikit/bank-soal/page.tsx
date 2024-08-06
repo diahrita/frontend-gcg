@@ -1,119 +1,170 @@
 'use client';
 
 import Head from "next/head";
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import { Badge } from 'primereact/badge';
-import React, { useState } from "react";
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { Demo } from '@/types';
+import { Toast } from 'primereact/toast';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog'; // Import Dialog
+import { classNames } from 'primereact/utils'; // Import classNames
 
-const Dashboard = () => {
-    const [visible, setVisible] = useState<boolean>(false);
-    const [codeAlat, setCodeAlat] = useState<string>('');
-    const [nipp, setNipp] = useState<string>('');
+const Crud = () => {
+    let emptyBankSoal: Demo.BankSoal = {
+        header_id: 0,
+        label: '',
+        grup: '',
+    };
 
-    return (
-        <>
-        <Head>
-            <title>SIMGO</title>
-            <meta name="description" content="Sistem Informasi Manajemen Good Corporate Governance" />
-        </Head>
-        <div className="card">
-            <h4>Bank Soal</h4>
-            <div className="grid">
-                <div className="col-12">
-                    <div className="card mb-0">
-                        <div className="flex justify-content-between">
-                            <div>
-                                <div className="text-900 font-medium text-xl mb-2">Pemeriksaan Area Kerja</div>
-                                <span className="block text-500 font-medium">AreaKerjaRTG</span>
-                            </div>
-                            <Button icon="pi pi-search" onClick={() => setVisible(true)} />
-                            <Dialog header="Cari Soal" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
-                                <div className="p-fluid">
-                                    <div className="field">
-                                        <label htmlFor="code_alat" className="font block mb-2">Kode Soal</label>
-                                        <InputText id="code_alat" type="text" value={codeAlat} onChange={(e) => setCodeAlat(e.target.value)} className="w-full" />
-                                    </div>
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [banksoals, setBankSoals] = useState<Demo.BankSoal[]>([]); // Pastikan tipe data selalu array
+    const [banksoalDialog, setBankSoalDialog] = useState(false); // State untuk mengontrol visibilitas dialog
+    const [deleteBankSoalDialog, setDeleteSoalDialog] = useState(false);
+    const [banksoal, setBankSoal] = useState<Demo.BankSoal>(emptyBankSoal);
+    const [selectedBankSoals] = useState<Demo.BankSoal[] | null>(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const toast = useRef<Toast>(null);
+    const dt = useRef<DataTable<any>>(null);
 
-                                    <div className="field">
-                                        <label htmlFor="nipp" className="font block mb-2">NIPP</label>
-                                        <InputText id="nipp" keyfilter="int" value={nipp} onChange={(e) => setNipp(e.target.value)} className="w-full" />
-                                    </div>
-                                    
-                                    <div className="field">
-                                        <Button label="Cari" className="w-full"></Button>
-                                    </div>
-                                </div>
-                            </Dialog>
-                        </div>
-                    </div>
-                </div>
+    const openNew = () => {
+        setBankSoal(emptyBankSoal);
+        setSubmitted(false);
+        setBankSoalDialog(true);
+        setIsEditMode(false);
+    };
 
-                <div className="col-12">
-                    <div className="card mb-0">
-                        <div className="flex justify-content-between">
-                            <div>
-                                <div className="text-900 font-medium text-xl mb-2">Cabin Check</div>
-                                <span className="block text-500 font-medium">CCCabinRTG</span>
-                            </div>
-                            <Button icon="pi pi-search" onClick={() => setVisible(true)} />
-                            <Dialog header="Cari Soal" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
-                                <div className="p-fluid">
-                                    <div className="field">
-                                        <label htmlFor="code_alat" className="font block mb-2">Kode Soal</label>
-                                        <InputText id="code_alat" type="text" value={codeAlat} onChange={(e) => setCodeAlat(e.target.value)} className="w-full" />
-                                    </div>
+    const hideDialog = () => {
+        setBankSoalDialog(false);
+    };
 
-                                    <div className="field">
-                                        <label htmlFor="nipp" className="font block mb-2">NIPP</label>
-                                        <InputText id="nipp" keyfilter="int" value={nipp} onChange={(e) => setNipp(e.target.value)} className="w-full" />
-                                    </div>
-                                    
-                                    <div className="field">
-                                        <Button label="Cari" className="w-full"></Button>
-                                    </div>
-                                </div>
-                            </Dialog>
-                        </div>
-                    </div>
-                </div>
+    const saveBankSoal = () => {
+        setSubmitted(true);
 
-                <div className="col-12">
-                    <div className="card mb-0">
-                        <div className="flex justify-content-between">
-                            <div>
-                                <div className="text-900 font-medium text-xl mb-2">Pemeriksaan Fungsi dan Kondisi RTG</div>
-                                <span className="block text-500 font-medium">KondisiFungsiRTG</span>
-                            </div>
-                            <Button icon="pi pi-search" onClick={() => setVisible(true)} />
-                            <Dialog header="Cari Soal" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
-                                <div className="p-fluid">
-                                    <div className="field">
-                                        <label htmlFor="code_alat" className="font block mb-2">Kode Soal</label>
-                                        <InputText id="code_alat" type="text" value={codeAlat} onChange={(e) => setCodeAlat(e.target.value)} className="w-full" />
-                                    </div>
+        if (banksoal.label && banksoal.label.trim() && banksoal.grup && banksoal.grup.trim()) {
+            let _banksoals = [...banksoals]; // Tidak perlu fallback ke array kosong karena tipe data sudah pasti array
+            if (isEditMode) {
+                const index = _banksoals.findIndex(bs => bs.header_id === banksoal.header_id);
+                _banksoals[index] = banksoal;
+            } else {
+                banksoal.header_id = banksoals.length + 1;
+                _banksoals.push(banksoal);
+            }
 
-                                    <div className="field">
-                                        <label htmlFor="nipp" className="font block mb-2">NIPP</label>
-                                        <InputText id="nipp" keyfilter="int" value={nipp} onChange={(e) => setNipp(e.target.value)} className="w-full" />
-                                    </div>
-                                    
-                                    <div className="field">
-                                    <Link href="/uikit/soal" legacyBehavior>
-                                        <Button label="Cari" className="w-full"></Button>
-                                    </Link>
-                                    </div>
-                                </div>
-                            </Dialog>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            setBankSoals(_banksoals);
+            setBankSoalDialog(false);
+            setBankSoal(emptyBankSoal);
+            toast.current?.show({ severity: 'success', summary: 'Successful', detail: 'Bank Soal Saved', life: 3000 });
+        }
+    };
+
+    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
+        const val = (e.target && e.target.value) || '';
+        let _banksoal = { ...banksoal };
+        // @ts-ignore
+        _banksoal[`${name}`] = val;
+
+        setBankSoal(_banksoal);
+    };
+
+    const DialogFooter = (
+        <div>
+            <Button label="Cancel" icon="pi pi-times" onClick={hideDialog} className="p-button-text" />
+            <Button label="Save" icon="pi pi-check" onClick={saveBankSoal} autoFocus />
         </div>
-        </>
     );
+
+    const Dashboard = () => {
+        return (
+            <>
+                <div className="card">
+                    <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-4">
+                        <h5 className="m-0">Bank Soal</h5>
+                        <div className="flex justify-between items-center mt-2 md:mt-0">
+                            <span className="block mt-2 md:mt-0 p-input-icon-left mr-4">
+                                <i className="pi pi-search" />
+                                <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                            </span>
+                            <Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={openNew} />
+                        </div>
+                    </div>
+                    <div className="grid">
+                        <div className="col-12">
+                            <Link href="/uikit/soal">
+                                <div className="card mb-0" style={{ cursor: 'pointer' }}>
+                                    <div className="flex justify-content-between">
+                                        <div>
+                                            <div className="text-900 font-medium text-xl mb-2">Pemeriksaan Area Kerja</div>
+                                            <span className="block text-500 font-medium">AreaKerjaRTG</span>
+                                        </div>
+                                        <Badge value="6" size="xlarge" severity="warning"></Badge>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+
+                        <div className="col-12">
+                            <Link href="/uikit/soal">
+                                <div className="card mb-0" style={{ cursor: 'pointer' }}>
+                                    <div className="flex justify-content-between">
+                                        <div>
+                                            <div className="text-900 font-medium text-xl mb-2">Cabin Check</div>
+                                            <span className="block text-500 font-medium">CCCabinRTG</span>
+                                        </div>
+                                        <Badge value="6" size="xlarge" severity="warning"></Badge>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+
+                        <div className="col-12">
+                            <Link href="/uikit/soal">
+                                <div className="card mb-0" style={{ cursor: 'pointer' }}>
+                                    <div className="flex justify-content-between">
+                                        <div>
+                                            <div className="text-900 font-medium text-xl mb-2">Pemeriksaan Fungsi dan Kondisi RTG</div>
+                                            <span className="block text-500 font-medium">KondisiFungsiRTG</span>
+                                        </div>
+                                        <Badge value="6" size="xlarge" severity="warning"></Badge>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+                <Dialog visible={banksoalDialog} style={{ width: '450px' }} header="Tambah Bank Soal" modal className="p-fluid" footer={DialogFooter} onHide={hideDialog}>
+                    <div className="field">
+                        <label htmlFor="label">Label</label>
+                        <InputText
+                            id="label"
+                            value={banksoal.label || ''}
+                            onChange={(e) => onInputChange(e, 'label')}
+                            required
+                            autoFocus
+                            className={classNames({ 'p-invalid': submitted && !banksoal.label })}
+                        />
+                        {submitted && !banksoal.label && <small className="p-error">Label is required.</small>}
+                    </div>
+                    <div className="field">
+                        <label htmlFor="grup">Grup</label>
+                        <InputText
+                            id="grup"
+                            value={banksoal.grup !== undefined ? banksoal.grup.toString() : ''}
+                            onChange={(e) => onInputChange(e, 'grup')}
+                            required
+                            className={classNames({ 'p-invalid': submitted && !banksoal.grup })}
+                        />
+                        {submitted && !banksoal.grup && <small className="p-error">Grup is required.</small>}
+                    </div>
+                </Dialog>
+            </>
+        );
+    };
+
+    return <Dashboard />;
 };
 
-export default Dashboard;
+export default Crud;

@@ -7,7 +7,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Demo } from '@/types';
 import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
@@ -24,6 +24,7 @@ const Crud = () => {
         show: 0
     };
 
+    const [editSoalDialog, setEditSoalDialog] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [soals, setSoals] = useState<Demo.Soal[] | null>(null);
     const [soalDialog, setSoalDialog] = useState(false);
@@ -59,9 +60,7 @@ const Crud = () => {
       setSubmitted(true);
   
       if (soal.pertanyaan && soal.jawaban) {
-          // Logika untuk menyimpan soal
       } else {
-          // Tangani kasus di mana soal.pertanyaan atau soal.jawaban adalah undefined
           toast.current?.show({
               severity: 'error',
               summary: 'Error',
@@ -230,6 +229,20 @@ const Crud = () => {
         return isEditMode ? 'Edit Soal' : 'Tambah Soal';
     };
 
+    const newSoalDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={() => setSoalDialog(false)} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveSoal} />
+        </>
+    );
+
+    const editSoalDialogFooter = (
+        <>
+            <Button label="Cancel" icon="pi pi-times" text onClick={() => setEditSoalDialog(false)} />
+            <Button label="Save" icon="pi pi-check" text onClick={saveSoal} />
+        </>
+    );
+
     return (
         <div className="grid crud-demo">
             <div className="col-12">
@@ -264,15 +277,15 @@ const Crud = () => {
                     </DataTable>
 
                     <Dialog
-                          visible={soalDialog}
-                          style={{ width: '450px' }}
-                          header={getDialogHeader()}
-                          modal
-                          className="p-fluid"
-                          footer={soalDialogFooter}
-                          onHide={hideDialog}
-                      >
-                          <div className="field">
+                        visible={soalDialog}
+                        style={{ width: '450px' }}
+                        header={getDialogHeader()}
+                        modal
+                        className="p-fluid"
+                        footer={newSoalDialogFooter}
+                        onHide={() => setSoalDialog(false)}
+                    >
+                        <div className="field">
                               <label htmlFor="pertanyaan">Pertanyaan</label>
                               <InputText
                                   id="pertanyaan"
@@ -306,57 +319,130 @@ const Crud = () => {
                               />
                               {submitted && soal.jumlah === undefined && <small className="p-error">Jumlah is required.</small>}
                           </div>
-                          {!isEditMode && (
-                            <>
-                                <div className="field">
-                                    <label htmlFor="grup">Grup</label>
-                                    <InputText
-                                        id="grup"
-                                        value={soal.grup}
-                                        onChange={(e) => onInputChange(e, 'grup')}
-                                        required
-                                        className={classNames({ 'p-invalid': submitted && !soal.grup })}
-                                    />
-                                    {submitted && !soal.grup && <small className="p-error">Grup is required.</small>}
-                                </div>
-                                <div className="field">
-                                    <label htmlFor="created_at">Tanggal Dibuat</label>
-                                    <Calendar
-                                        id="created_at"
-                                        value={datetime24h}
-                                        onChange={(e) => setDateTime24h(e.value)}
-                                        dateFormat="dd/mm/yy"
-                                        showTime
-                                        hourFormat="24"
-                                    />
-                                </div>
-                                <div className="field">
-                                    <label htmlFor="modified_at">Tanggal Diubah</label>
-                                    <Calendar
-                                        id="modified_at"
-                                        value={datetime24h}
-                                        onChange={(e) => setDateTime24h(e.value)}
-                                        dateFormat="dd/mm/yy"
-                                        showTime
-                                        hourFormat="24"
-                                    />
-                                </div>
-                            </>
-                        )}
+                          <div className="field">
+                              <label htmlFor="grup">Grup</label>
+                              <InputText
+                                  id="grup"
+                                  value={soal.grup}
+                                  onChange={(e) => onInputChange(e, 'grup')}
+                                  required
+                                  className={classNames({ 'p-invalid': submitted && !soal.grup })}
+                              />
+                              {submitted && !soal.grup && <small className="p-error">Grup is required.</small>}
+                         </div>
+                         <div className="field">
+                              <label htmlFor="created_at">Tanggal Dibuat</label>
+                              <Calendar
+                                  id="created_at"
+                                  value={datetime24h}
+                                  onChange={(e) => setDateTime24h(e.value)}
+                                  dateFormat="dd/mm/yy"
+                                  showTime
+                                  hourFormat="24"
+                              />
+                         </div>
+                         <div className="field">
+                              <label htmlFor="modified_at">Tanggal Diubah</label>
+                              <Calendar
+                                  id="modified_at"
+                                  value={datetime24h}
+                                  onChange={(e) => setDateTime24h(e.value)}
+                                  dateFormat="dd/mm/yy"
+                                  showTime
+                                  hourFormat="24"
+                              />
+                         </div>
+                         <div className="field">
+                               <label htmlFor="show">Tampilkan</label>
+                               <InputText
+                                  id="show"
+                                  value={soal.show !== undefined ? soal.show.toString() : ''}
+                                  onChange={(e) => onInputChange(e, 'show')}
+                                  required
+                                  className={classNames({ 'p-invalid': submitted && !soal.show })}
+                              />
+                               {submitted && !soal.show && <small className="p-error">Tampilkan is required.</small>}
+                         </div>
+                    </Dialog>
+
+                    <Dialog
+                         visible={editSoalDialog}
+                         style={{ width: '450px' }}
+                         header={getDialogHeader()}
+                         modal
+                         className="p-fluid"
+                         footer={editSoalDialogFooter}
+                         onHide={() => setEditSoalDialog(false)}
+                    >
                         <div className="field">
-                            <label htmlFor="show">Tampilkan</label>
-                            <InputText
-                                id="show"
-                                value={soal.show !== undefined ? soal.show.toString() : ''}
-                                onChange={(e) => onInputChange(e, 'show')}
-                                required
-                                className={classNames({ 'p-invalid': submitted && !soal.show })}
-                            />
-                            {submitted && !soal.show && <small className="p-error">Tampilkan is required.</small>}
-                        </div>
-                      </Dialog>
-
-
+                              <label htmlFor="pertanyaan">Pertanyaan</label>
+                              <InputText
+                                  id="pertanyaan"
+                                  value={soal.pertanyaan || ''}
+                                  onChange={(e) => onInputChange(e, 'pertanyaan')}
+                                  required
+                                  autoFocus
+                                  className={classNames({ 'p-invalid': submitted && !soal.pertanyaan })}
+                              />
+                              {submitted && !soal.pertanyaan && <small className="p-error">Pertanyaan is required.</small>}
+                          </div>
+                          <div className="field">
+                              <label htmlFor="jawaban">Jawaban</label>
+                              <InputText
+                                  id="jawaban"
+                                  value={soal.jawaban !== undefined ? soal.jawaban.toString() : ''}
+                                  onChange={(e) => onInputChange(e, 'jawaban')}
+                                  required
+                                  className={classNames({ 'p-invalid': submitted && soal.jawaban === undefined })}
+                              />
+                              {submitted && soal.jawaban === undefined && <small className="p-error">Jawaban is required.</small>}
+                          </div>
+                          <div className="field">
+                              <label htmlFor="jumlah">Jumlah</label>
+                              <InputText
+                                  id="jumlah"
+                                  value={soal.jumlah !== undefined ? soal.jumlah.toString() : ''}
+                                  onChange={(e) => onInputChange(e, 'jumlah')}
+                                  required
+                                  className={classNames({ 'p-invalid': submitted && soal.jumlah === undefined })}
+                              />
+                              {submitted && soal.jumlah === undefined && <small className="p-error">Jumlah is required.</small>}
+                          </div>
+                          <div className="field">
+                              <label htmlFor="grup">Grup</label>
+                              <InputText
+                                  id="grup"
+                                  value={soal.grup}
+                                  onChange={(e) => onInputChange(e, 'grup')}
+                                  required
+                                  className={classNames({ 'p-invalid': submitted && !soal.grup })}
+                              />
+                              {submitted && !soal.grup && <small className="p-error">Grup is required.</small>}
+                         </div>
+                         <div className="field">
+                              <label htmlFor="modified_at">Tanggal Diubah</label>
+                              <Calendar
+                                  id="modified_at"
+                                  value={datetime24h}
+                                  onChange={(e) => setDateTime24h(e.value)}
+                                  dateFormat="dd/mm/yy"
+                                  showTime
+                                  hourFormat="24"
+                              />
+                         </div>
+                         <div className="field">
+                               <label htmlFor="show">Tampilkan</label>
+                               <InputText
+                                  id="show"
+                                  value={soal.show !== undefined ? soal.show.toString() : ''}
+                                  onChange={(e) => onInputChange(e, 'show')}
+                                  required
+                                  className={classNames({ 'p-invalid': submitted && !soal.show })}
+                              />
+                               {submitted && !soal.show && <small className="p-error">Tampilkan is required.</small>}
+                         </div>
+                    </Dialog>
+                    
                     <Dialog
                         visible={deleteSoalDialog}
                         style={{ width: '450px' }}

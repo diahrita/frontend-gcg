@@ -117,6 +117,13 @@ declare namespace Demo {
         createdAt: number;
     }
 
+    type BankSoal = {
+        header_id?: number;
+        label?: string;
+        grup?: string;
+        [key: string]: any; 
+    };
+
     type Soal = {
         id?: number;
         pertanyaan?: string;
