@@ -11,21 +11,21 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-    const { loading, isAuthenticated } = useAuth();
+    // const { loading, isAuthenticated } = useAuth();
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('lastVisitedPage', window.location.pathname);
-        }
-    }, []); 
+    // useEffect(() => {
+    //     if (typeof window !== 'undefined') {
+    //         localStorage.setItem('lastVisitedPage', window.location.pathname);
+    //     }
+    // }, []);
 
-    if (loading) {
-        return <Loading />;
-    }
+    // if (loading) {
+    //     return <Loading />;
+    // }
 
-    if (!isAuthenticated) {
-        return <Loading />; 
-    }
+    // if (!isAuthenticated) {
+    //     return <Loading />;
+    // }
 
     return (
         <>

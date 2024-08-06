@@ -22,7 +22,7 @@ const DataAdmin = () => {
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
+    // const [isEditMode, setIsEditMode] = useState(false);
     const [product, setProduct] = useState<Demo.Product>({
         id: '',
         name: '',
