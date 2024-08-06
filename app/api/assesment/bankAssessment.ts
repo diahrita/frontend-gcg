@@ -31,7 +31,7 @@ export const bankAssessment = async (code_alat: string, nipp: string): Promise<F
             }
         );
         const data: Assessment[] = response.data;
-        console.log('API Response Data:', data); // Log the data received from the API
+        console.log('API Response Data:', data); 
         return { successCode: response.data.successCode, data };
 
     } catch (err: any) {

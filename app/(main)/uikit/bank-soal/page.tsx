@@ -2,20 +2,52 @@
 
 import { bankAssessment } from "@/app/api/assesment/bankAssessment";
 import { Messages } from "@/app/hendlererror/message/messages";
+import { Demo } from '@/types';
 import { Assessment } from "@/types/assessment";
-import Head from "next/head";
-import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import { Badge } from 'primereact/badge';
-import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Demo } from '@/types';
-import { Toast } from 'primereact/toast';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog'; // Import Dialog
+import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils'; // Import classNames
+import React, { useEffect, useRef, useState } from 'react';
 
 const Crud = () => {
+
+
+    const [visible, setVisible] = useState<boolean>(false);
+    const [codeAlat, setCodeAlat] = useState<string>('RTG-22');
+    const [nipp, setNipp] = useState<string>('8606120200');
+    const [data, setData] = useState<Assessment[] | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchData = async () => {
+        console.log('Fetching data...');
+        try {
+            const result = await bankAssessment(codeAlat, nipp); // Call your API function
+            console.log('API Response:', result); 
+            
+            // Check if the successCode is 200
+            if (result.successCode === 200 && result.data) {
+                console.log('Data received from API:', result.data);
+                setData(result.data);
+                setError(null); 
+            } else {
+                console.log('Unexpected successCode or no data:', result.successCode);
+                setError(Messages.GENERIC_ERROR);
+            }
+        } catch (err) {
+            console.error('Error occurred in fetchData:', err);
+            setError('An unexpected error occurred');
+        }
+    };
+
+    useEffect(() => {
+        fetchData(); // Call fetchData once on component mount
+    }, [codeAlat, nipp]); // Dependencies to re-fetch when codeAlat or nipp changes
+
     let emptyBankSoal: Demo.BankSoal = {
         header_id: 0,
         label: '',
@@ -23,8 +55,8 @@ const Crud = () => {
     };
 
     const [isEditMode, setIsEditMode] = useState(false);
-    const [banksoals, setBankSoals] = useState<Demo.BankSoal[]>([]); // Pastikan tipe data selalu array
-    const [banksoalDialog, setBankSoalDialog] = useState(false); // State untuk mengontrol visibilitas dialog
+    const [banksoals, setBankSoals] = useState<Demo.BankSoal[]>([]); 
+    const [banksoalDialog, setBankSoalDialog] = useState(false); 
     const [deleteBankSoalDialog, setDeleteSoalDialog] = useState(false);
     const [banksoal, setBankSoal] = useState<Demo.BankSoal>(emptyBankSoal);
     const [selectedBankSoals] = useState<Demo.BankSoal[] | null>(null);
@@ -32,6 +64,8 @@ const Crud = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
+ 
+   
 
     const openNew = () => {
         setBankSoal(emptyBankSoal);
