@@ -1,0 +1,18 @@
+.input-field {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.input-invalid {
+    border-color: red;
+}
+
+.input-invalid::placeholder {
+    color: red; 
+    font-style: italic;
+}
+
+.error-text {
+    color: red;
+    font-size: 0.875rem; 
+}

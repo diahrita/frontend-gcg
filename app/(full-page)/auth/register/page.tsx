@@ -1,103 +1,92 @@
-'use client'
-import { regisAdmin } from '@/app/api/register/regisAdmin'; // Ganti dengan path yang sesuai
-import { RegisterAdmin } from '@/types/register';
-import React, { useState } from 'react';
-import './Register.css'; // Ganti dengan file CSS Anda
+// RegisterAdminForm.tsx
+import React from 'react';
+import './RegisterAdminForm.css';
+import { useRegisterAdminForm } from '@/app/api/register/logic/RegisterAdminLogic';
 
-const Register: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [shortName, setShortName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
-    const [formattedData, setFormattedData] = useState<string | null>(null);
-
-    const handleRegister = async () => {
-        const registrationData: RegisterAdmin = {
-            username,
-            password,
-            short_name: shortName,
-            email,
-            phone,
-        };
-
-        const result = await regisAdmin(registrationData);
-
-        if (result.status === 200) {
-            setSuccess('Registration successful!');
-            setError(null);
-            // Format data to JSON string with double quotes
-            setFormattedData(JSON.stringify(registrationData, null, 4));
-        } else {
-            setError('Registration failed. Please try again.');
-            setSuccess(null);
-            setFormattedData(null);
-        }
-    };
+const RegisterAdminForm: React.FC = () => {
+    const {
+        formData,
+        error_regis,
+        success,
+        loading_regis,
+        handleChange,
+        handleSubmit
+    } = useRegisterAdminForm();
 
     return (
-        <div className="register-container">
+        <div className="register-form">
             <h1>Register Admin</h1>
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
-            
-            <div className="form-group">
-                <label htmlFor="username">Username</label>
-                <input
-                    type="text"
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="shortName">Short Name</label>
-                <input
-                    type="text"
-                    id="shortName"
-                    value={shortName}
-                    onChange={(e) => setShortName(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="phone">Phone</label>
-                <input
-                    type="tel"
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                />
-            </div>
-            <button onClick={handleRegister}>Register</button>
-            
-            {formattedData && (
-                <div className="formatted-data">
-                    <h2>Formatted Data</h2>
-                    <pre>{formattedData}</pre>
+            <form onSubmit={handleSubmit}>
+               
+                <div className="form-group">
+                    <label htmlFor="username">Username:</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
-            )}
+
+                <div className="form-group">
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="short_name">Short Name:</label>
+                    <input
+                        type="text"
+                        id="short_name"
+                        name="short_name"
+                        value={formData.short_name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                
+                <div className="form-group">
+                    <label htmlFor="phone">Phone:</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <button type="submit" disabled={loading_regis}>
+                    {loading_regis ? 'Submitting...' : 'Register'}
+                </button>
+           
+            </form>
+            {error_regis && <p className="error-message">{error_regis}</p>}
+            {success && <p className="success-message">{success}</p>}
         </div>
     );
 };
 
-export default Register;
+export default RegisterAdminForm;

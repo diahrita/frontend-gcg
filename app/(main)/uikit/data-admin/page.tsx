@@ -5,6 +5,7 @@ import { DataPartner } from '@/types/partner';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 
+import { useRegisterAdminForm } from '@/app/api/register/logic/RegisterAdminLogic';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
@@ -16,11 +17,22 @@ import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
+import './style.css';
+
 
 const DataAdmin = () => {
     // State for Data Admin
     const { dataWithDisplayId, loading, error, handlePageChange } = useDataAdminLogic();
-    
+
+    const {
+        formData,
+        error_regis,
+        success,
+        loading_regis,
+        handleChange,
+        handleSubmit
+    } = useRegisterAdminForm();
+
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
@@ -39,11 +51,11 @@ const DataAdmin = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const [page, setPage] = useState(0); 
-    const [limit, setLimit] = useState(rowsPerPage); 
-    
+    const [page, setPage] = useState(0);
+    const [limit, setLimit] = useState(rowsPerPage);
 
-        
+
+
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
@@ -216,17 +228,25 @@ const DataAdmin = () => {
 
     const productDialogFooter = (
         <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveProduct} />
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
         </>
     );
 
     const newProductDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
+            <Button
+                label={loading_regis ? 'Saving...' : 'Save'}
+                icon={loading_regis ? '' : 'pi pi-check'}
+                className="p-button-text"
+                onClick={saveProduct}
+                disabled={loading_regis}
+            />
+            {loading_regis && <i className="pi pi-spinner pi-spin" style={{ marginLeft: '0.5em' }}></i>}
         </>
     );
+
 
     return (
         <div className="grid crud-demo">
@@ -243,29 +263,28 @@ const DataAdmin = () => {
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
                     <DataTable
-                    value={dataWithDisplayId}
-                    dataKey="id"
-                    paginator
-                    rows={rowsPerPage}
-                    rowsPerPageOptions={[5, 10, 15, 20]}
-                    // first={ (page ) * limit }
-                    onPage={(event) => {
-                        handlePageChange(event); 
-                        setRowsPerPage(event.rows); 
-                    }}
-                    className="datatable-responsive"
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
-                    emptyMessage="No data available"
-                    header={header}
-                    responsiveLayout="scroll"
-                >
-                    <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                    <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                    <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                    <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                    <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                </DataTable>
+                        value={dataWithDisplayId}
+                        dataKey="id"
+                        paginator
+                        rows={rowsPerPage}
+                        rowsPerPageOptions={[5, 10, 15, 20]}
+                        onPage={(event) => {
+                            handlePageChange(event);
+                            setRowsPerPage(event.rows);
+                        }}
+                        className="datatable-responsive"
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+                        emptyMessage="No data available"
+                        header={header}
+                        responsiveLayout="scroll"
+                    >
+                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                    </DataTable>
 
                 </div>
             </div>
@@ -273,8 +292,8 @@ const DataAdmin = () => {
             {/* Edit Data */}
             <Dialog visible={productDialog} style={{ width: '450px' }} header="Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                 <div className="field">
-                    <label htmlFor="name">Name</label>
-                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                    <label htmlFor="username">Name</label>
+                    <InputText id="username" value={formData.username} type='text' onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
                     {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                 </div>
                 <div className="field">
@@ -289,31 +308,88 @@ const DataAdmin = () => {
                 </div>
             </Dialog>
 
+
             {/* New Data */}
-            <Dialog visible={newProductDialog} style={{ width: '450px' }} header="Tambah Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                <div className="field">
-                    <label htmlFor="name">Name</label>
-                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                    {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
-                </div>
-                <div className="field">
-                    <label htmlFor="mail">Mail</label>
-                    <InputText id="mail" value={product.mail} onChange={(e) => onInputChange(e, 'mail')} required className={classNames({ 'p-invalid': submitted && !product.mail })} />
-                    {submitted && !product.mail && <small className="p-invalid">Mail is required.</small>}
-                </div>
-                <div className="field">
-                    <label htmlFor="telepon">Telepon</label>
-                    <InputText id="telepon" value={product.telepon} onChange={(e) => onInputChange(e, 'telepon')} required className={classNames({ 'p-invalid': submitted && !product.telepon })} />
-                   
-                    {submitted && !product.telepon && <small className="p-invalid">Telepon is required.</small>}
-                </div>
-                <div className="field">
-                    <label htmlFor="password">Password</label>
-                    <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required className={classNames({ 'p-invalid': submitted && !product.password })} />
-                    {submitted && !product.password && <small className="p-invalid">Password is required.</small>}
-                </div>
+            <Dialog visible={newProductDialog} style={{ width: '450px' }} header="Tambah Data Admin" modal className="p-fluid" footer={newProductDialogFooter} onHide={hideDialog}>
+                <form id="adminForm" onSubmit={handleSubmit}>
+                    <div className="field">
+                        <label htmlFor="username">Username</label>
+                        <InputText
+                            type="text"
+                            id="username"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            required
+                            placeholder={submitted && !formData.username ? 'Username is required' : 'Username'}
+                            className={classNames('input-field', { 'input-invalid': submitted && !formData.username })}
+                        />
+                    </div>
+
+                    <div className="field">
+                        <label htmlFor="short_name">Short Name</label>
+                        <InputText
+                            type="text"
+                            id="short_name"
+                            name="short_name"
+                            value={formData.short_name}
+                            onChange={handleChange}
+                            required
+                            placeholder={submitted && !formData.short_name ? 'Short Name is required' : 'Short Name'}
+                            className={classNames('input-field', { 'input-invalid': submitted && !formData.short_name })}
+                        />
+                    </div>
+
+                    <div className="field">
+                        <label htmlFor="email">Email</label>
+                        <InputText
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            placeholder={submitted && !formData.email ? 'Email is required' : 'Email'}
+                            className={classNames('input-field', { 'input-invalid': submitted && !formData.email })}
+                        />
+                    </div>
+
+                    <div className="field">
+                        <label htmlFor="phone">Telepon</label>
+                        <InputText
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            required
+                            placeholder={submitted && !formData.phone ? 'Telepon is required' : 'Telepon'}
+                            className={classNames('input-field', { 'input-invalid': submitted && !formData.phone })}
+                        />
+                    </div>
+
+                    <div className="field">
+                        <label htmlFor="password">Password</label>
+                        <InputText
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                            placeholder={submitted && !formData.password ? 'Password is required' : 'Password'}
+                            className={classNames('input-field', { 'input-invalid': submitted && !formData.password })}
+                        />
+                    </div>
+
+                    <button type="submit" disabled={loading_regis}>
+                        {loading_regis ? 'Submitting...' : 'Register'}
+                    </button>
+                </form>
+                {error_regis && <p className="error-message">{error_regis}</p>}
+                {success && <p className="success-message">{success}</p>}
             </Dialog>
-            
+
         </div>
     );
 };
