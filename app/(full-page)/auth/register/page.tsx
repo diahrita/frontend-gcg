@@ -77,8 +77,6 @@ const RegisterAdminForm: React.FC = () => {
                         required
                     />
                 </div>
-
-                
                 <button type="submit" disabled={loading_regis}>
                     {loading_regis ? 'Submitting...' : 'Register'}
                 </button>
