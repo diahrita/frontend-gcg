@@ -1,12 +1,10 @@
 'use client';
 import { useDataAdminLogic } from '@/app/api/partner/logic/partnerLogic';
+import { useRegisterAdminForm } from '@/app/api/register/logic/RegisterAdminLogic';
 import { Demo } from '@/types';
 import { DataPartner } from '@/types/partner';
-import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
-
-import { useRegisterAdminForm } from '@/app/api/register/logic/RegisterAdminLogic';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
