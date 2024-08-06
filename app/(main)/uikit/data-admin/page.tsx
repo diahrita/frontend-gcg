@@ -2,6 +2,7 @@
 import { useDataAdminLogic } from '@/app/api/partner/logic/partnerLogic';
 import { Demo } from '@/types';
 import { DataPartner } from '@/types/partner';
+import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -34,6 +35,7 @@ const DataAdmin = () => {
     const [submitted, setSubmitted] = useState(false);
     const [newProductDialog, setNewProductDialog] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
+    const [currentPassword, setCurrentPassword] = useState<string>('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
 
@@ -292,7 +294,7 @@ const DataAdmin = () => {
                 </div>
                 <div className="field">
                     <label htmlFor="password">Password</label>
-                    <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required className={classNames({ 'p-invalid': submitted && !product.password })} />
+                    <Password className="w-full mb-3" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} feedback={false} toggleMask />
                     {submitted && !product.password && <small className="p-invalid">Password is required.</small>}
                 </div>
             </Dialog>
