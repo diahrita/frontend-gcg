@@ -4,6 +4,7 @@ import { Demo } from '@/types';
 import { DataPartner } from '@/types/partner';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
+
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
@@ -19,10 +20,12 @@ import { ProductService } from '../../../../demo/service/ProductService';
 const DataAdmin = () => {
     // State for Data Admin
     const { dataWithDisplayId, loading, error, handlePageChange } = useDataAdminLogic();
+    
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [product, setProduct] = useState<Demo.Product>({
         id: '',
         name: '',
@@ -36,10 +39,19 @@ const DataAdmin = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
+    const [page, setPage] = useState(0); 
+    const [limit, setLimit] = useState(rowsPerPage); 
+    
+
+        
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
     }, []);
+
+    const onRowsPerPageChange = (event: { value: number }) => {
+        setRowsPerPage(event.value);
+    };
 
     const openNew = () => {
         setProduct({
@@ -230,27 +242,31 @@ const DataAdmin = () => {
 
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-
                     <DataTable
-                        value={dataWithDisplayId}
-                        dataKey="id"
-                        paginator
-                        rows={5}
-                        rowsPerPageOptions={[5, 10, 15, 20]}
-                        onPage={handlePageChange}
-                        className="datatable-responsive"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
-                        emptyMessage="No data available"
-                        header={header}
-                        responsiveLayout="scroll"
-                    >
-                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                    </DataTable>
+                    value={dataWithDisplayId}
+                    dataKey="id"
+                    paginator
+                    rows={rowsPerPage}
+                    rowsPerPageOptions={[5, 10, 15, 20]}
+                    // first={ (page ) * limit }
+                    onPage={(event) => {
+                        handlePageChange(event); 
+                        setRowsPerPage(event.rows); 
+                    }}
+                    className="datatable-responsive"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+                    emptyMessage="No data available"
+                    header={header}
+                    responsiveLayout="scroll"
+                >
+                    <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                    <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                    <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                    <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
+                    <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                </DataTable>
+
                 </div>
             </div>
 

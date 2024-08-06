@@ -13,18 +13,18 @@ export const useDataAdminLogic = () => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            setError(null);
-
             try {
                 const result = await fetchBusinessPartnerData(page, limit);
-                if (result && result.data) {
+                if (result.successCode === 200 && result.data) {
                     setData(result.data);
                     sessionStorage.removeItem(Messages.ERROR);
                 } else {
-                    setError(Messages.GENERIC_ERROR);
+                    const storedError = sessionStorage.getItem(Messages.ERROR);
+                    setError(storedError || Messages.GENERIC_ERROR);
                 }
-            } catch (err: any) {
-                setError(err.message || Messages.GENERIC_ERROR);
+            } catch (err) {
+                const storedError = sessionStorage.getItem(Messages.ERROR);
+                setError(storedError || Messages.GENERIC_ERROR);
             } finally {
                 setLoading(false);
             }
@@ -37,8 +37,10 @@ export const useDataAdminLogic = () => {
         const newPage = Math.floor(event.first / event.rows) + 1;
         setPage(newPage);
         setLimit(event.rows);
+        //setRowsPerPage(await event);
     };
 
+    // Filter out partners with fields equal to "-"
     const filteredData = (data && Array.isArray(data) ? data : []).filter(partner =>
         partner.short_name !== "-" ||
         partner.email !== "-" ||
@@ -48,6 +50,7 @@ export const useDataAdminLogic = () => {
         partner.tax_no !== "-"
     );
 
+    // Add display ID to the filtered data
     const dataWithDisplayId = filteredData.map((partner, index) => ({
         ...partner,
         id: index + 1

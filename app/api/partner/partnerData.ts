@@ -5,45 +5,51 @@ import { AuthHeaders } from '@/app/route/authHeaders';
 import { DataPartner } from '@/types/partner';
 import axios from 'axios';
 
-export const fetchBusinessPartnerData = async (page: number = 1, limit: number = 5) => {
- 
+interface FetchResult {
+    successCode: number;
+    data: DataPartner[] | null;
+}
+
+export const fetchBusinessPartnerData = async (page: number = 1, limit: number = 5): Promise<FetchResult> => {
     if (typeof window === 'undefined') {
-        return null;
+        return { successCode: 500, data: null }; // Return an error successCode if running server-side
     }
 
-    let token = sessionStorage.getItem(Messages.TOKEN);
-    
+    const token = sessionStorage.getItem(Messages.TOKEN);
+
     if (!token) {
-        return null; 
+        return { successCode: 401, data: null }; // Return unauthorized successCode if token is missing
     }
 
     try {
-        const response = await axios.get(APIEndpoints.BUSINESS_PARTNER, { 
+        const response = await axios.get(APIEndpoints.BUSINESS_PARTNER, {
             headers: AuthHeaders.getBearerToken(token),
             params: {
                 page: page,
                 limit: limit
             }
         });
+
         const data: DataPartner[] = response.data;
         sessionStorage.removeItem(Messages.ERROR);
-        return response.data;
-       
+
+        // Assume response.data contains successCode
+        const successCode = response.status; // Use response status code for successCode
+        return { successCode, data };
+
     } catch (err: any) {
         const { status, message } = handleError(err);
-        // console.error("Error fetching data:", message);
-        return { status, data: null };
+        console.error("Error fetching data:", message); // Log the error message
+        return { successCode: status, data: null };
     }
 };
 
-
 const startFetchingData = () => {
     const intervalId = setInterval(async () => {
-        const data = await fetchBusinessPartnerData();
-        // console.log(data); 
+        const result = await fetchBusinessPartnerData();
+        // You can log or handle the result here
+        console.log(result);
     }, 15000);
-
-    
 };
 
 startFetchingData();
