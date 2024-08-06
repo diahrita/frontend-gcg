@@ -36,7 +36,7 @@ const AppMenu = () => {
                         }
                     ]
                 },
-                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' }
+                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/input-bank-soal' }
             ]
         },
         {

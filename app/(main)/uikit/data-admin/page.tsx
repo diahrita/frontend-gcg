@@ -2,6 +2,7 @@
 import { useDataAdminLogic } from '@/app/api/partner/logic/partnerLogic';
 import { Demo } from '@/types';
 import { DataPartner } from '@/types/partner';
+import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 
@@ -50,6 +51,7 @@ const DataAdmin = () => {
     const [submitted, setSubmitted] = useState(false);
     const [newProductDialog, setNewProductDialog] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
+    const [currentPassword, setCurrentPassword] = useState<string>('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
     const [page, setPage] = useState(0);

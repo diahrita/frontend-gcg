@@ -3,11 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Dropdown } from 'primereact/dropdown';
-import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
-import { InputNumber } from "primereact/inputnumber";
 import { Password } from 'primereact/password';
 
 interface DropdownItem {
