@@ -1,0 +1,14 @@
+.error-message {
+    color: white; 
+    padding: 10px; 
+    border-radius: 4px; 
+    margin-bottom: 10px; 
+}
+
+.p-invalid {
+    border-color: red !important;  
+}
+
+.p-invalid::placeholder {
+    color: red; 
+}

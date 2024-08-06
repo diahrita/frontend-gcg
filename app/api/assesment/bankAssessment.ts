@@ -12,14 +12,14 @@ interface FetchResult {
 
 export const bankAssessment = async (code_alat: string, nipp: string): Promise<FetchResult> => {
     if (typeof window === 'undefined') {
-        return { successCode: 500, data: null }; // Return an error successCode if running server-side
+        return { successCode: 500, data: null }; 
     }
 
     let token = sessionStorage.getItem(Messages.TOKEN);
     
     if (!token) {
         console.error('Error: Token not found');
-        return { successCode: 401, data: null }; // Return unauthorized successCode if token is missing
+        return { successCode: 401, data: null }; 
     }
 
     try {

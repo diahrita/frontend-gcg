@@ -17,36 +17,6 @@ import React, { useEffect, useRef, useState } from 'react';
 const Crud = () => {
 
 
-    const [visible, setVisible] = useState<boolean>(false);
-    const [codeAlat, setCodeAlat] = useState<string>('RTG-22');
-    const [nipp, setNipp] = useState<string>('8606120200');
-    const [data, setData] = useState<Assessment[] | null>(null);
-    const [error, setError] = useState<string | null>(null);
-
-    const fetchData = async () => {
-        console.log('Fetching data...');
-        try {
-            const result = await bankAssessment(codeAlat, nipp); // Call your API function
-            console.log('API Response:', result); 
-            
-            // Check if the successCode is 200
-            if (result.successCode === 200 && result.data) {
-                console.log('Data received from API:', result.data);
-                setData(result.data);
-                setError(null); 
-            } else {
-                console.log('Unexpected successCode or no data:', result.successCode);
-                setError(Messages.GENERIC_ERROR);
-            }
-        } catch (err) {
-            console.error('Error occurred in fetchData:', err);
-            setError('An unexpected error occurred');
-        }
-    };
-
-    useEffect(() => {
-        fetchData(); // Call fetchData once on component mount
-    }, [codeAlat, nipp]); // Dependencies to re-fetch when codeAlat or nipp changes
 
     let emptyBankSoal: Demo.BankSoal = {
         header_id: 0,
