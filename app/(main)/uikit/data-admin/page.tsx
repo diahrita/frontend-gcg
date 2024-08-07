@@ -240,10 +240,6 @@ const DataAdmin = () => {
                         paginator
                         rows={rowsPerPage}
                         rowsPerPageOptions={[5, 10, 15, 20]}
-                        onPage={(event) => {
-                            handlePageChange(event);
-                            setRowsPerPage(event.rows);
-                        }}
                         className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
