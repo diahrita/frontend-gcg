@@ -13,6 +13,7 @@ export const Messages = {
     LOGIN_PROMPT_TEXT : 'Login untuk melanjutkan',
     BUTTON_LOADING_TEXT : 'Loading...',
     BUTTON_LOGIN_TEXT : 'Login',
+    ALERT_WARNING : 'Masukkan kode alat kembali!',
     // Pesan error 400
     BAD_REQUEST: 'Permintaan tidak dapat dipahami atau kehilangan parameter yang diperlukan.',
     VALIDATION_ERROR: 'Terjadi kesalahan validasi. Silakan periksa input Anda.',

@@ -25,7 +25,7 @@ export const loginUser = async (username: string, password: string, router: Retu
             // Memeriksa hash
             if (hash?.trim()) {
                 sessionStorage.setItem('hash', hash);
-                sessionStorage.setItem('username', username);
+                localStorage.setItem('username', username);
 
                 // Mendapatkan token
                 const token = await getToken(username);

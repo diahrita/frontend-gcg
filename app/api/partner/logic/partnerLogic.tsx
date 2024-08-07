@@ -21,10 +21,12 @@ export const useDataAdminLogic = () => {
                 } else {
                     const storedError = sessionStorage.getItem(Messages.ERROR);
                     setError(storedError || Messages.GENERIC_ERROR);
+                
                 }
             } catch (err) {
                 const storedError = sessionStorage.getItem(Messages.ERROR);
                 setError(storedError || Messages.GENERIC_ERROR);
+           
             } finally {
                 setLoading(false);
             }

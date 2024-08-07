@@ -1,18 +1,90 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { getDetailByHeaderId } from '@/app/api/assesment/detailAssessments';
+import { Messages } from '@/app/hendlererror/message/messages';
+import { Demo } from '@/types';
+import { AssessmentItem } from '@/types/assessment';
+import moment from 'moment';
 import { Button } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { ProgressBar } from 'primereact/progressbar';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils';
-import React, { useRef, useState } from 'react';
-import { Demo } from '@/types';
-import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
+import { classNames } from 'primereact/utils';
+import React, { useEffect, useRef, useState } from 'react';
 
 const Crud = () => {
+    const [data, setData] = useState<AssessmentItem[] | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const title = sessionStorage.getItem('title');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const code_alat = sessionStorage.getItem('codeAlat');
+                const nipp = sessionStorage.getItem('nipp');
+                const headerIdStr = sessionStorage.getItem('header_id');
+
+                if (!code_alat || !nipp || !headerIdStr) {
+                    setLoading(false);
+                    return;
+                }
+
+                const headerId = Number(headerIdStr);
+
+                if (isNaN(headerId)) {
+                    setError('Invalid header ID');
+                    setLoading(false);
+                    return;
+                }
+
+                const result = await getDetailByHeaderId(headerId, code_alat, nipp);
+                if (result.successCode === 200 && result.data) {
+                    setData(result.data.data);
+                    console.log('Data SET:', result.data.data); 
+                } else {
+                    const storedError = sessionStorage.getItem(Messages.ERROR);
+                    setError(storedError || Messages.GENERIC_ERROR);
+                }
+            } catch (err) {
+                console.error('Fetch data error:', err);
+                const storedError = sessionStorage.getItem(Messages.ERROR);
+                setError(storedError || Messages.GENERIC_ERROR);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (data) {
+            // console.log('Data updated:', data);
+        }
+    }, [data]);
+
+    const filteredData = (data && Array.isArray(data) ? data : []).filter(item =>
+        item.pertanyaan !== "-" ||
+        item.jawaban !== "-" ||
+        item.grup !== "-" ||
+        item.group_position !== "-"
+    );
+
+    const dataWithDisplayId =filteredData.map((item, index) => ({
+        ...item,
+        id: index + 1
+    }));
+
+      
+
     let emptySoal: Demo.Soal = {
         id: 0,
         pertanyaan: '',
@@ -35,10 +107,6 @@ const Crud = () => {
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-
-    // useEffect(() => {
-    //     SoalService.getSoals().then((data) => setSoals(data as any));
-    // }, []);
 
     const openNew = () => {
         setSoal(emptySoal);
@@ -95,26 +163,6 @@ const Crud = () => {
         });
     };
 
-    const findIndexById = (id: string) => {
-        let index = -1;
-        for (let i = 0; i < (soals as any)?.length; i++) {
-            if ((soals as any)[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    };
-
-    const createId = () => {
-        let id = '';
-        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         const val = (e.target && e.target.value) || '';
@@ -124,65 +172,75 @@ const Crud = () => {
         setSoal(_soal);
     };
 
-    const pertanyaanBodyTemplate = (rowData: Demo.Soal) => {
+    const idBodyTemplate = (item:AssessmentItem ) => (
+        <>
+            <span className="p-column-title">Id</span>
+            {item.id}
+        </>
+    );
+
+
+    const pertanyaanBodyTemplate = (item : AssessmentItem) => {
         return (
             <>
                 <span className="p-column-title">Pertanyaan</span>
-                {rowData.pertanyaan}
+                {item.pertanyaan}
             </>
         );
     };
 
-    const jumlahBodyTemplate = (rowData: Demo.Soal) => {
+    const jumlahBodyTemplate = (item: AssessmentItem) => {
         return (
             <>
                 <span className="p-column-title">Jumlah</span>
-                {rowData.jumlah}
+                {item.jumlah}
             </>
         );
     };
 
-    const jawabanBodyTemplate = (rowData: Demo.Soal) => {
+    const jawabanBodyTemplate = (item: AssessmentItem) => {
         return (
             <>
                 <span className="p-column-title">Jawaban</span>
-                {rowData.jawaban}
+                {item.jawaban}
             </>
         );
     };
 
-    const grupBodyTemplate = (rowData: Demo.Soal) => {
+    const grupBodyTemplate = (item: AssessmentItem) => {
         return (
             <>
                 <span className="p-column-title">Grup</span>
-                {rowData.grup}
+                {item.grup}
             </>
         );
     };
 
-    const createdAtBodyTemplate = (rowData: Demo.Soal) => {
+    const createdAtBodyTemplate = (item : AssessmentItem) => {
+        const formattedDate = moment(item.created_at).format("DD MMMM YYYY, HH:mm");
+    
         return (
             <>
                 <span className="p-column-title">Tanggal Dibuat</span>
-                {rowData.created_at}
+                {formattedDate}
             </>
         );
     };
 
-    const modifiedAtBodyTemplate = (rowData: Demo.Soal) => {
+    const modifiedAtBodyTemplate = (item: AssessmentItem) => {
         return (
             <>
                 <span className="p-column-title">Tanggal Diubah</span>
-                {rowData.modified_at}
+                {item.modified_at}
             </>
         );
     };
 
-    const showBodyTemplate = (rowData: Demo.Soal) => {
+    const showBodyTemplate = (item: AssessmentItem) => {
         return (
             <>
                 <span className="p-column-title">Tampilkan</span>
-                {rowData.show}
+                {item.show}
             </>
         );
     };
@@ -198,7 +256,7 @@ const Crud = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Pemeriksaan Area Kerja</h5>
+            <h5 className="m-0">{title}</h5>
             <div className="flex justify-between items-center mt-2 md:mt-0">
                 <span className="block mt-2 md:mt-0 p-input-icon-left mr-4">
                     <i className="pi pi-search" />
@@ -247,34 +305,41 @@ const Crud = () => {
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
-                    <Toast ref={toast} />
+                {loading && (
+                        <div style={{ padding: '10px', display: 'inline-block', width: '100%', position: 'relative' }}>
+                            <span style={{ display: 'block', marginBottom: '5px', fontSize: '14px', color: '#333' }}>Loading...</span>
+                            <ProgressBar mode="indeterminate" style={{ marginTop: '10px', height: '8px', width: '100%' }} />
+                        </div>
+                    )}
+                    {error && <div style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '1rem' }}>{error}</div>}
+                <DataTable
+                value={dataWithDisplayId}
+                dataKey="id"
+                paginator
+                rows={10}
+                rowsPerPageOptions={[5, 10, 25]}
+                className="datatable-responsive"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} soals"
+                globalFilter={globalFilter}
+                emptyMessage="No soals found."
+                header={header}
+                responsiveLayout="scroll"
+            >
+                <Column field="id" header="Id" body={idBodyTemplate} sortable headerStyle={{ minWidth: '5rem' }}></Column>
+                <Column field="pertanyaan" header="Pertanyaan"  body={pertanyaanBodyTemplate} sortable headerStyle={{ minWidth: '25rem' }}></Column>
+               
+                <Column field="jumlah" header="Jumlah" sortable body={jumlahBodyTemplate} headerStyle={{ minWidth: '5rem' }}></Column>
+                
+                <Column field="jawaban" header="Jawaban" sortable body={jawabanBodyTemplate} headerStyle={{ minWidth: '5rem' }}></Column>
+                <Column field="grup" header="Grup" sortable body={grupBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                <Column field="created_at" header="Tanggal Dibuat" sortable body={createdAtBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                <Column field="modified_at" header="Tanggal Diubah" sortable body={modifiedAtBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                <Column field="show" header="Tampilkan" sortable body={showBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                <Column header="Actions" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+            
+            </DataTable>
 
-                    <DataTable
-                        ref={dt}
-                        value={soals}
-                        selection={selectedSoals}
-                        dataKey="id"
-                        paginator
-                        rows={10}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        className="datatable-responsive"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} soals"
-                        globalFilter={globalFilter}
-                        emptyMessage="No soals found."
-                        header={header}
-                        responsiveLayout="scroll"
-                    >
-                        <Column field="id" header="Id" sortable headerStyle={{ minWidth: '5rem' }}></Column>
-                        <Column field="pertanyaan" header="Pertanyaan" sortable headerStyle={{ minWidth: '25rem' }}></Column>
-                        <Column field="jumlah" header="Jumlah" sortable body={jumlahBodyTemplate} headerStyle={{ minWidth: '5rem' }}></Column>
-                        <Column field="jawaban" header="Jawaban" sortable body={jawabanBodyTemplate} headerStyle={{ minWidth: '5rem' }}></Column>
-                        <Column field="grup" header="Grup" sortable body={grupBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="created_at" header="Tanggal Dibuat" sortable body={createdAtBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="modified_at" header="Tanggal Diubah" sortable body={modifiedAtBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="show" header="Tampilkan" sortable body={showBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column header="Actions" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                    </DataTable>
 
                     <Dialog
                         visible={soalDialog}
@@ -464,6 +529,7 @@ const Crud = () => {
             </div>
         </div>
     );
+    
 };
 
 export default Crud;

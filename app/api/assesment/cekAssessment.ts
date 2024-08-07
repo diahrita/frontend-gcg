@@ -2,8 +2,7 @@ import { Messages } from '@/app/hendlererror/message/messages';
 import { handleError } from '@/app/hendlererror/server/errorHandler';
 import { APIEndpoints } from '@/app/route/apiEndpoints';
 import { AuthHeaders } from '@/app/route/authHeaders';
-import { LabelAssessment } from '@/types/assessment';
-
+import { AssessmentItem, LabelAssessment } from '@/types/assessment';
 import axios from 'axios';
 
 interface FetchResult {
@@ -31,10 +30,12 @@ export const cekAssessment = async (code_alat: string, nipp: string): Promise<Fe
                 headers: AuthHeaders.getBearerToken(token),
             }
         );
-        const data: LabelAssessment[] = response.data;
+        
+        const data: LabelAssessment[] = response.data.data;
 
-
-        // console.log('API Response Data:', data); 
+        
+        
+        console.log('API Response Data ini ya:', data); 
         return { successCode: response.data.successCode, data };
 
     } catch (err: any) {
@@ -43,3 +44,4 @@ export const cekAssessment = async (code_alat: string, nipp: string): Promise<Fe
         return { successCode: status, data: null };
     }
 };
+

@@ -15,6 +15,8 @@ export const useLoginLogic = () => {
     useEffect(() => {
         const token = sessionStorage.getItem('token');
         const expirationTime = sessionStorage.getItem('expirationTime');
+        const storedUsername = localStorage.getItem('username');
+        // const storedPassword = localStorage.getItem('password');
 
         if (token && expirationTime) {
             const isExpired = Date.now() > parseInt(expirationTime);
@@ -30,6 +32,11 @@ export const useLoginLogic = () => {
         if (storedError) {
             setError(storedError);
         }
+
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
+
     }, [router]);
 
     const handleLogin = async () => {
@@ -55,6 +62,8 @@ export const useLoginLogic = () => {
             const expirationTime = Date.now() + 6 * 60 * 60 * 1000; 
             sessionStorage.setItem('token', token);
             sessionStorage.setItem('expirationTime', expirationTime.toString());
+            localStorage.setItem('username', username); 
+            localStorage.setItem('password', password); 
         } catch (err: any) {
             setError(err.message);
         } finally {
