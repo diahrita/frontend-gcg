@@ -3,6 +3,7 @@
 import { bankAssessment } from '@/app/api/assesment/bankAssessment';
 import { Messages } from '@/app/hendlererror/message/messages';
 import { Assessment } from '@/types/assessment';
+import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { useState } from 'react';
@@ -11,15 +12,18 @@ import './style.css';
 const InputBankSoal = () => {
     const [codeAlat, setCodeAlat] = useState<string>('');
     const [nipp, setNipp] = useState<string>('');
+    // const [data, setData] = useState<any[]>([]);
     const [data, setData] = useState<Assessment[] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const router = useRouter();
 
     const fetchData = async () => {
         console.log('Fetching data...');
         if (!codeAlat || !nipp) {
             setError('Kode Alat dan NIPP harus diisi');
             return;
+            
         }
         setError(null);
         setLoading(true);
@@ -30,6 +34,8 @@ const InputBankSoal = () => {
             if (result.successCode === 200 && result.data) {
                 console.log('Data received from API:', result.data);
                 setData(result.data);
+                router.push('/uikit/bank-soal');
+                
             } else {
                 console.log('Unexpected successCode or no data:', result.successCode);
                 setError(Messages.GENERIC_ERROR);
@@ -83,13 +89,15 @@ const InputBankSoal = () => {
                                 />
                             </div>
                         </div>
-                        
-                        <Button 
+
+                        <Button
                             label={loading ? 'Loading...' : 'Submit'} 
                             className={`w-full mt-2 ${loading ? 'p-button-secondary' : ''}`} 
                             onClick={fetchData}
                             disabled={loading}
                         />
+                       
+
                     </div>
                 </div>
             </div>

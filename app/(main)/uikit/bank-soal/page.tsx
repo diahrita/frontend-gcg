@@ -1,9 +1,6 @@
 'use client';
 
-import { bankAssessment } from "@/app/api/assesment/bankAssessment";
-import { Messages } from "@/app/hendlererror/message/messages";
 import { Demo } from '@/types';
-import { Assessment } from "@/types/assessment";
 import Link from 'next/link';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
@@ -12,7 +9,7 @@ import { Dialog } from 'primereact/dialog'; // Import Dialog
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils'; // Import classNames
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 const Crud = () => {
 

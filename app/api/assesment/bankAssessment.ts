@@ -31,12 +31,12 @@ export const bankAssessment = async (code_alat: string, nipp: string): Promise<F
             }
         );
         const data: Assessment[] = response.data;
-        console.log('API Response Data:', data); 
+        // console.log('API Response Data:', data); 
         return { successCode: response.data.successCode, data };
 
     } catch (err: any) {
         const { status, message } = handleError(err);
-        console.error('Error occurred:', message); // Log the error message
+        console.error('Error occurred:', message);
         return { successCode: status, data: null };
     }
 };
