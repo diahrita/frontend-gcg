@@ -19,20 +19,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
 import './style.css';
 
-
 const DataAdmin = () => {
     // State for Data Admin
     const { dataWithDisplayId, loading, error, handlePageChange } = useDataAdminLogic();
 
-    const {
-        formData,
-        error_regis,
-        success,
-        loading_regis,
-        handleChange,
-        handleSubmit
-    } = useRegisterAdminForm();
-
+    const { formData, error_regis, success, loading_regis, handleChange, handleSubmit } = useRegisterAdminForm();
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
@@ -54,9 +45,6 @@ const DataAdmin = () => {
     const dt = useRef<DataTable<any>>(null);
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(rowsPerPage);
-
-
-
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
@@ -170,19 +158,6 @@ const DataAdmin = () => {
         setProduct(_product);
     };
 
-    const rightToolbarTemplate = () => (
-        <>
-            <Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={openNew} />
-            <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-        </>
-    );
-
-    const leftToolbarTemplate = () => (
-        <React.Fragment>
-            <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-        </React.Fragment>
-    );
-
     const idBodyTemplate = (partner: DataPartner) => (
         <>
             <span className="p-column-title">Id</span>
@@ -220,10 +195,14 @@ const DataAdmin = () => {
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Data Admin</h5>
-            <span className="block mt-2 md:mt-0 p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span>
+            <div className="flex justify-between items-center mt-2 md:mt-0">
+                <span className="block mt-2 md:mt-0 p-input-icon-left mr-4">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                </span>
+                <Button label="New" icon="pi pi-plus" severity="success" className="mr-4" onClick={openNew} />
+                <Button label="Export" icon="pi pi-upload" severity="help" className="mr-4" onClick={exportCSV} />
+            </div>
         </div>
     );
 
@@ -237,17 +216,10 @@ const DataAdmin = () => {
     const newProductDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button
-                label={loading_regis ? 'Saving...' : 'Save'}
-                icon={loading_regis ? '' : 'pi pi-check'}
-                className="p-button-text"
-                onClick={saveProduct}
-                disabled={loading_regis}
-            />
+            <Button label={loading_regis ? 'Saving...' : 'Save'} icon={loading_regis ? '' : 'pi pi-check'} className="p-button-text" onClick={saveProduct} disabled={loading_regis} />
             {loading_regis && <i className="pi pi-spinner pi-spin" style={{ marginLeft: '0.5em' }}></i>}
         </>
     );
-
 
     return (
         <div className="grid crud-demo">
@@ -262,7 +234,6 @@ const DataAdmin = () => {
                     {error && <div style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '1rem' }}>{error}</div>}
 
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
                     <DataTable
                         value={dataWithDisplayId}
                         dataKey="id"
@@ -286,7 +257,6 @@ const DataAdmin = () => {
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
-
                 </div>
             </div>
 
@@ -294,7 +264,7 @@ const DataAdmin = () => {
             <Dialog visible={productDialog} style={{ width: '450px' }} header="Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                 <div className="field">
                     <label htmlFor="username">Name</label>
-                    <InputText id="username" value={formData.username} type='text' onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                    <InputText id="username" value={formData.username} type="text" onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
                     {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                 </div>
                 <div className="field">
@@ -308,7 +278,6 @@ const DataAdmin = () => {
                     {submitted && !product.telepon && <small className="p-invalid">Telepon is required.</small>}
                 </div>
             </Dialog>
-
 
             {/* New Data */}
             <Dialog visible={newProductDialog} style={{ width: '450px' }} header="Tambah Data Admin" modal className="p-fluid" footer={newProductDialogFooter} onHide={hideDialog}>
@@ -369,8 +338,6 @@ const DataAdmin = () => {
                         />
                     </div>
 
-
-
                     <div className="field">
                         <label htmlFor="password">Password</label>
                         <Password
@@ -393,7 +360,6 @@ const DataAdmin = () => {
                 {error_regis && <p className="error-message">{error_regis}</p>}
                 {success && <p className="success-message">{success}</p>}
             </Dialog>
-
         </div>
     );
 };

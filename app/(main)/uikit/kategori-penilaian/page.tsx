@@ -262,6 +262,7 @@ const KategoriPenilaian = () => {
                                 value={kategori.item}
                                 onChange={(e) => onInputChange(e, 'item')}
                                 required
+                                placeholder="Item Penilaian"
                                 autoFocus
                                 className={classNames({
                                     'p-invalid': submitted && !kategori.item
@@ -272,17 +273,17 @@ const KategoriPenilaian = () => {
 
                         <div className="field col">
                             <label htmlFor="aspek">Aspek</label>
-                            <InputNumber id="aspek" value={kategori.aspek} onValueChange={(e) => onInputNumberChange(e, 'aspek')} />
+                            <InputNumber id="aspek" placeholder="Aspek" value={kategori.aspek} onValueChange={(e) => onInputNumberChange(e, 'aspek')} />
                         </div>
 
                         <div className="field col">
                             <label htmlFor="indikator">Indikator</label>
-                            <InputNumber id="indikator" value={kategori.indikator} onValueChange={(e) => onInputNumberChange(e, 'indikator')} />
+                            <InputNumber id="indikator" placeholder="Indikator" value={kategori.indikator} onValueChange={(e) => onInputNumberChange(e, 'indikator')} />
                         </div>
 
                         <div className="field col">
                             <label htmlFor="parameter">Parameter</label>
-                            <InputNumber id="parameter" value={kategori.parameter} onValueChange={(e) => onInputNumberChange(e, 'parameter')} />
+                            <InputNumber id="parameter" placeholder="Parameter" value={kategori.parameter} onValueChange={(e) => onInputNumberChange(e, 'parameter')} />
                         </div>
                     </Dialog>
 
@@ -295,6 +296,7 @@ const KategoriPenilaian = () => {
                                 value={kategori.item}
                                 onChange={(e) => onInputChange(e, 'item')}
                                 required
+                                placeholder="Item Penilaian"
                                 autoFocus
                                 className={classNames({
                                     'p-invalid': submitted && !kategori.item
@@ -305,17 +307,17 @@ const KategoriPenilaian = () => {
 
                         <div className="field col">
                             <label htmlFor="aspek">Aspek</label>
-                            <InputNumber id="aspek" value={kategori.aspek} onValueChange={(e) => onInputNumberChange(e, 'aspek')} />
+                            <InputNumber id="aspek" placeholder="Aspek" value={kategori.aspek} onValueChange={(e) => onInputNumberChange(e, 'aspek')} />
                         </div>
 
                         <div className="field col">
                             <label htmlFor="indikator">Indikator</label>
-                            <InputNumber id="indikator" value={kategori.indikator} onValueChange={(e) => onInputNumberChange(e, 'indikator')} />
+                            <InputNumber id="indikator" placeholder="Indikator" value={kategori.indikator} onValueChange={(e) => onInputNumberChange(e, 'indikator')} />
                         </div>
 
                         <div className="field col">
                             <label htmlFor="parameter">Parameter</label>
-                            <InputNumber id="parameter" value={kategori.parameter} onValueChange={(e) => onInputNumberChange(e, 'parameter')} />
+                            <InputNumber id="parameter" placeholder="Parameter" value={kategori.parameter} onValueChange={(e) => onInputNumberChange(e, 'parameter')} />
                         </div>
                     </Dialog>
 
