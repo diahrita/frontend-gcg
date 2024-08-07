@@ -38,6 +38,7 @@ const DataAdmin = () => {
     const [productDialog, setProductDialog] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    
     const [product, setProduct] = useState<Demo.Product>({
         id: '',
         name: '',
@@ -45,6 +46,7 @@ const DataAdmin = () => {
         telepon: '',
         password: ''
     });
+
     const [selectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [newProductDialog, setNewProductDialog] = useState(false);
@@ -54,9 +56,6 @@ const DataAdmin = () => {
     const dt = useRef<DataTable<any>>(null);
     const [page, setPage] = useState(0);
     const [limit, setLimit] = useState(rowsPerPage);
-
-
-
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));

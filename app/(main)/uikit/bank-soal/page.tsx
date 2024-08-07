@@ -1,6 +1,8 @@
 'use client';
 
+import { bankAssessment } from '@/app/api/assesment/bankAssessment';
 import { Demo } from '@/types';
+import { LabelAndGroup } from '@/types/assessment';
 import Link from 'next/link';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
@@ -9,11 +11,47 @@ import { Dialog } from 'primereact/dialog'; // Import Dialog
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils'; // Import classNames
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const Crud = () => {
 
 
+    const [data, setData] = useState<LabelAndGroup[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+
+    const fetchLabelsAndGroups = async () => {
+        setLoading(true);
+        try {
+            // Ambil nilai dari sessionStorage
+            const codeAlat = sessionStorage.getItem('codeAlat');
+            const nipp = sessionStorage.getItem('nipp');
+
+            // Validasi jika nilai tidak ditemukan
+            if (!codeAlat || !nipp) {
+                setLoading(false);
+                return;
+            }
+
+            const result = await bankAssessment(codeAlat, nipp);
+
+            if (result.successCode === 200 && result.data) {
+                setData(result.data);
+                console.log("Ini data", result.data);
+            } else {
+                toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Failed to fetch data', life: 3000 });
+            }
+        } catch (error) {
+            toast.current?.show({ severity: 'error', summary: 'Error', detail: 'An error occurred', life: 3000 });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchLabelsAndGroups();
+    }, []);
 
     let emptyBankSoal: Demo.BankSoal = {
         header_id: 0,
@@ -22,17 +60,16 @@ const Crud = () => {
     };
 
     const [isEditMode, setIsEditMode] = useState(false);
-    const [banksoals, setBankSoals] = useState<Demo.BankSoal[]>([]); 
-    const [banksoalDialog, setBankSoalDialog] = useState(false); 
-    const [deleteBankSoalDialog, setDeleteSoalDialog] = useState(false);
+    const [banksoals, setBankSoals] = useState<Demo.BankSoal[]>([]);
+    const [banksoalDialog, setBankSoalDialog] = useState(false);
     const [banksoal, setBankSoal] = useState<Demo.BankSoal>(emptyBankSoal);
-    const [selectedBankSoals] = useState<Demo.BankSoal[] | null>(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
+
     const dt = useRef<DataTable<any>>(null);
- 
-   
+
+
 
     const openNew = () => {
         setBankSoal(emptyBankSoal);
@@ -70,7 +107,6 @@ const Crud = () => {
         let _banksoal = { ...banksoal };
         // @ts-ignore
         _banksoal[`${name}`] = val;
-
         setBankSoal(_banksoal);
     };
 
@@ -80,6 +116,7 @@ const Crud = () => {
             <Button label="Save" icon="pi pi-check" onClick={saveBankSoal} autoFocus />
         </div>
     );
+
 
     const Dashboard = () => {
         return (
@@ -95,48 +132,34 @@ const Crud = () => {
                             <Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={openNew} />
                         </div>
                     </div>
+
+
                     <div className="grid">
-                        <div className="col-12">
-                            <Link href="/uikit/soal">
-                                <div className="card mb-0" style={{ cursor: 'pointer' }}>
-                                    <div className="flex justify-content-between">
-                                        <div>
-                                            <div className="text-900 font-medium text-xl mb-2">Pemeriksaan Area Kerja</div>
-                                            <span className="block text-500 font-medium">AreaKerjaRTG</span>
-                                        </div>
-                                        <Badge value="6" size="xlarge" severity="warning"></Badge>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
+                        {loading}
 
-                        <div className="col-12">
-                            <Link href="/uikit/soal">
-                                <div className="card mb-0" style={{ cursor: 'pointer' }}>
-                                    <div className="flex justify-content-between">
-                                        <div>
-                                            <div className="text-900 font-medium text-xl mb-2">Cabin Check</div>
-                                            <span className="block text-500 font-medium">CCCabinRTG</span>
+                        {data ? (
+                            data.map((item, index) => (
+                                <div className="col-12" key={index}>
+                                    <Link href="/uikit/soal">
+                                        <div className="card mb-0" style={{ cursor: 'pointer' }}>
+                                            <div className="flex justify-content-between">
+                                                <div>
+                                                    <div className="text-900 font-medium text-xl mb-2">
+                                                        {item.label}
+                                                    </div>
+                                                    <span className="block text-500 font-medium">
+                                                        {item.grup}
+                                                    </span>
+                                                </div>
+                                                <Badge value="6" size="xlarge" severity="warning"></Badge>
+                                            </div>
                                         </div>
-                                        <Badge value="6" size="xlarge" severity="warning"></Badge>
-                                    </div>
+                                    </Link>
                                 </div>
-                            </Link>
-                        </div>
-
-                        <div className="col-12">
-                            <Link href="/uikit/soal">
-                                <div className="card mb-0" style={{ cursor: 'pointer' }}>
-                                    <div className="flex justify-content-between">
-                                        <div>
-                                            <div className="text-900 font-medium text-xl mb-2">Pemeriksaan Fungsi dan Kondisi RTG</div>
-                                            <span className="block text-500 font-medium">KondisiFungsiRTG</span>
-                                        </div>
-                                        <Badge value="6" size="xlarge" severity="warning"></Badge>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
+                            ))
+                        ) : (
+                            <div>{error || 'Loading data...'}</div>
+                        )}
                     </div>
                 </div>
                 <Dialog visible={banksoalDialog} style={{ width: '450px' }} header="Tambah Bank Soal" modal className="p-fluid" footer={DialogFooter} onHide={hideDialog}>

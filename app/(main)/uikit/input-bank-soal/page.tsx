@@ -1,8 +1,7 @@
 'use client';
-
-import { bankAssessment } from '@/app/api/assesment/bankAssessment';
+import { cekAssessment } from '@/app/api/assesment/cekAssessment';
 import { Messages } from '@/app/hendlererror/message/messages';
-import { Assessment } from '@/types/assessment';
+import { LabelAssessment } from '@/types/assessment';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -12,14 +11,14 @@ import './style.css';
 const InputBankSoal = () => {
     const [codeAlat, setCodeAlat] = useState<string>('');
     const [nipp, setNipp] = useState<string>('');
-    // const [data, setData] = useState<any[]>([]);
-    const [data, setData] = useState<Assessment[] | null>(null);
+  
+    const [data, setData] = useState<LabelAssessment[] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
 
     const fetchData = async () => {
-        console.log('Fetching data...');
+        // console.log('Fetching data...');
         if (!codeAlat || !nipp) {
             setError('Kode Alat dan NIPP harus diisi');
             return;
@@ -28,25 +27,25 @@ const InputBankSoal = () => {
         setError(null);
         setLoading(true);
         try {
-            const result = await bankAssessment(codeAlat, nipp);
-            console.log('API Response:', result); 
-            
+            const result = await cekAssessment(codeAlat, nipp);
             if (result.successCode === 200 && result.data) {
-                console.log('Data received from API:', result.data);
+                // console.log('Data received from API:', result.data);
                 setData(result.data);
+                sessionStorage.setItem('codeAlat', codeAlat);
+                sessionStorage.setItem('nipp', nipp);
                 router.push('/uikit/bank-soal');
-                
             } else {
-                console.log('Unexpected successCode or no data:', result.successCode);
-                setError(Messages.GENERIC_ERROR);
+                const storedError = sessionStorage.getItem(Messages.ERROR);
+                setError(storedError || Messages.GENERIC_ERROR);
             }
         } catch (err) {
-            console.error('Error occurred in fetchData:', err);
-            setError('An unexpected error occurred');
+            const storedError = sessionStorage.getItem(Messages.ERROR);
+            setError(storedError || Messages.GENERIC_ERROR);
         } finally {
             setLoading(false);
         }
     };
+    
 
     return (
         <div className="grid">
