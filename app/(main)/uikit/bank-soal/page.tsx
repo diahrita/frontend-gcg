@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
-import { Dialog } from 'primereact/dialog'; // Import Dialog
+import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
-import { classNames } from 'primereact/utils'; // Import classNames
+import { classNames } from 'primereact/utils';
 import React, { useRef, useState } from 'react';
+import { BreadCrumb } from 'primereact/breadcrumb';
+import { MenuItem } from 'primereact/menuitem';
 
 const Crud = () => {
 
@@ -81,11 +83,15 @@ const Crud = () => {
         </div>
     );
 
+    const items: MenuItem[] = [{ label: 'Input Kode Alat dan NIPP', url: '/uikit/input-bank-soal'  }, { label: 'Bank Soal'}];
+    const home: MenuItem = { icon: 'pi pi-home', url: '/' }
+
     const Dashboard = () => {
         return (
             <>
                 <div className="card">
-                    <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-4">
+                <BreadCrumb model={items} home={home} />
+                    <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center mb-4 mt-4">
                         <h5 className="m-0">Bank Soal</h5>
                         <div className="flex justify-between items-center mt-2 md:mt-0">
                             <span className="block mt-2 md:mt-0 p-input-icon-left mr-4">

@@ -7,16 +7,21 @@ import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { useState } from 'react';
+import React from 'react';
+import { BreadCrumb } from 'primereact/breadcrumb';
+import { MenuItem } from 'primereact/menuitem';
 import './style.css';
 
 const InputBankSoal = () => {
     const [codeAlat, setCodeAlat] = useState<string>('');
     const [nipp, setNipp] = useState<string>('');
-    // const [data, setData] = useState<any[]>([]);
     const [data, setData] = useState<Assessment[] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
+
+    const items: MenuItem[] = [{ label: 'Input Kode Alat dan NIPP' }];
+    const home: MenuItem = { icon: 'pi pi-home', url: '/' }
 
     const fetchData = async () => {
         console.log('Fetching data...');
@@ -52,6 +57,7 @@ const InputBankSoal = () => {
         <div className="grid">
             <div className="col-12">
                 <div className="card">
+                <BreadCrumb model={items} home={home} className='mb-3' />
                     {error && <p className="error-message">{error}</p>}
                     <h5>Silahkan Masukkan Kode Alat dan NIPP</h5>
                     <div className="p-fluid formgrid grid">

@@ -11,6 +11,8 @@ import React, { useRef, useState } from 'react';
 import { Demo } from '@/types';
 import { Calendar } from 'primereact/calendar';
 import { Nullable } from "primereact/ts-helpers";
+import { BreadCrumb } from 'primereact/breadcrumb';
+import { MenuItem } from 'primereact/menuitem';
 
 const Crud = () => {
     let emptySoal: Demo.Soal = {
@@ -243,10 +245,14 @@ const Crud = () => {
         </>
     );
 
+    const items: MenuItem[] = [{ label: 'Input Kode Alat dan NIPP', url: '/uikit/input-bank-soal'  }, { label: 'Bank Soal', url: '/uikit/bank-soal'}, { label: '1'}];
+    const home: MenuItem = { icon: 'pi pi-home', url: '/' }
+
     return (
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
+                <BreadCrumb model={items} home={home} className='mb-3'/>
                     <Toast ref={toast} />
 
                     <DataTable
