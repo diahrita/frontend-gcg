@@ -1,11 +1,10 @@
 
-import { useEffect, useState, useRef } from 'react';
 import { getDetailByHeaderId } from '@/app/api/assesment/detailAssessments';
 import { Messages } from '@/app/hendlererror/message/messages';
 import { Demo } from '@/types';
 import { AssessmentItem } from '@/types/assessment';
 import { Toast } from 'primereact/toast';
-import { Nullable } from "primereact/ts-helpers";
+import { useEffect, useRef, useState } from 'react';
 
 export const DetailAssessment = () => {
     const [data, setData] = useState<AssessmentItem[] | null>(null);
@@ -64,6 +63,10 @@ export const DetailAssessment = () => {
         ...item,
         id: index + 1
     }));
+
+    const jumlahSoal = dataWithDisplayId.length;
+    sessionStorage.setItem('jumlahSoal', JSON.stringify(jumlahSoal));
+    console.log('Jumlah soal:', jumlahSoal);
 
     const [editSoalDialog, setEditSoalDialog] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
