@@ -26,13 +26,9 @@ const useBankSoalLogic = () => {
     const fetchLabelsAndGroups = async () => {
         setLoading(true);
         try {
-            const code_alat = sessionStorage.getItem('codeAlat');
-            const nipp = sessionStorage.getItem('nipp');
-            if (!code_alat || !nipp) {
-                setLoading(false);
-                return;
-            }
-            const result = await cekAssessment(code_alat, nipp);
+         
+            const result = await cekAssessment('RTG-22', '8606120200');
+
             if (result.successCode === 200 && result.data) {
                 setData(result.data);
                 // console.log("Ini data", result.data);

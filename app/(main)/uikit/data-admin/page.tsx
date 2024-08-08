@@ -240,9 +240,14 @@ const DataAdmin = () => {
                 label={loading_regis ? 'Saving...' : 'Save'}
                 icon={loading_regis ? '' : 'pi pi-check'}
                 className="p-button-text"
-                onClick={saveProduct}
+                // onClick={ type="submit"}
                 disabled={loading_regis}
             />
+
+                    <button type="submit" disabled={loading_regis}>
+                        {loading_regis ? 'Submitting...' : 'Save'}
+                    </button>
+            
             {loading_regis && <i className="pi pi-spinner pi-spin" style={{ marginLeft: '0.5em' }}></i>}
         </>
     );
@@ -262,6 +267,7 @@ const DataAdmin = () => {
 
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
                     <DataTable
                         value={dataWithDisplayId}
                         dataKey="id"
@@ -384,6 +390,7 @@ const DataAdmin = () => {
                     <button type="submit" disabled={loading_regis}>
                         {loading_regis ? 'Submitting...' : 'Register'}
                     </button>
+
                 </form>
                 {error_regis && <p className="error-message">{error_regis}</p>}
                 {success && <p className="success-message">{success}</p>}

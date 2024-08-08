@@ -12,7 +12,7 @@ interface FetchResult {
     // data : AssessmentItem [] | null;
 }
 
-export const getDetailByHeaderId = async (header_id: number, code_alat: string, nipp: string): Promise<FetchResult> => {
+export const getDetailByHeaderId = async (header_id: number, code_alat: 'RTG-22', nipp: '8606120200'): Promise<FetchResult> => {
     if (typeof window === 'undefined') {
         return { successCode: 500, data: null }; 
     }

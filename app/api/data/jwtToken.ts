@@ -45,7 +45,7 @@ export const startTokenRefresh = (username: string) => {
     // Set interval to fetch token
     tokenUpdateInterval = setInterval(() => {
         fetchToken();
-    }, 15000);
+    }, 10000);
 };
 
 export const stopTokenRefresh = () => {

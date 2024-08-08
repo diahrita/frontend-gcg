@@ -10,7 +10,7 @@ interface FetchResult {
     data: LabelAssessment[] | null;
 }
 
-export const cekAssessment = async (code_alat: string, nipp: string): Promise<FetchResult> => {
+export const cekAssessment = async (code_alat: 'RTG-22', nipp: '8606120200'): Promise<FetchResult> => {
     if (typeof window === 'undefined') {
         return { successCode: 500, data: null }; 
     }

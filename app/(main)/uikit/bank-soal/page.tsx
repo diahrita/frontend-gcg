@@ -9,12 +9,6 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 
-interface DataItem {
-    header_id: string;
-    label: string;
-    grup?: string;
-}
-
 const BankSoalUI = () => {
     const {
         data,

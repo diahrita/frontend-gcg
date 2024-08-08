@@ -17,11 +17,9 @@ export const DetailAssessment = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const code_alat = sessionStorage.getItem('codeAlat');
-                const nipp = sessionStorage.getItem('nipp');
                 const headerIdStr = sessionStorage.getItem('header_id');
 
-                if (!code_alat || !nipp || !headerIdStr) {
+                if (!headerIdStr) {
                     setLoading(false);
                     return;
                 }
@@ -34,7 +32,7 @@ export const DetailAssessment = () => {
                     return;
                 }
 
-                const result = await getDetailByHeaderId(headerId, code_alat, nipp);
+                const result = await getDetailByHeaderId(headerId, 'RTG-22', '8606120200');
                 if (result.successCode === 200 && result.data) {
                     setData(result.data.data);
                 } else {

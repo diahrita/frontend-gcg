@@ -49,7 +49,7 @@ const startFetchingData = () => {
         const result = await fetchBusinessPartnerData();
         // You can log or handle the result here
         console.log(result);
-    }, 15000);
+    }, 10000);
 };
 
 startFetchingData();

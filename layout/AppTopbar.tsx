@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-
+import { stopTokenRefresh } from '@/app/api/data/jwtToken';
+import { Messages } from '@/app/hendlererror/message/messages';
 import { AppTopbarRef } from '@/types';
 import Link from 'next/link';
 import { Button } from 'primereact/button';
@@ -10,7 +10,6 @@ import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
 import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { LayoutContext } from './context/layoutcontext';
-import { stopTokenRefresh } from '@/app/api/data/jwtToken';
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
@@ -22,6 +21,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const [profile, setProfile] = useState<{ email: string; type_user: string } | null>(null);
 
     const toast = useRef<Toast>(null);
+    const idleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
@@ -34,6 +34,42 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         if (storedProfile) {
             setProfile(JSON.parse(storedProfile));
         }
+
+        const checkToken = () => {
+            const token = sessionStorage.getItem(Messages.TOKEN);
+            if (!token) {
+                toast.current?.show({ severity: 'warn', summary: 'Session Berakhir!', detail: 'Session Anda telah berakhir. Anda akan diarahkan ke halaman login.', life: 3000 });
+                handleLogout();
+            }
+        };
+
+        const handleUserActivity = () => {
+            if (idleTimeoutRef.current) {
+                clearTimeout(idleTimeoutRef.current);
+            }
+            idleTimeoutRef.current = setTimeout(() => {
+                handleLogout();
+            }, 15 * 60 * 1000); // 15 minutes timeout
+        };
+
+        // Check token every minute
+        const tokenCheckInterval = setInterval(checkToken, 60 * 1000); // 1 minute interval
+
+        // Add event listeners
+        window.addEventListener('mousemove', handleUserActivity);
+        window.addEventListener('keydown', handleUserActivity);
+        window.addEventListener('scroll', handleUserActivity);
+
+        // Clean up event listeners and interval on component unmount
+        return () => {
+            if (idleTimeoutRef.current) {
+                clearTimeout(idleTimeoutRef.current);
+            }
+            clearInterval(tokenCheckInterval);
+            window.removeEventListener('mousemove', handleUserActivity);
+            window.removeEventListener('keydown', handleUserActivity);
+            window.removeEventListener('scroll', handleUserActivity);
+        };
     }, []);
 
     const getImageSrc = () => {
@@ -67,7 +103,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         {
             template: () => (
                 <div className="flex flex-column align-items-center py-2 px-2">
-                         <img src={getImageSrc()} width="45px" height={'45px'} alt="profile" />
+                     <img src={getImageSrc()} width="45px" height={'45px'} alt="profile" />
                     <div className="text-center mt-2">
                         <span className="font-bold mb-1">{profile?.type_user || '-'}</span>
                         <br></br>
@@ -88,7 +124,6 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     </a>
                 </Link>
             )
-
         },
         {
             label: 'Logout',
