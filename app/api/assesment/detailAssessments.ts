@@ -20,7 +20,7 @@ export const getDetailByHeaderId = async (header_id: number, code_alat: string, 
     let token = sessionStorage.getItem(Messages.TOKEN);
     
     if (!token) {
-        console.error('Error: Token not found');
+        // console.error('Error: Token not found');
         return { successCode: 401, data: null };
     }
 
@@ -46,21 +46,9 @@ export const getDetailByHeaderId = async (header_id: number, code_alat: string, 
 
     } catch (err: any) {
         const { status, message } = handleError(err);
-        console.error('Error occurred:', message);
+        // console.error('Error occurred:', message);
         return { successCode: status, data: null };
     }
 };
 
-
-
-// Fungsi untuk mendapatkan detail berdasarkan header_id
-export const getDetailByHeaderIds = async (header_id: number, code_alat: string, nipp: string): Promise<LabelAssessment | null> => {
-    const result = await cekAssessment(code_alat, nipp);
-
-    if (result.successCode === 200 && result.data) {
-        const foundItem = result.data.find(item => item.header_id === header_id);
-        return foundItem || null;
-    }
-    return null;
-};
 

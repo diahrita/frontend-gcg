@@ -9,6 +9,11 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 
+interface DataItem {
+    header_id: string;
+    label: string;
+    grup?: string;
+}
 
 const BankSoalUI = () => {
     const {
@@ -38,7 +43,7 @@ const BankSoalUI = () => {
             <Button label="Save" icon="pi pi-check" onClick={saveBankSoal} autoFocus />
         </div>
     );
-
+    
     return (
         <>
             <div className="card">
@@ -75,7 +80,7 @@ const BankSoalUI = () => {
                                                     {item.grup}
                                                 </span>
                                             </div>
-                                            <Badge value="6" size="xlarge" severity="warning"></Badge>
+                                            <Badge value={data.length} size="xlarge" severity="warning"></Badge>
                                         </div>
                                     </div>
                                 </Link>

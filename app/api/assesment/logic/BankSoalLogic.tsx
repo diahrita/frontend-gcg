@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
 import { cekAssessment } from '@/app/api/assesment/cekAssessment';
 import { Messages } from '@/app/hendlererror/message/messages';
 import { Demo } from '@/types';
 import { LabelAndGroup } from '@/types/assessment';
+import { useEffect, useRef, useState } from 'react';
 
 const useBankSoalLogic = () => {
     const [data, setData] = useState<LabelAndGroup[]>([]);
@@ -35,7 +35,7 @@ const useBankSoalLogic = () => {
             const result = await cekAssessment(code_alat, nipp);
             if (result.successCode === 200 && result.data) {
                 setData(result.data);
-                console.log("Ini data", result.data);
+                // console.log("Ini data", result.data);
             } else {
                 const storedError = sessionStorage.getItem(Messages.ERROR);
                 setError(storedError || Messages.GENERIC_ERROR);
@@ -87,6 +87,8 @@ const useBankSoalLogic = () => {
         const val = (e.target && e.target.value) || '';
         setBankSoal(prevState => ({ ...prevState, [name]: val }));
     };
+
+
 
     return {
         data,

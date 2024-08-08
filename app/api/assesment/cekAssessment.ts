@@ -18,7 +18,7 @@ export const cekAssessment = async (code_alat: string, nipp: string): Promise<Fe
     let token = sessionStorage.getItem(Messages.TOKEN);
     
     if (!token) {
-        console.error('Error: Token not found');
+        // console.error('Error: Token not found');
         return { successCode: 401, data: null };
     }
 
@@ -35,12 +35,12 @@ export const cekAssessment = async (code_alat: string, nipp: string): Promise<Fe
 
         
         
-        console.log('API Response Data ini ya:', data); 
+        // console.log('API Response Data ini ya:', data); 
         return { successCode: response.data.successCode, data };
 
     } catch (err: any) {
         const { status, message } = handleError(err);
-        console.error('Error occurred:', message);
+        // console.error('Error occurred:', message);
         return { successCode: status, data: null };
     }
 };

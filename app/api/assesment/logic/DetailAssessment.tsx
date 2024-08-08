@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef } from 'react';
 import { getDetailByHeaderId } from '@/app/api/assesment/detailAssessments';
 import { Messages } from '@/app/hendlererror/message/messages';
@@ -42,7 +43,6 @@ export const DetailAssessment = () => {
                     setError(storedError || Messages.GENERIC_ERROR);
                 }
             } catch (err) {
-                console.error('Fetch data error:', err);
                 const storedError = sessionStorage.getItem(Messages.ERROR);
                 setError(storedError || Messages.GENERIC_ERROR);
             } finally {
