@@ -200,7 +200,11 @@ const Crud = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Pemeriksaan Area Kerja</h5>
+            <div className="flex flex-column">
+                <h4 className="m-0 mb-2">Pemeriksaan Area Kerja</h4>
+                <span className="m-0">Jumlah Soal : <span className="font-medium"><a>6</a></span></span>
+                
+            </div>
             <div className="flex justify-between items-center mt-2 md:mt-0">
                 <span className="block mt-2 md:mt-0 p-input-icon-left mr-4">
                     <i className="pi pi-search" />
