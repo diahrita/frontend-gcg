@@ -5,5 +5,3 @@ export const APIEndpoints = {
     REGIS_ADMIN : '/api/register',
     ASSESSMENT : '/api/checklist/pertanyaan/get_pertanyaan',
 };
-
-
