@@ -36,7 +36,8 @@ const AppMenu = () => {
                         }
                     ]
                 },
-                { label: 'Bank Soal', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' }
+                { label: 'Kategori', icon: 'pi pi-fw pi-folder-open', to: '/uikit/kategori' }, 
+                { label: 'Pertanyaan', icon: 'pi pi-fw pi-folder-open', to: '/uikit/bank-soal' }
             ]
         },
         {

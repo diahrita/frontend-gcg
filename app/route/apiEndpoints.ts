@@ -3,7 +3,7 @@ export const APIEndpoints = {
     AUTHENTICATION: '/api/authentication',
     TOKEN_API : '/api/token',
     REGIS_ADMIN : '/api/register',
-    ASSESSMENT : '/api/mytps/pertanyaan/get_pertanyaan',
+    ASSESSMENT : '/api/checklist/pertanyaan/get_pertanyaan',
 };
 
 

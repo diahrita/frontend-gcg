@@ -19,14 +19,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
         }
     }, []);
 
-    if (loading) {
+  
+    if (loading || !isAuthenticated) {
         return <Loading />;
     }
-
-    if (!isAuthenticated) {
-        return <Loading />;
-    }
-
     return (
         <>
             <Head>

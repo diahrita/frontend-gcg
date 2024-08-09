@@ -10,6 +10,10 @@ interface FetchResult {
     data: LabelAssessment[] | null;
 }
 
+
+// nip ini == username
+// code alat = GCG
+
 export const cekAssessment = async (code_alat: 'RTG-22', nipp: '8606120200'): Promise<FetchResult> => {
     if (typeof window === 'undefined') {
         return { successCode: 500, data: null }; 
