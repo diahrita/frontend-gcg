@@ -12,6 +12,7 @@ export const DetailAssessment = () => {
     const [error, setError] = useState<string | null>(null);
 
     const title = sessionStorage.getItem('title');
+    const jumlah_soal = sessionStorage.getItem('jumlahSoal');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -141,6 +142,7 @@ export const DetailAssessment = () => {
         loading,
         error,
         title,
+        jumlah_soal,
         editSoalDialog,
         isEditMode,
         soals,

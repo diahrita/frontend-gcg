@@ -22,7 +22,7 @@ const InputBankSoalUI = () => {
 
 
     const items: MenuItem[] = [{ label: 'Input Kode Alat dan NIPP' }];
-const home: MenuItem = { icon: 'pi pi-home', url: '/' }
+    const home: MenuItem = { icon: 'pi pi-home', url: '/' }
 
     return (
         <div className="grid">

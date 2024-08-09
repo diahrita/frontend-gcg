@@ -1,25 +1,23 @@
 'use client'
 import { DetailAssessment } from '@/app/api/assesment/logic/DetailAssessment';
+import { format } from 'date-fns';
+import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { MenuItem } from 'primereact/menuitem';
 import { ProgressBar } from 'primereact/progressbar';
 import { classNames } from 'primereact/utils';
-import React, { useRef, useState } from 'react';
-import { Demo } from '@/types';
-import { Calendar } from 'primereact/calendar';
-import { Nullable } from "primereact/ts-helpers";
-import { BreadCrumb } from 'primereact/breadcrumb';
-import { MenuItem } from 'primereact/menuitem';
 
-const Crud = () => {
+  const Soal = () => {
     const {
         dataWithDisplayId,
         loading,
         error,
         title,
+        jumlah_soal,
         editSoalDialog,
         isEditMode,
         soalDialog,
@@ -36,16 +34,14 @@ const Crud = () => {
         confirmDeleteSoal,
         deleteSoal,
         onInputChange,
-        setGlobalFilter
+        setGlobalFilter,
+        
     } = DetailAssessment();
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <div className="flex flex-column">
-                <h4 className="m-0 mb-2">Pemeriksaan Area Kerja</h4>
-                <span className="m-0">Jumlah Soal : <span className="font-medium"><a>6</a></span></span>
-                
-            </div>
+            <h5 className="m-0">{title}</h5>
+            <span className="m-0">Jumlah Soal : {jumlah_soal} <span className="font-medium"><a>6</a></span></span>
             <div className="flex justify-between items-center mt-2 md:mt-0">
                 <span className="block mt-2 md:mt-0 p-input-icon-left mr-4">
                     <i className="pi pi-search" />
@@ -70,61 +66,45 @@ const Crud = () => {
         </>
     );
 
-    const [datetime24h, setDateTime24h] = useState<Nullable<Date>>(null);
-
-    const getDialogHeader = () => {
-        return isEditMode ? 'Edit Soal' : 'Tambah Soal';
+    const formatDate = (dateString: string | Date) => {
+        if (!dateString) return '';
+        return format(new Date(dateString), 'dd MMM yyyy HH:mm:ss');
     };
-
-    const newSoalDialogFooter = (
-        <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={() => setSoalDialog(false)} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveSoal} />
-        </>
-    );
-
-    const editSoalDialogFooter = (
-        <>
-            <Button label="Cancel" icon="pi pi-times" text onClick={() => setEditSoalDialog(false)} />
-            <Button label="Save" icon="pi pi-check" text onClick={saveSoal} />
-        </>
-    );
 
     const items: MenuItem[] = [{ label: 'Input Kode Alat dan NIPP', url: '/uikit/input-bank-soal'  }, { label: 'Bank Soal', url: '/uikit/bank-soal'}, { label: '1'}];
     const home: MenuItem = { icon: 'pi pi-home', url: '/' }
+
 
     return (
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
                 <BreadCrumb model={items} home={home} className='mb-3'/>
-                    <Toast ref={toast} />
+                    {loading && (
+                        <div style={{ padding: '10px', display: 'inline-block', width: '100%', position: 'relative' }}>
+                            <ProgressBar mode="indeterminate" style={{ height: '6px' }} />
+                        </div>
+                    )}
+                    {error && <div className="alert alert-error">{error}</div>}
+                    <DataTable value={dataWithDisplayId} header={header} globalFilter={globalFilter} paginator rows={10}>
+                    <Column field="id" header="Id"  sortable headerStyle={{ minWidth: '5rem' }}></Column>
+                    <Column field="pertanyaan" header="Pertanyaan"sortable headerStyle={{ minWidth: '25rem' }}></Column>
+                    <Column field="jumlah" header="Jumlah" sortable headerStyle={{ minWidth: '5rem' }}></Column>
+                    <Column field="jawaban" header="Jawaban" sortable headerStyle={{ minWidth: '5rem' }}></Column>
+                    <Column field="grup" header="Grup" sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                    <Column body={(rowData: any) => formatDate(rowData.created_at)} header="Tanggal Dibuat" sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                    <Column body={(rowData: any) => formatDate(rowData.modified_at)} header="Tanggal Diubah" sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                    
+                    <Column field="show" header="Tampilkan" sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column header="Actions" headerStyle={{ minWidth: '10rem' }}
+                            body={(rowData: any) => (
+                                <div>
+                                    <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning mr-2" onClick={() => editSoal(rowData)} />
+                                    <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteSoal(rowData)} />
+                                </div>
+                            )}
+                        />
 
-                    <DataTable
-                        ref={dt}
-                        value={soals}
-                        selection={selectedSoals}
-                        dataKey="id"
-                        paginator
-                        rows={10}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        className="datatable-responsive"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} soals"
-                        globalFilter={globalFilter}
-                        emptyMessage="No soals found."
-                        header={header}
-                        responsiveLayout="scroll"
-                    >
-                        <Column field="id" header="Id" sortable headerStyle={{ minWidth: '5rem' }}></Column>
-                        <Column field="pertanyaan" header="Pertanyaan" sortable headerStyle={{ minWidth: '25rem' }}></Column>
-                        <Column field="jumlah" header="Jumlah" sortable body={jumlahBodyTemplate} headerStyle={{ minWidth: '5rem' }}></Column>
-                        <Column field="jawaban" header="Jawaban" sortable body={jawabanBodyTemplate} headerStyle={{ minWidth: '5rem' }}></Column>
-                        <Column field="grup" header="Grup" sortable body={grupBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="created_at" header="Tanggal Dibuat" sortable body={createdAtBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="modified_at" header="Tanggal Diubah" sortable body={modifiedAtBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="show" header="Tampilkan" sortable body={showBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column header="Actions" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
                     <Dialog visible={soalDialog} style={{ width: '450px' }} header="Soal Details" modal className="p-fluid" footer={soalDialogFooter} onHide={hideDialog}>
@@ -152,4 +132,4 @@ const Crud = () => {
     );
 };
 
-export default Crud;
+export default Soal;
