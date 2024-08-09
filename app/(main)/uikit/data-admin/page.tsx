@@ -7,13 +7,10 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import { FileUpload } from 'primereact/fileupload';
-import { InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { ProgressBar } from 'primereact/progressbar';
 import { Toast } from 'primereact/toast';
-import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
@@ -27,7 +24,6 @@ const DataAdmin = () => {
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [product, setProduct] = useState<Demo.Product>({
         id: '',
@@ -36,23 +32,35 @@ const DataAdmin = () => {
         telepon: '',
         password: ''
     });
-    const [selectedProducts] = useState(null);
+
+    const [partner, setPartner] = useState<DataPartner>({
+        id: 0,
+        partner_path_name: '',
+        contact_id: '',
+        contact_ref: '',
+        code_ref: '',
+        short_name: '',
+        sp_short_name: '',
+        description: '',
+        title: '',
+        job_position: '',
+        email: '',
+        phone: '',
+        mobile: '',
+        add_street1: '',
+        postal_code: '',
+        tax_no: ''
+    });
+
     const [submitted, setSubmitted] = useState(false);
     const [newProductDialog, setNewProductDialog] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
-    const [currentPassword, setCurrentPassword] = useState<string>('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const [page, setPage] = useState(0);
-    const [limit, setLimit] = useState(rowsPerPage);
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
     }, []);
-
-    const onRowsPerPageChange = (event: { value: number }) => {
-        setRowsPerPage(event.value);
-    };
 
     const openNew = () => {
         setProduct({
@@ -112,8 +120,8 @@ const DataAdmin = () => {
         }
     };
 
-    const addAdmin = (product: Demo.Product) => {
-        setProduct({ ...product });
+    const editProduct = (partner: DataPartner) => {
+        setPartner({ ...partner });
         setProductDialog(true);
     };
 
@@ -150,14 +158,6 @@ const DataAdmin = () => {
         setProduct(_product);
     };
 
-    const onInputNumberChange = (e: InputNumberValueChangeEvent, name: string) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
-    };
-
     const idBodyTemplate = (partner: DataPartner) => (
         <>
             <span className="p-column-title">Id</span>
@@ -186,9 +186,9 @@ const DataAdmin = () => {
         </>
     );
 
-    const actionBodyTemplate = (partner: DataPartner) => (
+    const actionBodyTemplate = (rowData: DataPartner) => (
         <>
-            <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" />
+            <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2 small-button" onClick={() => editProduct(rowData)} />
         </>
     );
 
@@ -247,11 +247,11 @@ const DataAdmin = () => {
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '3rem' }} className="height-colum"></Column>
+                        <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }} className="height-colum"></Column>
+                        <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '10rem' }} className="height-colum"></Column>
+                        <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '10rem' }} className="height-colum"></Column>
+                        <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '5rem' }} className="height-colum"></Column>
                     </DataTable>
                 </div>
             </div>
@@ -259,19 +259,19 @@ const DataAdmin = () => {
             {/* Edit Data */}
             <Dialog visible={productDialog} style={{ width: '450px' }} header="Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                 <div className="field">
-                    <label htmlFor="username">Name</label>
-                    <InputText id="username" value={formData.username} type="text" onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                    {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                    <label htmlFor="contact_ref">Name</label>
+                    <InputText id="contact_ref" placeholder="Name" value={partner.contact_ref} onChange={(e) => onInputChange(e, 'contact_ref')} required autoFocus className={classNames({ 'p-invalid': submitted && !partner.contact_ref })} />
+                    {submitted && !partner.contact_ref && <small className="p-invalid">Name is required.</small>}
                 </div>
                 <div className="field">
-                    <label htmlFor="mail">Mail</label>
-                    <InputText id="mail" value={product.mail} onChange={(e) => onInputChange(e, 'mail')} required className={classNames({ 'p-invalid': submitted && !product.mail })} />
-                    {submitted && !product.mail && <small className="p-invalid">Mail is required.</small>}
+                    <label htmlFor="email">Email</label>
+                    <InputText id="email" placeholder="Email" onChange={(e) => onInputChange(e, 'email')} required className={classNames({ 'p-invalid': submitted && !partner.email })} />
+                    {submitted && !partner.email && <small className="p-invalid">Email is required.</small>}
                 </div>
                 <div className="field">
-                    <label htmlFor="telepon">Telepon</label>
-                    <InputText id="telepon" value={product.telepon} onChange={(e) => onInputChange(e, 'telepon')} required className={classNames({ 'p-invalid': submitted && !product.telepon })} />
-                    {submitted && !product.telepon && <small className="p-invalid">Telepon is required.</small>}
+                    <label htmlFor="phone">Contact</label>
+                    <InputText id="phone" placeholder="Nomor Telepon" onChange={(e) => onInputChange(e, 'phone')} required className={classNames({ 'p-invalid': submitted && !partner.phone })} />
+                    {submitted && !partner.phone && <small className="p-invalid">Contact is required.</small>}
                 </div>
             </Dialog>
 

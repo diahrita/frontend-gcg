@@ -8,11 +8,24 @@
 }
 
 .input-invalid::placeholder {
-    color: red; 
+    color: red;
     font-style: italic;
 }
 
 .error-text {
     color: red;
-    font-size: 0.875rem; 
+    font-size: 0.875rem;
+}
+
+.height-colum {
+    height: 15px;
+}
+
+.small-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    height: 2rem;
+    width: auto;
+    margin: 0;
+    border-radius: 25px;
 }

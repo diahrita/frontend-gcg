@@ -49,6 +49,16 @@ const AppMenu = () => {
                 }
             ]
         },
+        {
+            label: 'Display',
+            items: [
+                {
+                    label: 'Information Display',
+                    icon: 'pi pi-fw pi-desktop',
+                    to: '/uikit/information-display'
+                }
+            ]
+        }
         // {
         //     label: 'Pages',
         //     icon: 'pi pi-fw pi-briefcase',
@@ -69,7 +79,7 @@ const AppMenu = () => {
         //             icon: 'pi pi-fw pi-prime',
         //             to: '/utilities/icons'
         //         }
-              
+
         //     ]
         // }
     ];
