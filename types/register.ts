@@ -4,4 +4,4 @@ export type RegisterAdmin = {
     short_name: string;
     email: string;
     phone: string;
-}
+};

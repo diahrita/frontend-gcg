@@ -43,10 +43,10 @@ const LoginPage = () => {
                            <span className="text-600 font-medium">{Messages.LOGIN_PROMPT_TEXT}</span>
                        </div>
 
-                       <div>
-                           <div className="flex align-items-center justify-content-between mb-1 gap-5">
-                               {error && <p className="text-red-500" style={{ whiteSpace: 'pre-line' }}>{error}</p>}
-                           </div>
+                        <div>
+                        <div className="flex items-center justify-center text-center mb-5 gap-5" style={{ height: '100%' }}>
+                            {error && <p className="text-red-500" style={{ whiteSpace: 'pre-line', margin: 'auto' }}>{error}</p>}
+                        </div>
 
                            <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
                                {Messages.DEFAULT_USERNAME}

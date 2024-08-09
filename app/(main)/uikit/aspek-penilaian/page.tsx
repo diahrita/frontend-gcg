@@ -243,6 +243,7 @@ const AspekPenilaian = () => {
                                 value={aspek.aspekpenilaian}
                                 onChange={(e) => onInputChange(e, 'aspekpenilaian')}
                                 required
+                                placeholder="Aspek Penilaian"
                                 autoFocus
                                 className={classNames({
                                     'p-invalid': submitted && !aspek.aspekpenilaian
@@ -258,6 +259,7 @@ const AspekPenilaian = () => {
                                 value={aspek.deskripsi}
                                 onChange={(e) => onInputChange(e, 'deskripsi')}
                                 required
+                                placeholder="Deskripsi Penilaian"
                                 className={classNames({
                                     'p-invalid': submitted && !aspek.deskripsi
                                 })}
@@ -272,6 +274,7 @@ const AspekPenilaian = () => {
                                 value={aspek.bobot}
                                 onChange={(e) => onInputChange(e, 'bobot')}
                                 required
+                                placeholder="Bobot Penilaian"
                                 className={classNames({
                                     'p-invalid': submitted && !aspek.bobot
                                 })}
@@ -289,6 +292,7 @@ const AspekPenilaian = () => {
                                 value={aspek.aspekpenilaian}
                                 onChange={(e) => onInputChange(e, 'aspekpenilaian')}
                                 required
+                                placeholder="Aspek Penilaian"
                                 autoFocus
                                 className={classNames({
                                     'p-invalid': submitted && !aspek.aspekpenilaian
@@ -304,6 +308,7 @@ const AspekPenilaian = () => {
                                 value={aspek.deskripsi}
                                 onChange={(e) => onInputChange(e, 'deskripsi')}
                                 required
+                                placeholder="Deskripsi Penilaian"
                                 className={classNames({
                                     'p-invalid': submitted && !aspek.deskripsi
                                 })}
@@ -318,6 +323,7 @@ const AspekPenilaian = () => {
                                 value={aspek.bobot}
                                 onChange={(e) => onInputChange(e, 'bobot')}
                                 required
+                                placeholder="Bobot Penilaian"
                                 className={classNames({
                                     'p-invalid': submitted && !aspek.bobot
                                 })}

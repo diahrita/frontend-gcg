@@ -7,36 +7,23 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import { FileUpload } from 'primereact/fileupload';
-import { InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { ProgressBar } from 'primereact/progressbar';
 import { Toast } from 'primereact/toast';
-import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
 import './style.css';
 
-
 const DataAdmin = () => {
     // State for Data Admin
     const { dataWithDisplayId, loading, error, handlePageChange } = useDataAdminLogic();
 
-    const {
-        formData,
-        error_regis,
-        success,
-        loading_regis,
-        handleChange,
-        handleSubmit
-    } = useRegisterAdminForm();
-
+    const { formData, error_regis, success, loading_regis, handleChange, handleSubmit } = useRegisterAdminForm();
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     
     const [product, setProduct] = useState<Demo.Product>({
@@ -47,23 +34,34 @@ const DataAdmin = () => {
         password: ''
     });
 
-    const [selectedProducts] = useState(null);
+    const [partner, setPartner] = useState<DataPartner>({
+        id: 0,
+        partner_path_name: '',
+        contact_id: '',
+        contact_ref: '',
+        code_ref: '',
+        short_name: '',
+        sp_short_name: '',
+        description: '',
+        title: '',
+        job_position: '',
+        email: '',
+        phone: '',
+        mobile: '',
+        add_street1: '',
+        postal_code: '',
+        tax_no: ''
+    });
+
     const [submitted, setSubmitted] = useState(false);
     const [newProductDialog, setNewProductDialog] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
-    const [currentPassword, setCurrentPassword] = useState<string>('');
     const toast = useRef<Toast>(null);
     const dt = useRef<DataTable<any>>(null);
-    const [page, setPage] = useState(0);
-    const [limit, setLimit] = useState(rowsPerPage);
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
     }, []);
-
-    const onRowsPerPageChange = (event: { value: number }) => {
-        setRowsPerPage(event.value);
-    };
 
     const openNew = () => {
         setProduct({
@@ -123,8 +121,8 @@ const DataAdmin = () => {
         }
     };
 
-    const addAdmin = (product: Demo.Product) => {
-        setProduct({ ...product });
+    const editProduct = (partner: DataPartner) => {
+        setPartner({ ...partner });
         setProductDialog(true);
     };
 
@@ -161,27 +159,6 @@ const DataAdmin = () => {
         setProduct(_product);
     };
 
-    const onInputNumberChange = (e: InputNumberValueChangeEvent, name: string) => {
-        const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
-    };
-
-    const rightToolbarTemplate = () => (
-        <>
-            <Button label="New" icon="pi pi-plus" severity="success" className="mr-2" onClick={openNew} />
-            <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
-        </>
-    );
-
-    const leftToolbarTemplate = () => (
-        <React.Fragment>
-            <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-        </React.Fragment>
-    );
-
     const idBodyTemplate = (partner: DataPartner) => (
         <>
             <span className="p-column-title">Id</span>
@@ -210,19 +187,23 @@ const DataAdmin = () => {
         </>
     );
 
-    const actionBodyTemplate = (partner: DataPartner) => (
+    const actionBodyTemplate = (rowData: DataPartner) => (
         <>
-            <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2" />
+            <Button icon="pi pi-pencil" rounded severity="warning" className="mr-2 small-button" onClick={() => editProduct(rowData)} />
         </>
     );
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Data Admin</h5>
-            <span className="block mt-2 md:mt-0 p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span>
+            <div className="flex justify-between items-center mt-2 md:mt-0">
+                <span className="block mt-2 md:mt-0 p-input-icon-left mr-4">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
+                </span>
+                <Button label="New" icon="pi pi-plus" severity="success" className="mr-4" onClick={openNew} />
+                <Button label="Export" icon="pi pi-upload" severity="help" className="mr-4" onClick={exportCSV} />
+            </div>
         </div>
     );
 
@@ -236,22 +217,10 @@ const DataAdmin = () => {
     const newProductDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button
-                label={loading_regis ? 'Saving...' : 'Save'}
-                icon={loading_regis ? '' : 'pi pi-check'}
-                className="p-button-text"
-                // onClick={ type="submit"}
-                disabled={loading_regis}
-            />
-
-                    <button type="submit" disabled={loading_regis}>
-                        {loading_regis ? 'Submitting...' : 'Save'}
-                    </button>
-            
+            <Button label={loading_regis ? 'Saving...' : 'Save'} icon={loading_regis ? '' : 'pi pi-check'} className="p-button-text" onClick={saveProduct} disabled={loading_regis} />
             {loading_regis && <i className="pi pi-spinner pi-spin" style={{ marginLeft: '0.5em' }}></i>}
         </>
     );
-
 
     return (
         <div className="grid crud-demo">
@@ -266,8 +235,6 @@ const DataAdmin = () => {
                     {error && <div style={{ padding: '10px', backgroundColor: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb', borderRadius: '4px', marginBottom: '1rem' }}>{error}</div>}
 
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-
                     <DataTable
                         value={dataWithDisplayId}
                         dataKey="id"
@@ -281,35 +248,33 @@ const DataAdmin = () => {
                         header={header}
                         responsiveLayout="scroll"
                     >
-                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '3rem' }} className="height-colum"></Column>
+                        <Column field="contact_ref" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '10rem' }} className="height-colum"></Column>
+                        <Column field="phone" header="Contact" sortable body={contactBodyTemplate} headerStyle={{ minWidth: '10rem' }} className="height-colum"></Column>
+                        <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '10rem' }} className="height-colum"></Column>
+                        <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '5rem' }} className="height-colum"></Column>
                     </DataTable>
-
                 </div>
             </div>
 
             {/* Edit Data */}
             <Dialog visible={productDialog} style={{ width: '450px' }} header="Data Admin" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                 <div className="field">
-                    <label htmlFor="username">Name</label>
-                    <InputText id="username" value={formData.username} type='text' onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                    {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                    <label htmlFor="contact_ref">Name</label>
+                    <InputText id="contact_ref" placeholder="Name" value={partner.contact_ref} onChange={(e) => onInputChange(e, 'contact_ref')} required autoFocus className={classNames({ 'p-invalid': submitted && !partner.contact_ref })} />
+                    {submitted && !partner.contact_ref && <small className="p-invalid">Name is required.</small>}
                 </div>
                 <div className="field">
-                    <label htmlFor="mail">Mail</label>
-                    <InputText id="mail" value={product.mail} onChange={(e) => onInputChange(e, 'mail')} required className={classNames({ 'p-invalid': submitted && !product.mail })} />
-                    {submitted && !product.mail && <small className="p-invalid">Mail is required.</small>}
+                    <label htmlFor="email">Email</label>
+                    <InputText id="email" placeholder="Email" onChange={(e) => onInputChange(e, 'email')} required className={classNames({ 'p-invalid': submitted && !partner.email })} />
+                    {submitted && !partner.email && <small className="p-invalid">Email is required.</small>}
                 </div>
                 <div className="field">
-                    <label htmlFor="telepon">Telepon</label>
-                    <InputText id="telepon" value={product.telepon} onChange={(e) => onInputChange(e, 'telepon')} required className={classNames({ 'p-invalid': submitted && !product.telepon })} />
-                    {submitted && !product.telepon && <small className="p-invalid">Telepon is required.</small>}
+                    <label htmlFor="phone">Contact</label>
+                    <InputText id="phone" placeholder="Nomor Telepon" onChange={(e) => onInputChange(e, 'phone')} required className={classNames({ 'p-invalid': submitted && !partner.phone })} />
+                    {submitted && !partner.phone && <small className="p-invalid">Contact is required.</small>}
                 </div>
             </Dialog>
-
 
             {/* New Data */}
             <Dialog visible={newProductDialog} style={{ width: '450px' }} header="Tambah Data Admin" modal className="p-fluid" footer={newProductDialogFooter} onHide={hideDialog}>
@@ -370,8 +335,6 @@ const DataAdmin = () => {
                         />
                     </div>
 
-
-
                     <div className="field">
                         <label htmlFor="password">Password</label>
                         <Password
@@ -395,7 +358,6 @@ const DataAdmin = () => {
                 {error_regis && <p className="error-message">{error_regis}</p>}
                 {success && <p className="success-message">{success}</p>}
             </Dialog>
-
         </div>
     );
 };

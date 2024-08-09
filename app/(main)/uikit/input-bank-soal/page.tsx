@@ -1,25 +1,58 @@
 'use client';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-
+import { useState } from 'react';
+import React from 'react';
+import { BreadCrumb } from 'primereact/breadcrumb';
+import { MenuItem } from 'primereact/menuitem';
 import './style.css';
-import useInputBankSoalLogic from '@/app/api/assesment/logic/InputBankSoalLogic';
 
-const InputBankSoalUI = () => {
-    const {
-        codeAlat,
-        setCodeAlat,
-        nipp,
-        setNipp,
-        error,
-        loading,
-        fetchData
-    } = useInputBankSoalLogic();
+const InputBankSoal = () => {
+    const [codeAlat, setCodeAlat] = useState<string>('');
+    const [nipp, setNipp] = useState<string>('');
+    const [data, setData] = useState<Assessment[] | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const router = useRouter();
+
+    const items: MenuItem[] = [{ label: 'Input Kode Alat dan NIPP' }];
+    const home: MenuItem = { icon: 'pi pi-home', url: '/' }
+
+    const fetchData = async () => {
+        console.log('Fetching data...');
+        if (!codeAlat || !nipp) {
+            setError('Kode Alat dan NIPP harus diisi');
+            return;
+            
+        }
+        setError(null);
+        setLoading(true);
+        try {
+            const result = await bankAssessment(codeAlat, nipp);
+            console.log('API Response:', result); 
+            
+            if (result.successCode === 200 && result.data) {
+                console.log('Data received from API:', result.data);
+                setData(result.data);
+                router.push('/uikit/bank-soal');
+                
+            } else {
+                console.log('Unexpected successCode or no data:', result.successCode);
+                setError(Messages.GENERIC_ERROR);
+            }
+        } catch (err) {
+            console.error('Error occurred in fetchData:', err);
+            setError('An unexpected error occurred');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="grid">
             <div className="col-12">
                 <div className="card">
+                <BreadCrumb model={items} home={home} className='mb-3' />
                     {error && <p className="error-message">{error}</p>}
                     <h5>Silahkan Masukkan Kode Alat dan NIPP</h5>
                     <div className="p-fluid formgrid grid">
